@@ -6,7 +6,7 @@
 /*   By: nali <nali@42abudhabi.ae>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/18 14:30:14 by nali              #+#    #+#             */
-/*   Updated: 2023/01/18 15:06:25 by nali             ###   ########.fr       */
+/*   Updated: 2023/01/19 18:22:21 by nali             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,4 +32,12 @@ int ft_compare_files(std::string file1, std::string file2)
     f1.close();
     f2.close();
     return (0);
+}
+
+void    ft_print_result(std::string path1, std::string path2)
+{
+    if (ft_compare_files(path1,path2) == 0)
+        std::cout << GREEN <<"SUCCESS\n" << END << std::endl;
+    else
+        std::cout << RED <<"FAIL\n" << END << std::endl;
 }

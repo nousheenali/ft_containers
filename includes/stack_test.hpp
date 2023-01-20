@@ -22,4 +22,16 @@ void stack_tester(STK stck)
     std::cout << "empty: "<< stck.empty()<<std::endl;
 }
 
+template <typename STK>
+void write_output_to_file(std::string path, STK stck)
+{
+    std::streambuf *coutbuf;
+
+    std::ofstream out(path);
+    coutbuf = std::cout.rdbuf();   /* returns a pointer to the stream buffer object currently associated with the stream*/
+    std::cout.rdbuf(out.rdbuf()); /*sets obj in the brackets as the stream buffer associated with the stream*/
+    stack_tester(stck);
+    std::cout.rdbuf(coutbuf); //restore to cout buffer
+}
+
 #endif

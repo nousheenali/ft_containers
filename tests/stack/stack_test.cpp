@@ -2,38 +2,21 @@
 #include "../../includes/containers.hpp"
 std::string create_file_path(std::string path, std::string str)
 {
-    return (path + str + ".txt");
+    return (path + str);
 }
 
-int check_capacity(std::string p1, std::string p2)
+void check_capacity(std::string p1, std::string p2)
 {
-    std::streambuf *coutbuf;
+    
     ft::Stack<int> stck1; //custom stack
     std::stack<int> stck2; //std stack
 
     p1 = create_file_path(p1, "capacity");
     p2 = create_file_path(p2, "capacity");
-    std::ofstream out1(p1);
-    coutbuf = std::cout.rdbuf();   /* returns a pointer to the stream buffer object currently associated with the stream*/
-    std::cout.rdbuf(out1.rdbuf()); /*sets obj in the brackets as the stream buffer associated with the stream*/
-    stack_tester(stck1);
-    std::cout.rdbuf(coutbuf); //restore to cout buffer
-
-    std::ofstream out2(p2);
-    coutbuf = std::cout.rdbuf(); //returns a pointer to the stream buffer object currently associated with the stream
-    std::cout.rdbuf(out2.rdbuf());
-    stack_tester(stck2);
-    std::cout.rdbuf(coutbuf); //restore to cout buffer
-    if (ft_compare_files(p1,p2) == 0)
-    {
-        std::cout << GREEN <<"SUCCESS\t" << END << std::endl;
-        return (0);
-    }
-    else
-    {
-        std::cout << RED <<"FAIL\t\033[0m" << END << std::endl;
-        return (1);
-    }
+    write_output_to_file(p1, stck1);
+    write_output_to_file(p2, stck2);
+    std::cout << "CAPACITY\t" << END;
+    ft_print_result(p1,p2);
 }
 
 
@@ -42,25 +25,10 @@ void begin_stack_test(void)
     std::string str,p1,p2;
     std::streambuf *coutbuf;
 
-    p1 = "./tests/stack/custom/"; //location for custom stack output
-    p2 = "./tests/stack/std/"; //location for std stack output
+    p1 = "./outputs/stack/custom/"; //location for custom stack output
+    p2 = "./outputs/stack/std/"; //location for std stack output
     check_capacity(p1, p2);
-    
-    // std::ofstream out1(p1);
-    // coutbuf = std::cout.rdbuf();   /* returns a pointer to the stream buffer object currently associated with the stream*/
-    // std::cout.rdbuf(out1.rdbuf()); /*sets obj in the brackets as the stream buffer associated with the stream*/
-    // stack_tester(stck1);
-    // std::cout.rdbuf(coutbuf); //restore to cout buffer
 
-    // std::ofstream out2(p2);
-    // coutbuf = std::cout.rdbuf(); //returns a pointer to the stream buffer object currently associated with the stream
-    // std::cout.rdbuf(out2.rdbuf());
-    // stack_tester(stck2);
-    // std::cout.rdbuf(coutbuf); //restore to cout buffer
-    // if (ft_compare_files(p1,p2) == 0)
-    //     std::cout << GREEN <<"SUCCESS\t" << END << std::endl;
-    // else
-    //     std::cout << RED <<"FAIL\t\033[0m" << END << std::endl;
 }
 
 
