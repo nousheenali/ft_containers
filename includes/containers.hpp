@@ -6,7 +6,7 @@
 /*   By: nali <nali@42abudhabi.ae>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/18 09:02:05 by nali              #+#    #+#             */
-/*   Updated: 2023/01/19 22:36:42 by nali             ###   ########.fr       */
+/*   Updated: 2023/01/23 12:21:35 by nali             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,6 +18,7 @@
 #include <stack>
 #include <fstream>
 #include "../container_files/stack.hpp"
+#include "../container_files/vector.hpp"
 #include "stack_test.hpp"
 
 #define GREEN "\033[1;32m"
