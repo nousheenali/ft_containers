@@ -6,7 +6,7 @@
 /*   By: nali <nali@42abudhabi.ae>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/06 17:59:19 by nali              #+#    #+#             */
-/*   Updated: 2023/01/23 15:09:52 by nali             ###   ########.fr       */
+/*   Updated: 2023/01/24 21:51:49 by nali             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,19 +60,30 @@ int main(void)
     std::vector<int> vec_s2(5, 10);
     ft::vector<int> vec_f2(5, 10);
 
-    it2 = vec_f2.begin();
+    it1 =vec_s2.begin();
+    while(it1 != vec_s2.end())
+    {
+        std::cout << *it1 << ' ';
+        it1++;
+    }
+
+    std::cout << std::endl;
+    it2 =vec_f2.begin();
     while(it2 != vec_f2.end())
-    {}
-        std::cout << vec_s2[i]<< ' ';
+    {
+        std::cout << *it2 << ' ';
+        it2++;
     }
 
     std::vector<int> vec_s3(vec_s2);
     ft::vector<int> vec_f3(vec_f2);
+    it2 =vec_f3.begin();
+    while(it2 != vec_f3.end())
+    {
+        std::cout << *it2 << ' ';
+        it2++;
+    }
 
-    
-
-
-    
-
+    return (0);
 }
 

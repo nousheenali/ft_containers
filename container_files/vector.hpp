@@ -6,13 +6,15 @@
 /*   By: nali <nali@42abudhabi.ae>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/20 16:44:10 by nali              #+#    #+#             */
-/*   Updated: 2023/01/23 15:21:53 by nali             ###   ########.fr       */
+/*   Updated: 2023/01/24 22:07:36 by nali             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef VECTOR_HPP
 #define VECTOR_HPP
 
+#include "../includes/containers.hpp"
+#include "../includes/random_access_iterator.hpp"
 #include <memory> //to access allocator
 
 namespace ft
@@ -21,18 +23,18 @@ namespace ft
     class vector
     {    
         public:
-            typedef T                           value_type;
-            typedef Alloc                       allocator_type;
-            typedef size_t					    size_type;
-            typedef ptrdiff_t			        difference_type;
-            typedef typename allocator_type::reference	        reference;
-            typedef typename allocator_type::const_reference	const_reference;
+            typedef T                                           value_type;
+            typedef Alloc                                       allocator_type;
+            typedef size_t					                    size_type;
+            typedef ptrdiff_t			                        difference_type;
             typedef typename allocator_type::pointer            pointer;
             typedef typename allocator_type::const_pointer	    const_pointer;
-            typedef std::random_access_iterator_tag             iterator;
-            // typedef std::reverse_iterator<iterator>		    reverse_iterator;
+            typedef typename allocator_type::reference	        reference;
+            typedef typename allocator_type::const_reference	const_reference;
+            typedef ft::random_access_iterator <T>              iterator;
+            typedef ft::random_access_iterator <const T>        const_iterator;
             // typedef std::reverse_iterator<const_iterator>	const_reverse_iterator;
-            // typedef std::reverse_iterator<iterator>		    reverse_iterator;
+            // typedef std::reverse_iterator<iterator>		reverse_iterator;
         
         private:
             T*                  _start;    // Point to the first element
@@ -111,22 +113,19 @@ namespace ft
             }
                  
     };
-    /* relational operators */
-    template <class T, class Alloc>  
-    bool operator== (const vector<T,Alloc>& lhs, const vector<T,Alloc>& rhs)
-    {
-        if(lhs.size() != rhs.size())
-            return (false);
-        {
-            
-        }
+    // /* relational operators */
+    // template <class T, class Alloc>  
+    // bool operator== (const vector<T,Alloc>& lhs, const vector<T,Alloc>& rhs)
+    // {
+    //     if(lhs.size() != rhs.size())
+    //         return (false);
+    //     return();
+    // }
+    // template <class T, class Alloc>  
+    // bool operator!= (const vector<T,Alloc>& lhs, const vector<T,Alloc>& rhs)
+    // {
         
-    }
-    template <class T, class Alloc>  
-    bool operator!= (const vector<T,Alloc>& lhs, const vector<T,Alloc>& rhs)
-    {
-        
-    }
+    // }
 // (3)	
 // template <class T, class Alloc>  bool operator<  (const vector<T,Alloc>& lhs, const vector<T,Alloc>& rhs);
 // (4)	

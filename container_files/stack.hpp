@@ -6,7 +6,7 @@
 /*   By: nali <nali@42abudhabi.ae>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/05 13:31:54 by nali              #+#    #+#             */
-/*   Updated: 2023/01/23 08:39:10 by nali             ###   ########.fr       */
+/*   Updated: 2023/01/24 12:35:47 by nali             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,6 +69,7 @@ namespace ft
                 return (this->c.pop_back());
             }
             /*relational*/
+            /*these have been made as friend functions so that they can access the protected memeber c*/
             friend  bool operator== (const stack<T,Container>& lhs, const stack<T,Container>& rhs)
             {
                 return(lhs.c == rhs.c);
