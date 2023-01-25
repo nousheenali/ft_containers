@@ -6,7 +6,7 @@
 /*   By: nali <nali@42abudhabi.ae>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/23 16:53:39 by nali              #+#    #+#             */
-/*   Updated: 2023/01/24 22:58:35 by nali             ###   ########.fr       */
+/*   Updated: 2023/01/25 09:05:45 by nali             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,11 +41,13 @@ namespace ft{
             {
                 current = x.current;
             }
+            
             random_access_iterator &operator=(const random_access_iterator& x) //copy assignment
             {
 				current = x.current;
 			    return *this;
 		    }
+            
             ~random_access_iterator(){} //destructor
             
             /*properties*/
@@ -53,49 +55,60 @@ namespace ft{
             { 
                 return (current); 
             }
+            
             reference operator*()
             {
                 return *(current);
             }
+            
             pointer operator->() const
             { 
                 return (current);
             }
+            
             random_access_iterator &operator++() // pre-increment, return *this by reference
             {
 			    ++(current);
 			    return *this;
 		    }
+            
 		    random_access_iterator operator++(int) //post-increment, return unmodified copy by value
             {
                 return random_access_iterator(current++);
 		    }
-             random_access_iterator &operator--() //pre decrement
+            
+            random_access_iterator &operator--() //pre decrement
             {
                 --(current);
                 return *this;
 		    }
+            
 		    random_access_iterator operator--(int) //post decrement
             {
                 return random_access_iterator(current--);
 		    }
+            
             reference operator[](difference_type n) const
             {   
                 return current[n]; 
             }
+            
             random_access_iterator &operator+=(difference_type n)
             {
                 return (current + n);
             }
+            
             random_access_iterator operator+(difference_type n) const 
             { 
                 return random_access_iterator(current + n); 
             }
+            
             random_access_iterator &operator-=(difference_type n)
             {
                 current -= n; 
                 return *this; 
             }
+            
             random_access_iterator operator-(difference_type n) const 
             {
                 return random_access_iterator(current - n); 

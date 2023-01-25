@@ -6,7 +6,7 @@
 /*   By: nali <nali@42abudhabi.ae>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/20 16:44:10 by nali              #+#    #+#             */
-/*   Updated: 2023/01/24 22:07:36 by nali             ###   ########.fr       */
+/*   Updated: 2023/01/25 16:45:26 by nali             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,6 +15,7 @@
 
 #include "../includes/containers.hpp"
 #include "../includes/random_access_iterator.hpp"
+#include "../includes/reverse_iterator.hpp"
 #include <memory> //to access allocator
 
 namespace ft
@@ -33,83 +34,181 @@ namespace ft
             typedef typename allocator_type::const_reference	const_reference;
             typedef ft::random_access_iterator <T>              iterator;
             typedef ft::random_access_iterator <const T>        const_iterator;
-            // typedef std::reverse_iterator<const_iterator>	const_reverse_iterator;
-            // typedef std::reverse_iterator<iterator>		reverse_iterator;
+            typedef ft::reverse_iterator<const_iterator>	    const_reverse_iterator;
+            typedef ft::reverse_iterator<iterator>		        reverse_iterator;
         
         private:
             T*                  _start;    // Point to the first element
-            T*                  _end;   // Point to one-past the last element
+            T*                  _finish;   // Point to one-past the last element
             T*                  _capacity;  // Point to the end of the internal array(max elements it can hold)
             allocator_type     _alloc;
         
         public:
             /*constructors*/
             /*default constructor*/
-            explicit vector (const allocator_type& alloc = allocator_type()):_alloc(alloc),_start(NULL),_end(NULL),_capacity(NULL)
+            explicit vector (const allocator_type& alloc = allocator_type())
+            :_alloc(alloc),_start(NULL),_finish(NULL),_capacity(NULL)
             {}	
+            
             /*fill constructor*/
-            explicit vector (size_type n, const value_type& val = value_type(),const allocator_type& alloc = allocator_type()):_alloc(alloc) 
+            explicit vector (size_type n, const value_type& val = value_type(),const allocator_type& alloc = allocator_type())
+            :_alloc(alloc) 
             {
-                int i = 0;
                 _start = _alloc.allocate(n);
                 _capacity = _start + n;
-                _end = _start;
-                while(i < n)
+                _finish = _start;
+                while(n--)
                 {
-                    this->_alloc.construct(_end, val);
-                    i++;
-                    _end++;
+                    this->_alloc.construct(_finish, val);
+                    this->_finish++;
                 }  
             }	
-            // /*range constructor*/
-            // template <class InputIterator>         
-            // vector (InputIterator first, InputIterator last, const allocator_type& alloc = allocator_type())
-            // {
-                
-            // } 
-            /* copy constructor */
-            vector (const vector& x):_alloc(x._alloc)
+            
+            /*range constructor*/
+            template <class InputIterator>         
+            vector (InputIterator first, InputIterator last, const allocator_type& alloc = allocator_type())
             {
-                int i = 0;
-                this->_start = this->_alloc.allocate(x._capacity - x._start);
-                this->_capacity = this->_start + (x._capacity - x._start);
-                this->_end = this->_start;
-                while(i < (x._capacity - x._start))
+                size_type i = 0;
+                difference_type d = last - first;
+                this->_alloc = alloc;
+                this->_start = this->_alloc(d);
+                this->_capacity = this->_start + d;
+                this->_finish = this->_start;
+                while(i < d)
                 {
-                    this->_alloc.construct(this->_end, *(x._start + i));
+                    this->_alloc.construct(this->_finish, *(first + i));
                     i++;
-                    this->_end++;
-                } 
+                    this->_finish++;
+                }  
+            } 
+            
+            /* copy constructor */
+            vector (const vector& x):_alloc(alloc),_start(NULL),_finish(NULL),_capacity(NULL)
+            {
+                *this = x; //calls copy assignment
             }
+            
             /*destructor*/
-            ~vector(){}
+            ~vector()
+            {
+                this->clear();
+				_alloc.deallocate(this->_start, this->capacity());
+            }
             /*copy assignment*/
             vector& operator= (const vector& x)
             {
-                int i = 0;
-                this->_start = this->_alloc.allocate(x._capacity - x._start);
-                this->_capacity = this->_start + (x._capacity - x._start);
-                this->_end = this->_start;
-                while(i < (x._capacity - x._start))
+                if (!this->empty())
+				{   this->~vector();}
+                size_type c = x.capacity();
+                size_type s = x.size();
+                this->_start = this->_alloc.allocate(c);
+                this->_capacity = this->_start + c;
+                this->_finish = this->_start;
+                for (int i = 0; i < s; i++)
                 {
-                    this->_alloc.construct(this->_end, *(x._start + i));
-                    i++;
-                    this->_end++;
-                } 
+                    this->_alloc.construct(this->_finish, *(x._start + i));
+                    this->_finish++;
+                }
                 return(*this);
             }
             /*member functions*/
+
+            template <class InputIterator>  
+            void assign (InputIterator first, InputIterator last)
+            {}
+
+            void assign (size_type n, const value_type& val)
+            {
+                if (n > capacity())
+                {
+                    
+                }
+                    vector tmp(n, val, this->_alloc)
+                else if (n > size())
+                
+                else
+            }
+            
+            void assign(size_type __n, const value_type& __val)
+            { _M_fill_assign(__n, __val); }
+            
             iterator begin()
-            {
-                return (this->_start);
-            }
+            {   return (this->_start);}
+            
+            const_iterator begin() const
+            {   return const_iterator(this->_start);}
+            
             iterator end()
+            {   return (this->_finish);}
+            
+            const_iterator end() const
+            {   return const_iterator(this->_finish); }
+            
+            reverse_iterator rbegin()
+            {   return reverse_iterator(end());}
+            
+            const_reverse_iterator rbegin() const
+            {   return const_reverse_iterator(end());}
+
+            reverse_iterator rend() 
+            {   return reverse_iterator(begin()); }
+
+            const_reverse_iterator rend() const
+            {   return const_reverse_iterator(begin()); }
+
+            size_type size() const //  number of actual objects held in the vector
+            {   return (this->_finish - this->_start);}
+
+            size_type max_size() const //maximum potential size the container can reach
+            {   return _alloc.max_size();}
+            
+            void resize (size_type n, value_type val = value_type())
             {
-                return (this->_end);
+                if (n > size())
+                {
+                    if (n == 0)
+                        return;
+                    if (capacity() - size() >= n)
+                }
+                else if (n < size())
             }
-            size_type size() const
+
+            size_type   capacity() const
+            { return size_type(this->_capacity - this->_start); }
+
+            bool empty() const 
+            { return begin() == end(); }
+
+            void reserve (size_type n)
             {
-                return (this->_end - this->_start);
+                if (n > max_size())
+                    throw std::length_error("reserve length error");
+                else if(n > capacity())
+                {
+                    size_t i = 0;
+                    pointer tmp_start = _start;
+                    pointer tmp_finish = _finish;
+                    size_t tmp_size = size();
+                    size_t tmp_cap = capacity();
+                    
+                    _start = _alloc.allocate(n);
+                    _capacity = start + n;
+                    _finish = _start;
+                    while(i < tmp_size)
+                    {
+                        _alloc.construct(_finish, *(tmp_start + i));
+                        _finish++;
+                        i++;
+                    }
+                    _alloc.deallocate(tmp_start, tmp_cap);
+                } 
+            }
+            void clear()
+            {
+                size_type n = this->size();
+				for (size_t i = 0; i < n ; i++)
+					_alloc.destroy(_start + i);
+                this->_finish = this->start;
             }
                  
     };
