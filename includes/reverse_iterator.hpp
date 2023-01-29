@@ -6,7 +6,7 @@
 /*   By: nali <nali@42abudhabi.ae>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/24 22:16:41 by nali              #+#    #+#             */
-/*   Updated: 2023/01/25 10:23:23 by nali             ###   ########.fr       */
+/*   Updated: 2023/01/26 14:27:29 by nali             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,7 +36,7 @@ namespace ft
             /*constructors*/
             reverse_iterator():current(NULL){}
             explicit reverse_iterator (iterator_type it):current(it){}
-            reverse_iterator (const reverse_iterator<Iter>& rev_it):current(rev_it.current){}
+            reverse_iterator (const reverse_iterator<_Iterator>& rev_it):current(rev_it.current){}
             
             /*copy assignment*/
             reverse_iterator& operator=(const reverse_iterator& rev_it)
