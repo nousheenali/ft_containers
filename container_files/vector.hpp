@@ -17,6 +17,7 @@
 #include "../includes/random_access_iterator.hpp"
 #include "../includes/reverse_iterator.hpp"
 #include "../includes/type_traits.hpp"
+#include "../includes/compare_utils.hpp"
 #include <memory> //to access allocator
 
 namespace ft
@@ -325,35 +326,28 @@ namespace ft
                 return (position);
             }
 
-            // iterator erase (iterator first, iterator last)
-            // {
-            //     difference_type d = last - first;
-            //     size_type l = size();
-            //     while(size_t i = 0;; i++)
-            //     {
-            //         _alloc.construct(first + i , *(_start + i + d));
-            //         d++;
-            //     }
-                
-
-
-
-
-            //     for (size_type i = start + d; i < _size; i++) {
-			// 	    _alloc.destroy(_data + i);
-			// }
-			// _size -= range;
-			// return first;
-            // }
+            iterator erase (iterator first, iterator last)
+            {
+                difference_type offset, d;
+                offset  =  first - begin(); //dist of first from start of the array
+                d = last - first + 1;   // how many elemenst are to be erased
+                size_type l = size();
+                for(size_t i = 0; i < l - d - offset; i++)
+                    _alloc.construct(_start + offset + i , *(_start + offset + d + i));
+                for (size_type j = l - d; j < l; j++) 
+				    _alloc.destroy(_start + j);
+			    _finish -= d ;
+                return first;
+            }
 
             void	push_back( const T& value)
             {
-				if (size() == capacity) 
+				if (size() == capacity()) 
                 {
 					if (!(size()))
 						reserve(1);
 					else
-						reserve(_capacity * 2);
+						reserve(capacity() * 2);
 				}
 				_alloc.construct(_finish, value);
 				_finish++;
@@ -365,44 +359,92 @@ namespace ft
 				this->_finish--;
 			}
 
-            // resize
-            // swap
-            
-            // void resize (size_type n, value_type val = value_type())
-            // {
-            //     if (n > size())
-            //     {
-            //         if (n == 0)
-            //             return;
-            //         if (capacity() - size() >= n)
-            //     }
-            //     else if (n < size())
-            // }
+            void resize (size_type n, value_type val = value_type())
+            {
+                if (n > max_size()) 
+				    throw std::length_error("ft::vector::resize");
+			    if (n < size()) 
+                {
+					while (n < size()) 
+                    {
+						this->_finish--;
+						this->_alloc.destroy(_finish);
+					}
+				}
+                else
+                {
+                    if (this->capacity() < n)
+						reserve(n);
+					while (this->size() != n) 
+                    {
+						this->_alloc.construct(_finish, val);
+						this->_finish++;
+                    }
 
-        
+                }
+			
+            }
 
+            void swap (vector& x)
+            {
+				allocator_type	tmp_alloc = x._alloc;
+				pointer			tmp_start = x._start;
+				pointer			tmp_finish = x._finish;
+				size_t			tmp_capacity = x._capacity;
+
+				x._alloc = this->_alloc;
+				x._arr = this->_start;
+				x._end = this->_finish;
+				x._capacity = this->_capacity;
+				this->_alloc = tmp_alloc;
+				this->_start = tmp_start;
+				this->_finisf = tmp_finish;
+				this->_capacity = tmp_capacity;
+			}
     };
-    // /* relational operators */
-    // template <class T, class Alloc>  
-    // bool operator== (const vector<T,Alloc>& lhs, const vector<T,Alloc>& rhs)
-    // {
-    //     if(lhs.size() != rhs.size())
-    //         return (false);
-    //     return();
-    // }
-    // template <class T, class Alloc>  
-    // bool operator!= (const vector<T,Alloc>& lhs, const vector<T,Alloc>& rhs)
-    // {
-        
-    // }
-// (3)	
-// template <class T, class Alloc>  bool operator<  (const vector<T,Alloc>& lhs, const vector<T,Alloc>& rhs);
-// (4)	
-// template <class T, class Alloc>  bool operator<= (const vector<T,Alloc>& lhs, const vector<T,Alloc>& rhs);
-// (5)	
-// template <class T, class Alloc>  bool operator>  (const vector<T,Alloc>& lhs, const vector<T,Alloc>& rhs);
-// (6)	
-// template <class T, class Alloc>  bool operator>= (const vector<T,Alloc>& lhs, const vector<T,Alloc>& rhs);
+    /* relational operators */
+    template <class T, class Alloc>  
+    bool operator== (const vector<T,Alloc>& lhs, const vector<T,Alloc>& rhs)
+    {
+        if(lhs.size() != rhs.size())
+            return (false);
+        return(ft::equal(lhs.begin(), lhs.end(), rhs.begin()));
+    }
+
+    template <class T, class Alloc>  
+    bool operator!= (const vector<T,Alloc>& lhs, const vector<T,Alloc>& rhs)
+    {
+        return !(lhs == rhs);
+    }
+
+    template <class T, class Alloc>  
+    bool operator<  (const vector<T,Alloc>& lhs, const vector<T,Alloc>& rhs)
+    {
+        return (ft::lexicographical_compare(lhs.begin(), lhs.end(), rhs.begin(), rhs.end()));
+    }
+
+    template <class T, class Alloc>  
+    bool operator<= (const vector<T,Alloc>& lhs, const vector<T,Alloc>& rhs)
+    {
+        return !(rhs > lhs);
+    }
+
+    template <class T, class Alloc>  
+    bool operator> (const vector<T,Alloc>& lhs, const vector<T,Alloc>& rhs)
+    {
+        return (rhs > lhs);
+    }
+
+    template <class T, class Alloc>  
+    bool operator>= (const vector<T,Alloc>& lhs, const vector<T,Alloc>& rhs)
+    {
+        return !(lhs < rhs);
+    }
+    
+    template <class T, class Alloc>
+	void swap (vector<T,Alloc>& lhs, vector<T,Alloc>& rhs) {
+		lhs.swap(rhs);
+	}
 }
 
 #endif

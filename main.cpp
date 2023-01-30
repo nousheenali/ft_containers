@@ -51,7 +51,7 @@
 /*vector test*/
 int main(void)
 {
-    //default construvtor
+    // default construvtor
     std::vector<int> vec_s1;
     ft::vector<int> vec_f1;
 
@@ -208,6 +208,40 @@ int main(void)
     for( int j= 0; j < vec_f7.size(); j++ )
         std::cout << vec_f7[j]<< ' ';
     std::cout << std::endl;
+
+    std::cout << "\nCheck erase\n";
+    ft::vector<int>::iterator itf8;
+    itf7 = vec_f7.begin();
+    itf7++;
+    itf7++;
+    itf8 = vec_f7.begin();
+    itf8++;
+    itf8++;
+    itf8++;
+    itf8++;
+    itf8++;
+    vec_f7.erase(itf7, itf8);
+    for( int j= 0; j < vec_f7.size(); j++ )
+        std::cout << vec_f7[j]<< ' ';
+    std::cout << std::endl;
+
+
+    std::cout << "\nCheck relational operators\n";
+    ft::vector<int> alice;
+    alice.push_back(1); alice.push_back(2);alice.push_back(3);
+    ft::vector<int> eve;
+    eve.push_back(1); eve.push_back(2);eve.push_back(3);
+ 
+    std::cout << std::boolalpha;
+ 
+    // Compare non equal containers
+    std::cout << "alice == eve returns " << (alice == eve) << '\n';
+    alice.push_back(4);
+    std::cout << "alice == eve returns " << (alice == eve) << '\n';
+    std::cout << "alice != eve returns " << (alice != eve) << '\n';
+
+
+
 
     return (0);
 }
