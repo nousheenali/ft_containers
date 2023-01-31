@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   vector.hpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: nali <nali@42abudhabi.ae>                  +#+  +:+       +#+        */
+/*   By: nali <nali@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/20 16:44:10 by nali              #+#    #+#             */
-/*   Updated: 2023/01/31 08:46:46 by nali             ###   ########.fr       */
+/*   Updated: 2023/01/31 13:18:51 by nali             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -104,7 +104,7 @@ namespace ft
                 this->_start = this->_alloc.allocate(c);
                 this->_capacity = this->_start + c;
                 this->_finish = this->_start;
-                for (int i = 0; i < s; i++)
+                for (size_type i = 0; i < s; i++)
                 {
                     this->_alloc.construct(this->_finish, *(x._start + i));
                     this->_finish++;
@@ -117,27 +117,18 @@ namespace ft
             void assign (InputIterator first, InputIterator last,
             typename ft::enable_if<!ft::is_integral<InputIterator>::value, InputIterator>::type* = NULL)
             {
+                size_type d = last - first;
+                if (d > capacity())
+                    reserve(d);
                 clear();
                 if (first > last)
                     throw std::length_error("cannot create ft::vector larger than max_size()");
-                difference_type d = last - first;
-                while(d--)
+                while(first != last)
                 {
                     _alloc.construct(_finish, *first);
                     first++;
                     _finish++;
                 }
-                // clear();
-                // if (first > last)
-                //     throw std::length_error("cannot create ft::vector larger than max_size()");
-                // difference_type d = last - first;
-                // if (d > capacity())
-                //     reserve(d);
-                // for (size_type i = 0; first + i != last;i++)
-                // {
-                //     _alloc.construct((_start + i), *(first+ i));
-                //     _finish++;
-                // }
             }
 
             void assign (size_type n, const value_type& val)
