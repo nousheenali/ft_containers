@@ -6,7 +6,7 @@
 /*   By: nali <nali@42abudhabi.ae>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/20 16:44:10 by nali              #+#    #+#             */
-/*   Updated: 2023/01/27 17:06:37 by nali             ###   ########.fr       */
+/*   Updated: 2023/01/31 08:46:46 by nali             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -72,12 +72,12 @@ namespace ft
             vector (InputIterator first, InputIterator last, const allocator_type& alloc = allocator_type(),
             typename ft::enable_if<!ft::is_integral<InputIterator>::value, InputIterator>::type* = NULL)
             {
-                difference_type d = last - first;
+                size_type d = last - first;
                 this->_alloc = alloc;
                 this->_start = this->_alloc.allocate(d);
                 this->_capacity = this->_start + d;
                 this->_finish = this->_start;
-                for (size_t i = 0; i < d; i++)
+                for (size_type i = 0; i < d; i++)
                 {
                     this->_alloc.construct(this->_finish, *(first + i));
                     this->_finish++;
@@ -127,6 +127,17 @@ namespace ft
                     first++;
                     _finish++;
                 }
+                // clear();
+                // if (first > last)
+                //     throw std::length_error("cannot create ft::vector larger than max_size()");
+                // difference_type d = last - first;
+                // if (d > capacity())
+                //     reserve(d);
+                // for (size_type i = 0; first + i != last;i++)
+                // {
+                //     _alloc.construct((_start + i), *(first+ i));
+                //     _finish++;
+                // }
             }
 
             void assign (size_type n, const value_type& val)
@@ -225,7 +236,13 @@ namespace ft
             {   return (this->_finish - this->_start);}
 
             size_type max_size() const //maximum potential size the container can reach
-            {   return _alloc.max_size();}
+            {   
+                // const size_t diffmax = PTRDIFF_MAX/sizeof(T);
+                // const size_t allocmax = _alloc.max_size();
+                 
+                // return (std::min(diffmax, allocmax));
+                return _alloc.max_size();
+            }
 
             void reserve (size_type n)
             {
@@ -234,7 +251,7 @@ namespace ft
                 else if(n > capacity())
                 {
                     pointer tmp_start = _start;
-                    pointer tmp_finish = _finish;
+                    // pointer tmp_finish = _finish;
                     size_t tmp_size = size();
                     size_t tmp_cap = capacity();
                     
@@ -253,11 +270,13 @@ namespace ft
             /* Modifiers */
             
             void clear()
-            {
+            {   
                 size_type n = this->size();
-				for (size_t i = 0; i < n ; i++)
+                if (n == 0)
+                    return;
+				for (size_t i = 0; _start + i != _finish ; i++)
 					_alloc.destroy(_start + i);
-                this->_finish = this->_start;
+                _finish = _start;
             }
 
             iterator insert (iterator position, const value_type& val)
@@ -289,8 +308,8 @@ namespace ft
             iterator insert (iterator position, InputIterator first, InputIterator last, 
             typename ft::enable_if<!ft::is_integral<InputIterator>::value, InputIterator>::type* = NULL)
             {
-                difference_type d = position - this->begin();
-                difference_type n = last - first;
+                size_type d = position - this->begin();
+                size_type n = last - first;
                 if (d >= 0)
                 {
                     if (size() + n > capacity())
@@ -314,7 +333,7 @@ namespace ft
 
             iterator erase (iterator position)
             {
-                difference_type d = position - this->begin();
+                size_type d = position - this->begin();
                 size_type l = size();
                 while(d < l)
                 {
@@ -328,7 +347,7 @@ namespace ft
 
             iterator erase (iterator first, iterator last)
             {
-                difference_type offset, d;
+                size_type offset, d;
                 offset  =  first - begin(); //dist of first from start of the array
                 d = last - first + 1;   // how many elemenst are to be erased
                 size_type l = size();
@@ -390,15 +409,15 @@ namespace ft
 				allocator_type	tmp_alloc = x._alloc;
 				pointer			tmp_start = x._start;
 				pointer			tmp_finish = x._finish;
-				size_t			tmp_capacity = x._capacity;
+				pointer			tmp_capacity = x._capacity;
 
 				x._alloc = this->_alloc;
-				x._arr = this->_start;
-				x._end = this->_finish;
+				x._start = this->_start;
+				x._finish = this->_finish;
 				x._capacity = this->_capacity;
 				this->_alloc = tmp_alloc;
 				this->_start = tmp_start;
-				this->_finisf = tmp_finish;
+				this->_finish = tmp_finish;
 				this->_capacity = tmp_capacity;
 			}
     };
@@ -426,13 +445,13 @@ namespace ft
     template <class T, class Alloc>  
     bool operator<= (const vector<T,Alloc>& lhs, const vector<T,Alloc>& rhs)
     {
-        return !(rhs > lhs);
+        return !(lhs > rhs);
     }
 
     template <class T, class Alloc>  
     bool operator> (const vector<T,Alloc>& lhs, const vector<T,Alloc>& rhs)
     {
-        return (rhs > lhs);
+        return (rhs < lhs);
     }
 
     template <class T, class Alloc>  
