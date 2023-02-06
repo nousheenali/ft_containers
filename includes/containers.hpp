@@ -6,7 +6,7 @@
 /*   By: nali <nali@42abudhabi.ae>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/18 09:02:05 by nali              #+#    #+#             */
-/*   Updated: 2023/02/05 15:38:39 by nali             ###   ########.fr       */
+/*   Updated: 2023/02/06 12:22:02 by nali             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,6 +22,7 @@
 #include "normal_iterator.hpp"
 #include "stack_test.hpp"
 #include "iterators.hpp"
+#include "pair.hpp"
 
 #define GREEN "\033[1;32m"
 #define RED "\031[1;32m"
