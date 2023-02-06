@@ -6,7 +6,7 @@
 /*   By: nali <nali@42abudhabi.ae>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/18 09:02:05 by nali              #+#    #+#             */
-/*   Updated: 2023/01/24 21:21:57 by nali             ###   ########.fr       */
+/*   Updated: 2023/02/05 15:38:39 by nali             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,7 @@
 #include <fstream>
 #include "../container_files/stack.hpp"
 #include "../container_files/vector.hpp"
-#include "random_access_iterator.hpp"
+#include "normal_iterator.hpp"
 #include "stack_test.hpp"
 #include "iterators.hpp"
 

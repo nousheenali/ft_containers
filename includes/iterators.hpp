@@ -6,7 +6,7 @@
 /*   By: nali <nali@42abudhabi.ae>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/24 09:46:03 by nali              #+#    #+#             */
-/*   Updated: 2023/01/24 21:46:13 by nali             ###   ########.fr       */
+/*   Updated: 2023/02/05 15:36:20 by nali             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,7 +33,8 @@ namespace ft
         can inherit from this class to save some work.  The typedefs are then
         used in specializations and overloading.*/
         
-    template<typename _Category, typename _Tp, typename _Distance = ptrdiff_t, typename _Pointer = _Tp*, typename _Reference = _Tp&>
+    template<typename _Category, typename _Tp, typename _Distance = ptrdiff_t, 
+              typename _Pointer = _Tp*, typename _Reference = _Tp&>
     struct iterator
     {
         typedef _Category  iterator_category;

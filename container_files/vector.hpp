@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   vector.hpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: nali <nali@student.42.fr>                  +#+  +:+       +#+        */
+/*   By: nali <nali@42abudhabi.ae>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/20 16:44:10 by nali              #+#    #+#             */
-/*   Updated: 2023/01/31 13:18:51 by nali             ###   ########.fr       */
+/*   Updated: 2023/02/06 10:13:16 by nali             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 #define VECTOR_HPP
 
 #include "../includes/containers.hpp"
-#include "../includes/random_access_iterator.hpp"
+#include "../includes/normal_iterator.hpp"
 #include "../includes/reverse_iterator.hpp"
 #include "../includes/type_traits.hpp"
 #include "../includes/compare_utils.hpp"
@@ -34,8 +34,8 @@ namespace ft
             typedef typename allocator_type::const_pointer	    const_pointer;
             typedef typename allocator_type::reference	        reference;
             typedef typename allocator_type::const_reference	const_reference;
-            typedef ft::random_access_iterator <T>              iterator;
-            typedef ft::random_access_iterator <const T>        const_iterator;
+            typedef ft::normal_iterator <T>              iterator;
+            typedef ft::normal_iterator <const T>       const_iterator;
             typedef ft::reverse_iterator<const_iterator>	    const_reverse_iterator;
             typedef ft::reverse_iterator<iterator>		        reverse_iterator;
         
@@ -72,14 +72,21 @@ namespace ft
             vector (InputIterator first, InputIterator last, const allocator_type& alloc = allocator_type(),
             typename ft::enable_if<!ft::is_integral<InputIterator>::value, InputIterator>::type* = NULL)
             {
-                size_type d = last - first;
+                size_type d = 0;
+                InputIterator tmp = first;
+                while ( tmp != last)
+                {
+                    tmp++;
+                    d++;
+                }
                 this->_alloc = alloc;
                 this->_start = this->_alloc.allocate(d);
                 this->_capacity = this->_start + d;
                 this->_finish = this->_start;
                 for (size_type i = 0; i < d; i++)
                 {
-                    this->_alloc.construct(this->_finish, *(first + i));
+                    this->_alloc.construct(this->_finish, *first);
+                    first++;
                     this->_finish++;
                 }  
             } 
@@ -117,12 +124,18 @@ namespace ft
             void assign (InputIterator first, InputIterator last,
             typename ft::enable_if<!ft::is_integral<InputIterator>::value, InputIterator>::type* = NULL)
             {
-                size_type d = last - first;
+                size_type d = 0;
+                InputIterator tmp = first;
+                while ( tmp != last)
+                {
+                    tmp++;
+                    d++;
+                }
                 if (d > capacity())
                     reserve(d);
                 clear();
-                if (first > last)
-                    throw std::length_error("cannot create ft::vector larger than max_size()");
+                // if (first > last)
+                //     throw std::length_error("cannot create ft::vector larger than max_size()");
                 while(first != last)
                 {
                     _alloc.construct(_finish, *first);
@@ -196,7 +209,7 @@ namespace ft
             
             /*Iterators*/
             iterator begin()
-            {   return (this->_start);}
+            {   return iterator(this->_start);}
             
             const_iterator begin() const
             {   return const_iterator(this->_start);}
@@ -227,11 +240,7 @@ namespace ft
             {   return (this->_finish - this->_start);}
 
             size_type max_size() const //maximum potential size the container can reach
-            {   
-                // const size_t diffmax = PTRDIFF_MAX/sizeof(T);
-                // const size_t allocmax = _alloc.max_size();
-                 
-                // return (std::min(diffmax, allocmax));
+            { 
                 return _alloc.max_size();
             }
 
@@ -272,20 +281,23 @@ namespace ft
 
             iterator insert (iterator position, const value_type& val)
             {
+   
                 return(this->insert(position, 1, val));
             }
 
             iterator insert (iterator position, size_type n, const value_type& val)
-            {
-                difference_type d = position - this->begin();
+            {   
+                size_type d = position - this->begin();
                 if (d >= 0)
                 {
-                    if (size() + n > capacity())
+                    if(!_capacity)
+                        reserve(1);
+                    else if (size() + n > capacity())
                         reserve(std::max(capacity() * 2, size() + n));
                     size_type l = size();
-                    while(l >= d)
+                    while(l - d) //shift values only if insert is not at the end
                     {
-                        _alloc.construct(_start + l + n, *(_start + l));
+                        _alloc.construct(_start + l + n - 1 , *(_start + l - 1));
                         l--;
                     }
                     for(size_t i = 0; i < n; i++)
@@ -300,15 +312,23 @@ namespace ft
             typename ft::enable_if<!ft::is_integral<InputIterator>::value, InputIterator>::type* = NULL)
             {
                 size_type d = position - this->begin();
-                size_type n = last - first;
+                size_type n = 0;
+                InputIterator tmp = first;
+                while ( tmp != last)
+                {
+                    tmp++;
+                    n++;
+                }
                 if (d >= 0)
                 {
-                    if (size() + n > capacity())
+                    if(!_capacity)
+                        reserve(n);
+                    else if (size() + n > capacity())
                         reserve(std::max(capacity() * 2, size() + n));
                     size_type l = size();
-                    while(l >= d)
+                    while(l - d)
                     {
-                        _alloc.construct(_start + l + n, *(_start + l));
+                        _alloc.construct(_start + l + n - 1 , *(_start + l - 1));
                         l--;
                     }
                     for(size_t i = 0; i < n; i++)
@@ -336,11 +356,12 @@ namespace ft
                 return (position);
             }
 
+        
             iterator erase (iterator first, iterator last)
             {
                 size_type offset, d;
                 offset  =  first - begin(); //dist of first from start of the array
-                d = last - first + 1;   // how many elemenst are to be erased
+                d = last - first;   // how many elemenst are to be erased
                 size_type l = size();
                 for(size_t i = 0; i < l - d - offset; i++)
                     _alloc.construct(_start + offset + i , *(_start + offset + d + i));

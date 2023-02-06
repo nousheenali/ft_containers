@@ -6,17 +6,17 @@
 /*   By: nali <nali@42abudhabi.ae>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/05 13:31:54 by nali              #+#    #+#             */
-/*   Updated: 2023/01/24 12:35:47 by nali             ###   ########.fr       */
+/*   Updated: 2023/02/06 10:12:06 by nali             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef STACK_HPP
 #define STACK_HPP
 
-#include <vector>
+#include "vector.hpp"
 namespace ft
 {
-    template<typename T, typename Container = std::vector<T> >
+    template<typename T, typename Container = ft::vector<T> >
     class stack
     {
         public:
@@ -81,22 +81,22 @@ namespace ft
     }; 
     /*non member functions*/
     template <class T, class Container>  
-    bool operator!= (const stack<T,Container>& lhs, const stack<T,Container>& rhs)
+    bool operator!= (const ft::stack<T,Container>& lhs, const ft::stack<T,Container>& rhs)
     {
         return!(lhs == rhs);
     }
     template <class T, class Container>  
-    bool operator<= (const stack<T,Container>& lhs, const stack<T,Container>& rhs)
+    bool operator<= (const ft::stack<T,Container>& lhs, const ft::stack<T,Container>& rhs)
     {
         return!(rhs < lhs);
     }
     template <class T, class Container>  
-    bool operator>  (const stack<T,Container>& lhs, const stack<T,Container>& rhs)
+    bool operator>  (const ft::stack<T,Container>& lhs, const ft::stack<T,Container>& rhs)
     {
         return(rhs < lhs);
     }
     template <class T, class Container>  
-    bool operator>= (const stack<T,Container>& lhs, const stack<T,Container>& rhs)
+    bool operator>= (const ft::stack<T,Container>& lhs, const ft::stack<T,Container>& rhs)
     {
         return!(lhs < rhs);
     } 

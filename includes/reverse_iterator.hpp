@@ -6,7 +6,7 @@
 /*   By: nali <nali@42abudhabi.ae>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/24 22:16:41 by nali              #+#    #+#             */
-/*   Updated: 2023/01/26 14:27:29 by nali             ###   ########.fr       */
+/*   Updated: 2023/02/05 18:07:41 by nali             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,6 +44,9 @@ namespace ft
                 this->current = rev_it.current;
                 return (*this);
             }
+
+            template<typename It>
+            reverse_iterator(const reverse_iterator<It> & x): current(x.base()) { }
 
             /*destructor*/
             ~reverse_iterator() {}
@@ -101,7 +104,7 @@ namespace ft
             reverse_iterator operator-(difference_type n) const
             { return reverse_iterator(current + n); }
       
-            reverse_iterator&operator-=(difference_type n)
+            reverse_iterator& operator-=(difference_type n)
             {
 	            current += n;
 	            return *this;
@@ -118,7 +121,7 @@ namespace ft
 
     template<typename _It>
     bool operator<(const reverse_iterator<_It>& x, const reverse_iterator<_It>& y)
-    { return x.base() < y.base(); }
+    { return y.base() < x.base(); }
     
     template<typename _It>
     bool operator!=(const reverse_iterator<_It>& x, const reverse_iterator<_It>& y)
