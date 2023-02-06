@@ -6,7 +6,7 @@
 /*   By: nali <nali@42abudhabi.ae>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/06 10:21:29 by nali              #+#    #+#             */
-/*   Updated: 2023/02/06 13:16:41 by nali             ###   ########.fr       */
+/*   Updated: 2023/02/06 21:56:18 by nali             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,12 @@ namespace ft
               class Allocator = std::allocator<ft::pair<const Key, T>>> 
             class map
             {
-                
+                public:
+                    typedef Key					        key_type;
+                    typedef T					        mapped_type;
+                    typedef ft::pair<const Key, T>		value_type;
+                    typedef Compare					    key_compare;
+                    typedef Alloc					    allocator_type;
             };   
 }
 #endif

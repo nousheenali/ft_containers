@@ -6,49 +6,60 @@
 /*   By: nali <nali@42abudhabi.ae>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/06 17:59:19 by nali              #+#    #+#             */
-/*   Updated: 2023/02/06 13:20:52 by nali             ###   ########.fr       */
+/*   Updated: 2023/02/06 21:20:41 by nali             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "./includes/containers.hpp"
 #include <vector>
+#include <map>
+#include <stack>
 
-/*pair test*/
+
+/*map test*/
 
 int main(void)
 {
-    ft::pair <std::string,double> product1;                     // default constructor
-    ft::pair <std::string,double> product2 ("tomatoes",2.30);   // value init
-    ft::pair <std::string,double> product3 (product2);         //copy constructor
-
-    ft::pair <std::string,double> product4;
-    product4 = product2; 
-
-    std::cout << "The price of " << product1.first << " is $" << product1.second << '\n';
-    std::cout << "The price of " << product2.first << " is $" << product2.second << '\n';
-    std::cout << "The price of " << product3.first << " is $" << product3.second << '\n'; 
-    std::cout << "The price of " << product4.first << " is $" << product4.second << '\n'; 
-    
-    // ft::pair<int,char> foo (10,'z');
-    // ft::pair<int,char> bar (90,'a');
-
-    ft::pair <int,int> foo;
-    ft::pair <int,int> bar;
-
-    foo = ft::make_pair (10,20);
-    bar = ft::make_pair (10.5,'A'); // ok: implicit conversion from pair<double,char>
-
-    std::cout << "foo: " << foo.first << ", " << foo.second << '\n';
-    std::cout << "bar: " << bar.first << ", " << bar.second << '\n';
-    if (foo==bar) std::cout << "foo and bar are equal\n";
-    if (foo!=bar) std::cout << "foo and bar are not equal\n";
-    if (foo< bar) std::cout << "foo is less than bar\n";
-    if (foo> bar) std::cout << "foo is greater than bar\n";
-    if (foo<=bar) std::cout << "foo is less than or equal to bar\n";
-    if (foo>=bar) std::cout << "foo is greater than or equal to bar\n";
-    
+    std::map<char, int> mp;
     return (0);
 }
+
+// /*pair test*/
+
+// int main(void)
+// {
+//     ft::pair <std::string,double> product1;                     // default constructor
+//     ft::pair <std::string,double> product2 ("tomatoes",2.30);   // value init
+//     ft::pair <std::string,double> product3 (product2);         //copy constructor
+
+//     ft::pair <std::string,double> product4;
+//     product4 = product2; 
+
+//     std::cout << "The price of " << product1.first << " is $" << product1.second << '\n';
+//     std::cout << "The price of " << product2.first << " is $" << product2.second << '\n';
+//     std::cout << "The price of " << product3.first << " is $" << product3.second << '\n'; 
+//     std::cout << "The price of " << product4.first << " is $" << product4.second << '\n'; 
+    
+//     // ft::pair<int,char> foo (10,'z');
+//     // ft::pair<int,char> bar (90,'a');
+
+//     ft::pair <int,int> foo;
+//     ft::pair <int,int> bar;
+
+//     foo = ft::make_pair (10,20);
+//     bar = ft::make_pair (10.5,'A'); // ok: implicit conversion from pair<double,char>
+
+//     std::cout << "foo: " << foo.first << ", " << foo.second << '\n';
+//     std::cout << "bar: " << bar.first << ", " << bar.second << '\n';
+//     if (foo==bar) std::cout << "foo and bar are equal\n";
+//     if (foo!=bar) std::cout << "foo and bar are not equal\n";
+//     if (foo< bar) std::cout << "foo is less than bar\n";
+//     if (foo> bar) std::cout << "foo is greater than bar\n";
+//     if (foo<=bar) std::cout << "foo is less than or equal to bar\n";
+//     if (foo>=bar) std::cout << "foo is greater than or equal to bar\n";
+    
+//     return (0);
+// }
 // #define T_SIZE_TYPE typename TESTED_NAMESPACE::vector<T>::size_type
 
 // template <typename T>
