@@ -6,7 +6,7 @@
 /*   By: nali <nali@42abudhabi.ae>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/06 10:53:53 by nali              #+#    #+#             */
-/*   Updated: 2023/02/06 13:02:04 by nali             ###   ########.fr       */
+/*   Updated: 2023/02/20 09:23:34 by nali             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +14,8 @@
 #ifndef PAIR_HPP
 #define PAIR_HPP
 
+/*  Pair is used to combine together two values that may be of different data types. 
+    Pair provides a way to store two heterogeneous objects as a single unit. */
 namespace ft
 {
     template<class T1, class T2> 
