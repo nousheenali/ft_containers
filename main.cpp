@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.cpp                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: nali <nali@42abudhabi.ae>                  +#+  +:+       +#+        */
+/*   By: nali <nali@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/06 17:59:19 by nali              #+#    #+#             */
-/*   Updated: 2023/02/06 21:20:41 by nali             ###   ########.fr       */
+/*   Updated: 2023/02/21 13:39:12 by nali             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,15 +14,17 @@
 #include <vector>
 #include <map>
 #include <stack>
+#include <__tree>
+
 
 
 /*map test*/
 
-int main(void)
-{
-    std::map<char, int> mp;
-    return (0);
-}
+// int main(void)
+// {
+//     std::map<char, int> mp;
+//     return (0);
+// }
 
 // /*pair test*/
 
