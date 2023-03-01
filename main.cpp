@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.cpp                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: nali <nali@student.42.fr>                  +#+  +:+       +#+        */
+/*   By: nali <nali@42abudhabi.ae>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/06 17:59:19 by nali              #+#    #+#             */
-/*   Updated: 2023/02/21 13:39:12 by nali             ###   ########.fr       */
+/*   Updated: 2023/03/01 10:54:21 by nali             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,30 @@
 #include <stack>
 #include <__tree>
 
-
+/*br tree test*/
+int main() 
+{
+    // ft::map<int, int> m1;
+	// std::map<int, int>m2;
+	// ft::pair<int, int> p;
+	// p.first = 1;
+	// p.second = 11;
+	
+    ft::Rb_tree<int> rbt;
+    
+	
+	// bst.insert(8);
+	// bst.insert(18);
+	// bst.insert(5);
+	// bst.insert(15);
+	// bst.insert(17);
+	// bst.insert(25);
+	// bst.insert(40);
+	// bst.insert(80);
+	// bst.deleteNode(25);
+	// bst.prettyPrint();
+	// return 0;
+}
 
 /*map test*/
 

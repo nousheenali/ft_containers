@@ -6,7 +6,7 @@
 /*   By: nali <nali@42abudhabi.ae>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/20 10:35:00 by nali              #+#    #+#             */
-/*   Updated: 2023/03/01 10:55:19 by nali             ###   ########.fr       */
+/*   Updated: 2023/03/01 10:30:08 by nali             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,13 +20,12 @@
 
 namespace ft
 {
-    
     // T here is a pair<const key_type, mapped_type> from map
-    // template<typename T, typename Compare, typename Alloc>
-    template <typename T, class Compare = std::less<T>, class Alloc = std::allocator<T> >
+    template<typename T, typename Compare, typename Alloc>
+    /* template <typename T, class Compare = std::less<T>, class Allocator = std::allocator<T> >*/
     class Rb_tree
     {       
-        // typedef typename Alloc::template rebind<Rb_tree_node<T> >::other Node_allocator; // refer comment #1
+        typedef typename Alloc::template rebind<Rb_tree_node<T> >::other Node_allocator; // refer comment #1
         
         public:
             typedef T                       value_type;
@@ -44,8 +43,8 @@ namespace ft
             typedef Rb_tree_iterator<value_type>       iterator;
             typedef Rb_tree_const_iterator<value_type> const_iterator;
 
-            typedef ft::reverse_iterator<iterator>       reverse_iterator;
-            typedef ft::reverse_iterator<const_iterator> const_reverse_iterator;
+            // typedef ft::reverse_iterator<iterator>       reverse_iterator;
+            // typedef ft::reverse_iterator<const_iterator> const_reverse_iterator;
         
 
          private:
@@ -54,7 +53,7 @@ namespace ft
             Node_ptr                        _node;
             size_type                       _node_count; //node count of the tree
             Compare                         _comp;
-            // Node_allocator                  _node_alloc;
+            Node_allocator                  _node_alloc;
             allocator_type                  _alloc;
             
         private:
@@ -67,10 +66,10 @@ namespace ft
             }
         protected:
             Node_ptr get_node()
-            {   return _alloc.allocate(1); }
+            {   return Node_allocator::allocate(1); }
         
             void put_node(Node_ptr p)
-            {   _alloc.deallocate(p, 1); }
+            {   Node_allocator::deallocate(p, 1); }
 
             Node_ptr create_node(const value_type& x)
             {
@@ -184,12 +183,7 @@ namespace ft
             explicit Rb_tree(const value_compare& comp, const allocator_type& a)
             : _node_count(0), _comp(comp), _alloc(a),_root()
             {
-                _TNULL = get_node();
-                _TNULL->color = black;
-                _TNULL->parent = nullptr;
-                _TNULL->left = nullptr;
-                _TNULL->right = nullptr;
-                _root = _TNULL;
+                initialize(); //
             }
             
             Rb_tree( Rb_tree const &x ) :_comp(x._comp), _alloc(x._alloc)                                
@@ -218,35 +212,35 @@ namespace ft
             // ~Rb_tree( void )                                                             
             // {       this->erase(this->begin()); };
 
-            // pair<iterator,bool> insert_unique(const value_type& v)
-            // {
-            //     Node_ptr n = create_node(v);
-            //     Node_ptr y = nullptr;
-            //     Node_ptr x = root();
-            //     bool comp = true;
-            //     while (x != 0) 
-            //     {
-            //         y = x;
-            //         if (n->value < x->value)
-            //             x = x->left;
-            //         else
-            //             x = x->right;
-            //     }
-            //     n->parent == y;
-            //     if y == nullptr
-            //         root = n;
+            pair<iterator,bool> insert_unique(const value_type& v)
+            {
+                Node_ptr n = create_node(v);
+                Node_ptr y = nullptr;
+                Node_ptr x = root();
+                bool comp = true;
+                while (x != 0) 
+                {
+                    y = x;
+                    if (n->value < x->value)
+                        x = x->left;
+                    else
+                        x = x->right;
+                }
+                n->parent == y;
+                if y == nullptr
+                    root = n;
                 
                 
-            //     iterator __j = iterator(__y);   
-            //     if (__comp)
-            //         if (__j == begin())     
-            //         return pair<iterator,bool>(_M_insert(__x, __y, __v), true);
-            //         else
-            //         --__j;
-            //     if (_M_key_compare(_S_key(__j._M_node), _KeyOfValue()(__v)))
-            //         return pair<iterator,bool>(_M_insert(__x, __y, __v), true);
-            //     return pair<iterator,bool>(__j, false);
-            // }
+                iterator __j = iterator(__y);   
+                if (__comp)
+                    if (__j == begin())     
+                    return pair<iterator,bool>(_M_insert(__x, __y, __v), true);
+                    else
+                    --__j;
+                if (_M_key_compare(_S_key(__j._M_node), _KeyOfValue()(__v)))
+                    return pair<iterator,bool>(_M_insert(__x, __y, __v), true);
+                return pair<iterator,bool>(__j, false);
+            }
 
             // iterator insert(const value_type& v)
             // {

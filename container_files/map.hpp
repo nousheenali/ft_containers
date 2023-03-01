@@ -6,7 +6,7 @@
 /*   By: nali <nali@42abudhabi.ae>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/06 10:21:29 by nali              #+#    #+#             */
-/*   Updated: 2023/02/20 11:15:11 by nali             ###   ########.fr       */
+/*   Updated: 2023/03/01 09:57:31 by nali             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,19 +14,20 @@
 #define MAP_HPP
 
 #include "../includes/pair.hpp"
-#include <functional> //to access std::less
+#include "../includes/rb_tree.hpp"
+// #include <functional> //to access std::less
 
 namespace ft
 {
-    template <class Key, class T, class Compare = std::less<Key>,
-          class Allocator = std::allocator<pair<const Key, T>>>
+    template <class Key, class T, class Compare = ft::less<Key>,
+          class Allocator = std::allocator<ft::pair<const Key, T> > >
     class map
     {
         public:
             // types:
             typedef Key                                      key_type;
             typedef T                                        mapped_type;
-            typedef pair<const key_type, mapped_type>        value_type;
+            typedef ft::pair<const key_type, mapped_type>    value_type;
             typedef Compare                                  key_compare;
             typedef Allocator                                allocator_type;
 
@@ -34,7 +35,7 @@ namespace ft
             /*  value_comapre reference https://cplusplus.com/reference/map/map/value_comp/*/
             /*  compares objects of type std::map::value_type (key-value pairs) 
                 by comparing of the first components of the pairs.*/
-            class value_compare: public std::binary_function<value_type, value_type, bool>
+            class value_compare: public ft::binary_function<value_type, value_type, bool>
             {
                 friend class map;
                 protected:
@@ -47,11 +48,10 @@ namespace ft
                         return comp(x.first, y.first);
                     }
             };
-
+        
             private:
-                typedef ft::rb_tree<key_type, value_type, key_compare, allocator_type> rep_type;
-
-                Rep_type tree;
+                typedef ft::Rb_tree<value_type, key_compare, allocator_type> rep_type;
+                rep_type tree;
 
             public:
                 typedef typename allocator_type::reference          reference;
@@ -61,10 +61,10 @@ namespace ft
                 typedef typename allocator_type::size_type          size_type;
                 typedef typename allocator_type::difference_type    difference_type;
 
-                typedef Rep_type::iterator                          iterator;
-                typedef Rep_type::const_iterator                    const_iterator;
-                typedef Rep_type::reverse_iterator                  reverse_iterator;
-                typedef Rep_type::const_reverse_iterator            const_reverse_iterator;
+                typedef typename rep_type::iterator                          iterator;
+                typedef typename rep_type::const_iterator                    const_iterator;
+                typedef typename rep_type::reverse_iterator                  reverse_iterator;
+                typedef typename rep_type::const_reverse_iterator            const_reverse_iterator;
 
             // construct/copy/destroy:
             // map()
@@ -75,22 +75,23 @@ namespace ft
             // explicit map(const key_compare& comp);
             
             //default constructors
-            map();
-            map(const key_compare& comp = key_compare(), const allocator_type& a = allocator_type()){}
+            // map();
+            explicit map(const key_compare& comp = key_compare(), const allocator_type& alloc = allocator_type())
+            :tree(comp,alloc){}
             
-            template <class InputIterator>
-            map(InputIterator first, InputIterator last, const key_compare& comp = key_compare())
-            {
+            // template <class InputIterator>
+            // map(InputIterator first, InputIterator last, const key_compare& comp = key_compare())
+            // {
                 
-            }
+            // }
             
-            map(const map& m)
-            {
+            // map(const map& m)
+            // {
                 
-            }
+            // }
 
          
-            ~map();
+            ~map(){}
 
         //     map& operator=(const map& m);
         //     map& operator=(map&& m)

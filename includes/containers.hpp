@@ -6,7 +6,7 @@
 /*   By: nali <nali@42abudhabi.ae>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/18 09:02:05 by nali              #+#    #+#             */
-/*   Updated: 2023/02/06 12:22:02 by nali             ###   ########.fr       */
+/*   Updated: 2023/02/28 13:18:09 by nali             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,6 +19,8 @@
 #include <fstream>
 #include "../container_files/stack.hpp"
 #include "../container_files/vector.hpp"
+#include "../container_files/map.hpp"
+#include "rb_tree.hpp"
 #include "normal_iterator.hpp"
 #include "stack_test.hpp"
 #include "iterators.hpp"

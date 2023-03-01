@@ -75,6 +75,8 @@
         "ratio": "cpp",
         "sstream": "cpp",
         "__cxx_version": "cpp",
-        "filesystem": "cpp"
+        "filesystem": "cpp",
+        "__bits": "cpp",
+        "variant": "cpp"
     }
 }

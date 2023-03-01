@@ -1,0 +1,83 @@
+
+  484       _Base_ptr&
+  485       _M_leftmost()
+  486       { return this->_M_impl._M_header._M_left; }
+  487 
+  488       _Const_Base_ptr
+  489       _M_leftmost() const
+  490       { return this->_M_impl._M_header._M_left; }
+  491 
+  492       _Base_ptr&
+  493       _M_rightmost()
+  494       { return this->_M_impl._M_header._M_right; }
+  495 
+  496       _Const_Base_ptr
+  497       _M_rightmost() const
+  498       { return this->_M_impl._M_header._M_right; }
+  499 
+  500       _Link_type
+  501       _M_begin()
+  502       { return static_cast<_Link_type>(this->_M_impl._M_header._M_parent); }
+  503 
+  504       _Const_Link_type
+  505       _M_begin() const
+  506       {
+  507     return static_cast<_Const_Link_type>
+  508       (this->_M_impl._M_header._M_parent);
+  509       }
+  510 
+  511       _Link_type
+  512       _M_end()
+  513       { return static_cast<_Link_type>(&this->_M_impl._M_header); }
+  514 
+  515       _Const_Link_type
+  516       _M_end() const
+  517       { return static_cast<_Const_Link_type>(&this->_M_impl._M_header); }
+  518 
+  519       static const_reference
+  520       _S_value(_Const_Link_type __x)
+  521       { return __x->_M_value_field; }
+  522 
+  523       static const _Key&
+  524       _S_key(_Const_Link_type __x)
+  525       { return _KeyOfValue()(_S_value(__x)); }
+  526 
+  527       static _Link_type
+  528       _S_left(_Base_ptr __x)
+  529       { return static_cast<_Link_type>(__x->_M_left); }
+  530 
+  531       static _Const_Link_type
+  532       _S_left(_Const_Base_ptr __x)
+  533       { return static_cast<_Const_Link_type>(__x->_M_left); }
+  534 
+  535       static _Link_type
+  536       _S_right(_Base_ptr __x)
+  537       { return static_cast<_Link_type>(__x->_M_right); }
+  538 
+  539       static _Const_Link_type
+  540       _S_right(_Const_Base_ptr __x)
+  541       { return static_cast<_Const_Link_type>(__x->_M_right); }
+  542 
+  543       static const_reference
+  544       _S_value(_Const_Base_ptr __x)
+  545       { return static_cast<_Const_Link_type>(__x)->_M_value_field; }
+  546 
+  547       static const _Key&
+  548       _S_key(_Const_Base_ptr __x)
+  549       { return _KeyOfValue()(_S_value(__x)); }
+  550 
+  551       static _Base_ptr
+  552       _S_minimum(_Base_ptr __x)
+  553       { return _Rb_tree_node_base::_S_minimum(__x); }
+  554 
+  555       static _Const_Base_ptr
+  556       _S_minimum(_Const_Base_ptr __x)
+  557       { return _Rb_tree_node_base::_S_minimum(__x); }
+  558 
+  559       static _Base_ptr
+  560       _S_maximum(_Base_ptr __x)
+  561       { return _Rb_tree_node_base::_S_maximum(__x); }
+  562 
+  563       static _Const_Base_ptr
+  564       _S_maximum(_Const_Base_ptr __x)
+  565       { return _Rb_tree_node_base::_S_maximum(__x); }
