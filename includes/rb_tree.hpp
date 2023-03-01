@@ -20,13 +20,13 @@
 
 namespace ft
 {
+    // template <typename T, class Compare = std::less<T>, class Alloc = std::allocator<T> >
     
     // T here is a pair<const key_type, mapped_type> from map
-    // template<typename T, typename Compare, typename Alloc>
-    template <typename T, class Compare = std::less<T>, class Alloc = std::allocator<T> >
+    template<typename T, typename Compare, typename Alloc>
     class Rb_tree
     {       
-        // typedef typename Alloc::template rebind<Rb_tree_node<T> >::other Node_allocator; // refer comment #1
+        typedef typename Alloc::template rebind<Rb_tree_node<T> >::other Node_allocator; // refer comment #1
         
         public:
             typedef T                       value_type;
@@ -54,29 +54,135 @@ namespace ft
             Node_ptr                        _node;
             size_type                       _node_count; //node count of the tree
             Compare                         _comp;
-            // Node_allocator                  _node_alloc;
+            Node_allocator                  _node_alloc;
             allocator_type                  _alloc;
             
         private:
-            void initialize()
+            void initialize(Node_ptr n)
             {
-                this->_node->color= red;
-                this->_node->parent = 0;
-                this->_node->left = nullptr;
-                this->_node->right = nullptr;
+                n->color= red;
+                n->parent = 0;
+                n->left = nullptr;
+                n->right = nullptr;
             }
+
+
+            void rebalance_Insert(Node_ptr k)
+            {
+		        Node_ptr uncle;
+
+		        while (k->parent->color == red) 
+                {
+                    if (k->parent == k->parent->parent->right) 
+                    {
+                        uncle  = k->parent->parent->left;
+                        if (uncle->color == red) 
+                        {
+					        // case 3.1
+					        uncle->color = black;
+                            k->parent->color = black;
+					        k->parent->parent->color = red;
+					        k = k->parent->parent;
+				        } 
+                        else 
+                        {
+                            if (k == k->parent->left) 
+                            {
+                                // case 3.2.2
+                                k = k->parent;
+                                rightRotate(k); //rotate at the parent
+					        }
+                            // case 3.2.1
+                            k->parent->color = black;
+                            k->parent->parent->color = red;
+                            leftRotate(k->parent->parent);
+				        }
+			        } 
+                    else 
+                    {
+                        uncle = k->parent->parent->right; 
+
+                        if (uncle->color == red) 
+                        {
+                            // mirror case 3.1
+                            uncle->color = black;
+                            k->parent->color = black;
+                            k->parent->parent->color = red;
+                            k = k->parent->parent;	
+                        } 
+                        else 
+                        {
+                            if (k == k->parent->right) 
+                            {
+                                // mirror case 3.2.2
+                                k = k->parent;
+                                leftRotate(k);
+                            }
+                            // mirror case 3.2.1
+                            k->parent->color = black;
+                            k->parent->parent->color = red;
+                            rightRotate(k->parent->parent);
+                        }
+			        }
+                    if (k == root) 
+                        break;
+		        }
+		        root->color = black;
+	        }
+            // https://algorithmtutor.com/Data-Structures/Tree/Red-Black-Trees/
+            // refer fig 3
+            void leftRotate(Node_ptr x) 
+            {
+                Node_ptr y = x->right;
+                x->right = y->left;
+                if (y->left != _TNULL) 
+                    y->left->parent = x;
+
+                y->parent = x->parent;
+                if (x->parent == nullptr) 
+                    this->root = y;
+                else if (x == x->parent->left) 
+                    x->parent->left = y;
+                else
+                    x->parent->right = y;
+
+                y->left = x;
+                x->parent = y;
+            }
+
+            // refer fig 4
+            void rightRotate(Node_ptr x) 
+            {
+                Node_ptr y = x->left;
+                x->left = y->right;
+                if (y->right != _TNULL)
+                    y->right->parent = x;
+
+                y->parent = x->parent;
+                if (x->parent == nullptr) 
+                    this->root = y;
+                else if (x == x->parent->right) 
+                    x->parent->right = y;
+                else
+                    x->parent->left = y;
+
+                y->right = x;
+                x->parent = y;
+            }
+
+
         protected:
             Node_ptr get_node()
-            {   return _alloc.allocate(1); }
+            {   return _node_alloc.allocate(1); }
         
             void put_node(Node_ptr p)
-            {   _alloc.deallocate(p, 1); }
+            {   _node_alloc.deallocate(p, 1); }
 
             Node_ptr create_node(const value_type& x)
             {
                 Node_ptr tmp = get_node();
-                _alloc.construct(tmp->value, x);
-                initialize();
+                _alloc.construct(tmp, x);
+                initialize(tmp);
                 return tmp;
             }
             
@@ -138,35 +244,35 @@ namespace ft
             { return this->root; }
 
 
-            static const_reference S_value(Const_Node_ptr x)
-            { return x->value; }
-
-            static Node_ptr& S_left(Node_ptr x)
-            { return (Node_ptr&)(x->left); }
-
-            static Const_Node_ptr S_left(Const_Node_ptr x)
-            { return (Const_Node_ptr&)(x->left); }
-
-            static Node_ptr& S_right(Node_ptr x)
-            { return (Node_ptr&)(x->right); }
-
-            static Const_Node_ptr S_right(Const_Node_ptr x)
-            { return (Const_Node_ptr&)(x->right); }
-
             // static const_reference S_value(Const_Node_ptr x)
-            // { return static_cast<Const_Node_ptr>(x)->value; }
+            // { return x->value; }
 
-            static Node_ptr minimum(Node_ptr x)
-            { return minimum(x); }
+            // static Node_ptr& S_left(Node_ptr x)
+            // { return (Node_ptr&)(x->left); }
 
-            static Const_Node_ptr minimum(Const_Node_ptr x)
-            { return minimum(x); }
+            // static Const_Node_ptr S_left(Const_Node_ptr x)
+            // { return (Const_Node_ptr&)(x->left); }
 
-            static Node_ptr maximum(Node_ptr x)
-            { return maximum(x); }
+            // static Node_ptr& S_right(Node_ptr x)
+            // { return (Node_ptr&)(x->right); }
 
-            static Const_Node_ptr maximum(Const_Node_ptr x)
-            { return maximum(x); }
+            // static Const_Node_ptr S_right(Const_Node_ptr x)
+            // { return (Const_Node_ptr&)(x->right); }
+
+            // // static const_reference S_value(Const_Node_ptr x)
+            // // { return static_cast<Const_Node_ptr>(x)->value; }
+
+            // static Node_ptr minimum(Node_ptr x)
+            // { return minimum(x); }
+
+            // static Const_Node_ptr minimum(Const_Node_ptr x)
+            // { return minimum(x); }
+
+            // static Node_ptr maximum(Node_ptr x)
+            // { return maximum(x); }
+
+            // static Const_Node_ptr maximum(Const_Node_ptr x)
+            // { return maximum(x); }
             
 
             // Node_ptr sibling()
@@ -185,10 +291,8 @@ namespace ft
             : _node_count(0), _comp(comp), _alloc(a),_root()
             {
                 _TNULL = get_node();
+                initialize(_TNULL);
                 _TNULL->color = black;
-                _TNULL->parent = nullptr;
-                _TNULL->left = nullptr;
-                _TNULL->right = nullptr;
                 _root = _TNULL;
             }
             
@@ -201,52 +305,78 @@ namespace ft
                 }
             }
 
-            Rb_tree& operator = ( const Rb_tree &x )
-            {
-                if ( this != &x )
-                {
-                    this->erase(this->begin());
-                    if (x.root() != 0)
-                    {
-                        this->root() = this->copy(x.begin(), x.end());
-                        this->node_count = x.node_count;
-                    }
-                }
-                return *this;
-            };
+            // Rb_tree& operator = ( const Rb_tree &x )
+            // {
+            //     if ( this != &x )
+            //     {
+            //         this->erase(this->begin());
+            //         if (x.root() != 0)
+            //         {
+            //             this->root() = this->copy(x.begin(), x.end());
+            //             this->node_count = x.node_count;
+            //         }
+            //     }
+            //     return *this;
+            // };
 
             // ~Rb_tree( void )                                                             
             // {       this->erase(this->begin()); };
+            Node_allocator& get_Node_allocator()
+            { return this->_node_alloc; }
 
-            // pair<iterator,bool> insert_unique(const value_type& v)
-            // {
-            //     Node_ptr n = create_node(v);
-            //     Node_ptr y = nullptr;
-            //     Node_ptr x = root();
-            //     bool comp = true;
-            //     while (x != 0) 
-            //     {
-            //         y = x;
-            //         if (n->value < x->value)
-            //             x = x->left;
-            //         else
-            //             x = x->right;
-            //     }
-            //     n->parent == y;
-            //     if y == nullptr
-            //         root = n;
-                
-                
-            //     iterator __j = iterator(__y);   
-            //     if (__comp)
-            //         if (__j == begin())     
-            //         return pair<iterator,bool>(_M_insert(__x, __y, __v), true);
-            //         else
-            //         --__j;
-            //     if (_M_key_compare(_S_key(__j._M_node), _KeyOfValue()(__v)))
-            //         return pair<iterator,bool>(_M_insert(__x, __y, __v), true);
-            //     return pair<iterator,bool>(__j, false);
-            // }
+            const Node_allocator& get_Node_allocator() const
+            { return this->_node_alloc; }
+
+            allocator_type get_allocator() const
+            { return allocator_type(get_Node_allocator()); }
+
+            void insert(const value_type& v) //refer comment #2
+            {
+                Node_ptr n = create_node(v);
+                Node_ptr y = nullptr;
+                Node_ptr x = root();
+                //at the end of this loop y will be the parent of new node
+                while (x != 0) 
+                {
+                    y = x;
+                    if (n->value < x->value)
+                        x = x->left;
+                    else
+                        x = x->right;
+                }
+                n->parent == y;
+                //inserting the node
+                if (y == nullptr)
+                    _root = n;
+                else if (n->value < y->value)
+                    y->left = n;
+                else
+                    y->right = n;
+                // if n is parent node make it black
+                if (n->parent == nullptr) 
+                {
+                    n->color = black;
+                    return;
+		        }
+                //if granparent is nul i.e., parent is root do nothing
+                if (n->parent->parent == nullptr) 
+			        return;
+                // rebalance the tree
+                rebalance_insert(n);
+            }
+
+            template<typename InputIterator>
+	        void insert(InputIterator first, InputIterator last)
+	        {
+                while (first != last) 
+                {
+					this->insert(*first);
+					++first;
+				}
+            }
+
+
+
 
             // iterator insert(const value_type& v)
             // {
@@ -366,8 +496,7 @@ namespace ft
 
 #endif
 
-/*  
-    Comment #1
+/*  Comment #1
     https://stackoverflow.com/questions/14148756/what-does-template-rebind-do
 
     The Alloc template is used to obtain objects of some type. The container may 
@@ -382,8 +511,9 @@ namespace ft
 
     why separate implementation class in stl_tree.h
     https://stackoverflow.com/questions/24092264/gcc-stl-tree-h-red-black-tree-source-code-for-stdset
+*/
 
-
-
+/*  Comment #2
+    reference : https://algorithmtutor.com/Data-Structures/Tree/Red-Black-Trees/
 
 */

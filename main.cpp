@@ -14,18 +14,20 @@
 #include <vector>
 #include <map>
 #include <stack>
-#include <__tree>
+// #include <__tree>
 
 /*br tree test*/
 int main() 
 {
     // ft::map<int, int> m1;
-	// std::map<int, int>m2;
+	std::map<int, int>m2;
 	// ft::pair<int, int> p;
 	// p.first = 1;
 	// p.second = 11;
 	
-    ft::Rb_tree<int> rbt;
+    // ft::Rb_tree<int> rbt;
+
+	// rbt.insert(5);
     
 	
 	// bst.insert(8);

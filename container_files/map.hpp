@@ -67,31 +67,58 @@ namespace ft
                 typedef typename rep_type::const_reverse_iterator            const_reverse_iterator;
 
             // construct/copy/destroy:
-            // map()
-            //     noexcept(
-            //         is_nothrow_default_constructible<allocator_type>::value &&
-            //         is_nothrow_default_constructible<key_compare>::value &&
-            //         is_nothrow_copy_constructible<key_compare>::value);
-            // explicit map(const key_compare& comp);
             
             //default constructors
-            // map();
+            map():tree(){}
             explicit map(const key_compare& comp = key_compare(), const allocator_type& alloc = allocator_type())
             :tree(comp,alloc){}
             
-            // template <class InputIterator>
-            // map(InputIterator first, InputIterator last, const key_compare& comp = key_compare())
-            // {
-                
-            // }
-            
-            // map(const map& m)
-            // {
-                
-            // }
+            template <class InputIterator>
+            map(InputIterator first, InputIterator last, const key_compare& comp = key_compare(), const allocator_type& alloc = allocator_type(), 
+			typename ft::enable_if<!ft::is_integral<InputIterator>::value, InputIterator>::type* = NULL) 
+            : tree(comp, alloc)
+            {
+                tree.insert(first, last);
+            }
 
-         
-            ~map(){}
+            map(const map& m):tree(m.tree){}
+
+
+            map& operator=(const map& m) 
+            {
+                if (this != &m)
+                    this->tree = m.tree;
+                return (*this);
+		    }
+
+           ~map(){}
+
+            allocator_type get_allocator() const 
+            { return allocator_type(tree.get_allocator()); }
+
+            iterator begin() 
+            { return tree.begin(); }
+
+            // const_iterator begin() const 
+            // { return tree.begin(); }
+
+            // iterator end() 
+            // { return tree.end(); }
+
+            // const_iterator end() const 
+            // { return tree.end(); }
+
+            // reverse_iterator rbegin() 
+            // { return tree.rbegin(); }
+            
+            // const_reverse_iterator rbegin() const 
+            // { return tree.rbegin(); }
+
+            // reverse_iterator rend() 
+            // { return tree.rend(); }
+
+            // const_reverse_iterator rend() const 
+            // { return tree.rend(); }
 
         //     map& operator=(const map& m);
         //     map& operator=(map&& m)
