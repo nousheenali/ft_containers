@@ -42,6 +42,7 @@ namespace ft
             typedef Rb_tree_node<Val>*        Node_ptr; //Link_type
             typedef const Rb_tree_node<Val>*  Const_Node_ptr; //const_Link_type
             typedef Rb_tree_node<Val>         Node_type;
+            typedef const Rb_tree_node<Val>   Const_Node_type;
             // typedef Compare                 value_compare;
         
         public:
@@ -66,8 +67,8 @@ namespace ft
             {
                 n->_color= red;
                 n->_parent = 0;
-                n->_left = nullptr;
-                n->_right = nullptr;
+                n->_left = &_end_node;
+                n->_right = &_end_node;
             }
 
 
@@ -139,7 +140,7 @@ namespace ft
             {
                 Node_ptr y = x->_right;
                 x->_right = y->_left;
-                if (y->_left != nullptr) 
+                if (y->_left != end()) 
                     y->_left->_parent = x;
 
                 y->_parent = x->_parent;
@@ -159,7 +160,7 @@ namespace ft
             {
                 Node_ptr y = x->_left;
                 x->_left = y->_right;
-                if (y->_right != nullptr)
+                if (y->_right != end())
                     y->_right->_parent = x;
 
                 y->_parent = x->_parent;
@@ -213,53 +214,68 @@ namespace ft
             Const_Node_ptr root() const
             {   return this->_root; }
 
-            Node_ptr& leftmost()
-            { 
-                Node_ptr n = root();
-                return (n->minimum());
+            Node_ptr begin()
+            { return static_cast<Node_ptr>(this->_end_node._parent); }
+
+            Const_Node_ptr begin() const
+            {
+                return static_cast<Const_Node_ptr>(this->_end_node._parent);
             }
 
-            Const_Node_ptr leftmost() const
-            { 
-                Node_ptr n = root();
-                return (n->minimum());
-            }
+            Node_ptr end()
+            { return (&this->_end_node); }
 
-            Node_ptr& rightmost()
-            { 
-                Node_ptr n = root();
-                return (n->maximum());
-            }
+            Const_Node_ptr end() const
+            { return (&this->_end_node); }
 
-            Const_Node_ptr rightmost() const
-            { 
-                Node_ptr n = root();
-                return (n->maximum());
-            }
 
-            iterator begin()
-            {  return leftmost(); }
+            // Node_ptr& leftmost()
+            // { 
+            //     Node_ptr n = root();
+            //     return (n->minimum());
+            // }
 
-            const_iterator begin() const
-            {  return const_iterator(leftmost()); }
+            // Const_Node_ptr leftmost() const
+            // { 
+            //     Node_ptr n = root();
+            //     return (n->minimum());
+            // }
 
-            iterator end()
-            { return iterator(this->_end_node); }
+            // Node_ptr& rightmost()
+            // { 
+            //     Node_ptr n = root();
+            //     return (n->maximum());
+            // }
 
-            const_iterator end() const
-            { return const_iterator(this->_end_node); }
+            // Const_Node_ptr rightmost() const
+            // { 
+            //     Node_ptr n = root();
+            //     return (n->maximum());
+            // }
 
-            reverse_iterator rbegin() 
-            { return reverse_iterator(end()); }
+            // iterator begin()
+            // {  return iterator(leftmost()); }
 
-            const_reverse_iterator rbegin() const 
-            { return const_reverse_iterator(end()); }
+            // const_iterator begin() const
+            // {  return const_iterator(leftmost()); }
 
-            reverse_iterator rend() 
-            { return reverse_iterator(begin()); }
+            // iterator end()
+            // { return iterator(this->_end_node); }
 
-            const_reverse_iterator rend() const 
-            { return const_reverse_iterator(begin()); }
+            // const_iterator end() const
+            // { return const_iterator(this->_end_node); }
+
+            // reverse_iterator rbegin() 
+            // { return reverse_iterator(end()); }
+
+            // const_reverse_iterator rbegin() const 
+            // { return const_reverse_iterator(end()); }
+
+            // reverse_iterator rend() 
+            // { return reverse_iterator(begin()); }
+
+            // const_reverse_iterator rend() const 
+            // { return const_reverse_iterator(begin()); }
 
             bool empty() const 
             { return _node_count == 0; }
@@ -280,13 +296,12 @@ namespace ft
             explicit Rb_tree(const Compare& comp, const allocator_type& a)
             : _root(),_node_count(0), _comp(comp), _alloc(a)
             {
-                // _end_node = get_node();
-                // initialize(_end_node);
-                // _end_node->_color = black;
+                // creates an end node struct
                 _end_node._color= black;
-                _end_node._parent = nullptr;
-                _end_node._left = nullptr;
-                _end_node._right = nullptr;
+                _end_node._parent = 0;
+                _end_node._left = &_end_node;
+                _end_node._right = &_end_node;
+                _root = &(_end_node);
 
             }
             
@@ -299,20 +314,16 @@ namespace ft
 
             // Rb_tree& operator = ( const Rb_tree &x )
             // {
-            //     if ( this != &x )
-            //     {
-            //         this->erase(this->begin());
-            //         if (x.root() != 0)
-            //         {
-            //             this->root() = this->copy(x.begin(), x.end());
-            //             this->node_count = x.node_count;
-            //         }
-            //     }
+            //     clear(); // Replacement allocator cannot free existing storage, we need to erase nodes first.
+            //     this->_comp = x._comp;
+            //     if (x.root() != 0)
+	        //         root() = copy(x, __roan);
+
             //     return *this;
             // };
 
             ~Rb_tree( void )                                                             
-            {       this->erase(this->begin()); };
+            {       this->erase(this->_root); };
 
             void erase(Node_ptr x)
             {
@@ -321,9 +332,22 @@ namespace ft
                 {
                     erase(x->_right);
                     Node_ptr y = x->_left;
-                    destroy_node(x);
-                    x = y;
+	                destroy_node(x);
+	                x = y;
                 }
+            }
+
+            void clear()
+            {
+                this->erase(this->_root);
+                this->reset();
+            }
+
+            void reset()
+            {
+                this._root = this->_end_node;
+                this->_node_count = 0;
+                this->_root = &(_end_node);
             }
 
 
@@ -340,7 +364,7 @@ namespace ft
             {
                 Node_ptr n = create_node(v);
                 Node_ptr y = nullptr;
-                Node_ptr x = root();
+                Node_ptr x = begin();
                 bool flag = true; //indicates if insert was a success
                 while (x != 0) //at the end of this loop y will be the parent of new node
                 {
