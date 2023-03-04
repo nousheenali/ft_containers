@@ -19,6 +19,13 @@
 
 namespace ft
 {
+    /*  Map stores elements that are key value pairs.
+        No 2 elements have the same key values
+        key - key type
+        T - value type
+        Compare - Keys are sorted by using the comparison function Compare. by default it is std::less
+        Search, removal, and insertion operations have logarithmic complexity.
+        ALlocator - Allocator type, defaults to allocator<pair<const _Key, _Tp>.*/
     template <class Key, class T, class Compare = ft::less<Key>,
           class Allocator = std::allocator<ft::pair<const Key, T> > >
     class map
@@ -35,13 +42,16 @@ namespace ft
             /*  value_comapre reference https://cplusplus.com/reference/map/map/value_comp/*/
             /*  compares objects of type std::map::value_type (key-value pairs) 
                 by comparing of the first components of the pairs.*/
+            /*  A C++ functor (function object) is a class or struct object that can be called like a function.
+                It overloads the function-call operator () and allows us to use an object like a function.*/
             class value_compare: public ft::binary_function<value_type, value_type, bool>
             {
-                friend class map;
+                friend class map<Key, T, Compare, Allocator>;
                 protected:
                     key_compare comp;
+                    value_compare(key_compare c):comp(c) //constructor
+                    {}
 
-                    value_compare(key_compare c):comp(c){}
                 public:
                     bool operator() (const value_type& x, const value_type& y) const
                     {
@@ -50,7 +60,7 @@ namespace ft
             };
         
             private:
-                typedef ft::Rb_tree<value_type, key_compare, allocator_type> rep_type;
+                typedef ft::Rb_tree<key_type, value_type, ft::Select1st<value_type>, key_compare, allocator_type> rep_type;
                 rep_type tree;
 
             public:
@@ -61,7 +71,7 @@ namespace ft
                 typedef typename allocator_type::size_type          size_type;
                 typedef typename allocator_type::difference_type    difference_type;
 
-                typedef typename rep_type::iterator                          iterator;
+                typedef typename rep_type::iterator                         iterator;
                 typedef typename rep_type::const_iterator                    const_iterator;
                 typedef typename rep_type::reverse_iterator                  reverse_iterator;
                 typedef typename rep_type::const_reverse_iterator            const_reverse_iterator;
@@ -69,7 +79,8 @@ namespace ft
             // construct/copy/destroy:
             
             //default constructors
-            map():tree(){}
+            // map():tree(){}
+
             explicit map(const key_compare& comp = key_compare(), const allocator_type& alloc = allocator_type())
             :tree(comp,alloc){}
             
@@ -99,26 +110,106 @@ namespace ft
             iterator begin() 
             { return tree.begin(); }
 
-            // const_iterator begin() const 
-            // { return tree.begin(); }
+            const_iterator begin() const 
+            { return tree.begin(); }
 
-            // iterator end() 
-            // { return tree.end(); }
+            iterator end() 
+            { return tree.end(); }
 
-            // const_iterator end() const 
-            // { return tree.end(); }
+            const_iterator end() const 
+            { return tree.end(); }
 
-            // reverse_iterator rbegin() 
-            // { return tree.rbegin(); }
+            reverse_iterator rbegin() 
+            { return tree.rbegin(); }
             
-            // const_reverse_iterator rbegin() const 
-            // { return tree.rbegin(); }
+            const_reverse_iterator rbegin() const 
+            { return tree.rbegin(); }
 
-            // reverse_iterator rend() 
-            // { return tree.rend(); }
+            reverse_iterator rend() 
+            { return tree.rend(); }
 
-            // const_reverse_iterator rend() const 
-            // { return tree.rend(); }
+            const_reverse_iterator rend() const 
+            { return tree.rend(); }
+
+            bool empty() const 
+            { return tree.empty(); }
+
+            /** Returns the size of the %map.  */
+            size_type size() const 
+            { return tree.size(); }
+
+            /** Returns the maximum size of the %map.  */
+            size_type max_size() const 
+            { return tree.max_size(); }
+
+
+            /*
+                This function attempts to insert a (key, value) pair into the map.
+                A pair is only inserted if its first element (the key) is not already 
+                present in the map. Insertion requires logarithmic time.
+
+                val - Pair to be inserted 
+                Return -  A pair, of which the first element is an iterator that 
+                points to the possibly inserted pair, and the second is a bool 
+                that is true if the pair was actually inserted.*/
+            pair<iterator,bool> insert (const value_type& val)
+            { return tree.insert_unique(val); }
+
+
+            /*
+                Attempts to insert a std::pair into the %map.
+
+                position - An iterator that serves as a hint as to where the pair should be inserted.
+                val  - Pair to be inserted 
+                Return - An iterator that points to the element with key of
+                @a __x (may or may not be the %pair passed in).
+
+                *  This function is not concerned about whether the insertion
+                *  took place, and thus does not return a boolean like the
+                *  single-argument insert() does.  Note that the first
+                *  parameter is only a hint and can potentially improve the
+                *  performance of the insertion process.  A bad hint would
+                *  cause no gains in efficiency.
+            */
+    
+            iterator insert (iterator position, const value_type& val)
+            { 
+                (void)position;
+				return(this->insert(val).first);
+            }
+	
+            /*inserts a range of elements.*/
+            template <class InputIterator>  
+            void insert (InputIterator first, InputIterator last)
+            {   tree.insert_range_unique(first, last);}
+   
+
+
+
+
+
+
+
+
+
+        //     mapped_type& operator[](const key_type& k)
+        //     {
+        //         iterator i = lower_bound(k);
+        //     // __i->first is greater than or equivalent to __k.
+        //     if (__i == end() || key_comp()(__k, (*__i).first))
+        // #if __cplusplus >= 201103L
+        //     __i = _M_t._M_emplace_hint_unique(__i, std::piecewise_construct,
+        //                         std::tuple<const key_type&>(__k),
+        //                         std::tuple<>());
+        // #else
+        //     __i = insert(__i, value_type(__k, mapped_type()));
+        // #endif
+        //     return (*__i).second;
+        //     }
+
+        //     iterator lower_bound(const key_type& x)
+        //     { return tree.lower_bound(x); }
+
 
         //     map& operator=(const map& m);
         //     map& operator=(map&& m)

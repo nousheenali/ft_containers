@@ -6,21 +6,33 @@
 /*   By: nali <nali@42abudhabi.ae>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/06 17:59:19 by nali              #+#    #+#             */
-/*   Updated: 2023/03/01 10:54:21 by nali             ###   ########.fr       */
+/*   Updated: 2023/03/03 09:32:42 by nali             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "./includes/containers.hpp"
-#include <vector>
+// #include <vector>
 #include <map>
-#include <stack>
+#include <iostream>
+// #include <stack>
+
 // #include <__tree>
 
 /*br tree test*/
 int main() 
 {
-    // ft::map<int, int> m1;
-	std::map<int, int>m2;
+    ft::map<int, int> m1;
+	// std::map<int, int> m2;
+	// m2.insert(std::pair<int,int>(20,200) );
+	// m2.insert(std::pair<int,int>(30,300) );
+	// m2.insert(std::pair<int,int>(10,100) );
+	// m2.insert(std::pair<int,int>(70,700) );
+	// for (std::map<int,int>::iterator it=m2.begin(); it!=m2.end(); ++it)
+    // 	std::cout << it->first << " => " << it->second << '\n';
+
+	// m2.insert(30, 30);
+	// m2.insert(10, 10);
+
 	// ft::pair<int, int> p;
 	// p.first = 1;
 	// p.second = 11;

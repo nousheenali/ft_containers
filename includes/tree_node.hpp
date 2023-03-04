@@ -21,52 +21,83 @@ namespace ft
     struct Rb_tree_node
     {
         typedef Rb_tree_node<Val>*          node_ptr;
-        typedef const Rb_tree_node<Val>*    Const_node_ptr;
+        typedef const Rb_tree_node<Val>*    const_node_ptr;
 
-        Val             value;
-        Rb_tree_color   color;
-        node_ptr        parent;
-        node_ptr        left;
-        node_ptr        right;
+        Val             _value;
+        Rb_tree_color   _color;
+        node_ptr        _parent;
+        node_ptr        _left;
+        node_ptr        _right;
+
+        Rb_tree_node():_value(),_color(black),_parent(), _left(), _right(){}
+
+        Rb_tree_node(const Rb_tree_node& x) 
+        : _value(x._value), _color(x._color), _parent(x._parent), _left(x._left), _right(x._right){}
+        
+        Rb_tree_node& operator=(const Rb_tree_node& x) 
+        {
+			if (this != &x) 
+            {
+				this->_value = x._value;
+				this->_color = x._color;
+				this->_parent = x._parent;
+				this->_left = x._left;
+				this->_right = x._right;
+			}
+			return (*this);
+		}
+        
+        ~Rb_tree_node(){}
 
         static node_ptr minimum(node_ptr x)
         {
-            while (x->left != 0) 
-                x = x->left;
+            while (x->_left != 0) 
+                x = x->_left;
             return x;
         }
 
-        static Const_node_ptr minimum(Const_node_ptr x)
+        static const_node_ptr minimum(const_node_ptr x)
         {
-            while (x->left != 0) 
-                x = x->left;
+            while (x->_left != 0) 
+                x = x->_left;
             return x;
         }
 
         static node_ptr maximum(node_ptr x)
         {
-            while (x->right != 0) 
-                x = x->right;
+            while (x->_right != 0) 
+                x = x->_right;
             return x;
         }
 
-        static Const_node_ptr maximum(Const_node_ptr x)
+        static const_node_ptr maximum(const_node_ptr x)
         {
-            while (x->right != 0) 
-                x = x->right;
+            while (x->_right != 0) 
+                x = x->_right;
               return x;
         }
+        
+        Val* valptr()
+        { return &(_value); }
+
+        const Val* valptr() const
+        { return &(_value); }
+
     };
 
-    // template<typename Val>
-    // struct Rb_tree_node : public Rb_tree_node_base
-    // {
-    //     typedef Rb_tree_node<Val>* Link_type;
-    //     Val M_value_field;
- 
-    // };
+    template<typename Key_compare>
+    struct Rb_tree_key_compare
+    {
+      Key_compare		_key_compare;
 
-    
+      Rb_tree_key_compare(): _key_compare()
+      { }
+
+      Rb_tree_key_compare(const Key_compare& comp)
+      : _key_compare(comp)
+      { }
+
+    };
 }
 #endif
 

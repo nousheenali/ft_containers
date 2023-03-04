@@ -20,38 +20,42 @@
 
 namespace ft
 {
-    // template <typename T, class Compare = std::less<T>, class Alloc = std::allocator<T> >
-    
+
     // T here is a pair<const key_type, mapped_type> from map
-    template<typename T, typename Compare, typename Alloc>
+    template<typename Key, typename Val, typename KeyOfValue, typename Compare, typename Alloc >
     class Rb_tree
     {       
-        typedef typename Alloc::template rebind<Rb_tree_node<T> >::other Node_allocator; // refer comment #1
+        typedef typename Alloc::template rebind<Rb_tree_node<Val> >::other Node_allocator; // refer comment #1
         
         public:
-            typedef T                       value_type;
-            typedef Compare                 value_compare;
-            typedef value_type*             pointer;
-            typedef const value_type*       const_pointer;
-            typedef value_type&             reference;
-            typedef const value_type&       const_reference;
-            typedef Rb_tree_node<T>*        Node_ptr; //Link_type
-            typedef const Rb_tree_node<T>*  Const_Node_ptr; //const_Link_type
-            typedef size_t                  size_type;
-            typedef ptrdiff_t               difference_type;
-            typedef Alloc                   allocator_type;
+            typedef Key                     key_type;
+            typedef Val                     value_type; //this is the pair
+            typedef value_type* 			pointer;
+            typedef const value_type* 		const_pointer;
+            typedef value_type& 			reference;
+            typedef const value_type& 		const_reference;
+            typedef size_t 				    size_type;
+            typedef ptrdiff_t 			    difference_type;
+            typedef Alloc 				    allocator_type;
 
+        protected:
+            typedef Rb_tree_node<Val>*        Node_ptr; //Link_type
+            typedef const Rb_tree_node<Val>*  Const_Node_ptr; //const_Link_type
+            typedef Rb_tree_node<Val>         Node_type;
+            // typedef Compare                 value_compare;
+        
+        public:
             typedef Rb_tree_iterator<value_type>       iterator;
             typedef Rb_tree_const_iterator<value_type> const_iterator;
 
             typedef ft::reverse_iterator<iterator>       reverse_iterator;
             typedef ft::reverse_iterator<const_iterator> const_reverse_iterator;
         
-
          private:
             Node_ptr                        _root;
-            Node_ptr                        _TNULL; //leaf node or NULL node
-            Node_ptr                        _node;
+            // Node_ptr                        _end_node; //past-the-end element
+            Node_type                       _end_node; //past-the-end element, is struct not a pointer
+            // Node_ptr                        _node;
             size_type                       _node_count; //node count of the tree
             Compare                         _comp;
             Node_allocator                  _node_alloc;
@@ -60,144 +64,146 @@ namespace ft
         private:
             void initialize(Node_ptr n)
             {
-                n->color= red;
-                n->parent = 0;
-                n->left = nullptr;
-                n->right = nullptr;
+                n->_color= red;
+                n->_parent = 0;
+                n->_left = nullptr;
+                n->_right = nullptr;
             }
 
 
-            void rebalance_Insert(Node_ptr k)
+            void rebalance_insert(Node_ptr k)
             {
 		        Node_ptr uncle;
 
-		        while (k->parent->color == red) 
+		        while (k->_parent->_color == red) 
                 {
-                    if (k->parent == k->parent->parent->right) 
+                    if (k->_parent == k->_parent->_parent->_right) 
                     {
-                        uncle  = k->parent->parent->left;
-                        if (uncle->color == red) 
+                        uncle  = k->_parent->_parent->_left;
+                        if (uncle->_color == red) 
                         {
 					        // case 3.1
-					        uncle->color = black;
-                            k->parent->color = black;
-					        k->parent->parent->color = red;
-					        k = k->parent->parent;
+					        uncle->_color = black;
+                            k->_parent->_color = black;
+					        k->_parent->_parent->_color = red;
+					        k = k->_parent->_parent;
 				        } 
                         else 
                         {
-                            if (k == k->parent->left) 
+                            if (k == k->_parent->_left) 
                             {
                                 // case 3.2.2
-                                k = k->parent;
+                                k = k->_parent;
                                 rightRotate(k); //rotate at the parent
 					        }
                             // case 3.2.1
-                            k->parent->color = black;
-                            k->parent->parent->color = red;
-                            leftRotate(k->parent->parent);
+                            k->_parent->_color = black;
+                            k->_parent->_parent->_color = red;
+                            leftRotate(k->_parent->_parent);
 				        }
 			        } 
                     else 
                     {
-                        uncle = k->parent->parent->right; 
+                        uncle = k->_parent->_parent->_right; 
 
-                        if (uncle->color == red) 
+                        if (uncle->_color == red) 
                         {
                             // mirror case 3.1
-                            uncle->color = black;
-                            k->parent->color = black;
-                            k->parent->parent->color = red;
-                            k = k->parent->parent;	
+                            uncle->_color = black;
+                            k->_parent->_color = black;
+                            k->_parent->_parent->_color = red;
+                            k = k->_parent->_parent;	
                         } 
                         else 
                         {
-                            if (k == k->parent->right) 
+                            if (k == k->_parent->_right) 
                             {
                                 // mirror case 3.2.2
-                                k = k->parent;
+                                k = k->_parent;
                                 leftRotate(k);
                             }
                             // mirror case 3.2.1
-                            k->parent->color = black;
-                            k->parent->parent->color = red;
-                            rightRotate(k->parent->parent);
+                            k->_parent->_color = black;
+                            k->_parent->_parent->_color = red;
+                            rightRotate(k->_parent->_parent);
                         }
 			        }
                     if (k == root) 
                         break;
 		        }
-		        root->color = black;
+		        root->_color = black;
 	        }
             // https://algorithmtutor.com/Data-Structures/Tree/Red-Black-Trees/
             // refer fig 3
             void leftRotate(Node_ptr x) 
             {
-                Node_ptr y = x->right;
-                x->right = y->left;
-                if (y->left != _TNULL) 
-                    y->left->parent = x;
+                Node_ptr y = x->_right;
+                x->_right = y->_left;
+                if (y->_left != nullptr) 
+                    y->_left->_parent = x;
 
-                y->parent = x->parent;
-                if (x->parent == nullptr) 
+                y->_parent = x->_parent;
+                if (x->_parent == nullptr) 
                     this->root = y;
-                else if (x == x->parent->left) 
-                    x->parent->left = y;
+                else if (x == x->_parent->_left) 
+                    x->_parent->_left = y;
                 else
-                    x->parent->right = y;
+                    x->_parent->_right = y;
 
-                y->left = x;
-                x->parent = y;
+                y->_left = x;
+                x->_parent = y;
             }
 
             // refer fig 4
             void rightRotate(Node_ptr x) 
             {
-                Node_ptr y = x->left;
-                x->left = y->right;
-                if (y->right != _TNULL)
-                    y->right->parent = x;
+                Node_ptr y = x->_left;
+                x->_left = y->_right;
+                if (y->_right != nullptr)
+                    y->_right->_parent = x;
 
-                y->parent = x->parent;
-                if (x->parent == nullptr) 
+                y->_parent = x->_parent;
+                if (x->_parent == nullptr) 
                     this->root = y;
-                else if (x == x->parent->right) 
-                    x->parent->right = y;
+                else if (x == x->_parent->_right) 
+                    x->_parent->_right = y;
                 else
-                    x->parent->left = y;
+                    x->_parent->_left = y;
 
-                y->right = x;
-                x->parent = y;
+                y->_right = x;
+                x->_parent = y;
             }
 
 
         protected:
-            Node_ptr get_node()
+            Node_ptr get_node() //allocates
             {   return _node_alloc.allocate(1); }
         
-            void put_node(Node_ptr p)
+            void put_node(Node_ptr p) //deallocates
             {   _node_alloc.deallocate(p, 1); }
 
             Node_ptr create_node(const value_type& x)
             {
                 Node_ptr tmp = get_node();
-                _alloc.construct(tmp, x);
+                _node_alloc.construct(tmp, x);
                 initialize(tmp);
+                _node_count++;
                 return tmp;
             }
             
             void destroy_node(Node_ptr p)
             {
-                _alloc.destroy(&(p->value));
+                _node_alloc.destroy(&(p->_value));
                 put_node(p);
+                _node_count--;
             }
             
             Node_ptr clone_node(Const_Node_ptr x)
             {
-                Node_ptr tmp = create_node(x->value);
-                tmp->color = x->color;
-                tmp->left = 0;
-                tmp->right = 0;
+                Node_ptr tmp = create_node(x->_value);
+                tmp->_color = x->_color;
+                tmp->_left = 0;
+                tmp->_right = 0;
                 return tmp;
             }
 
@@ -208,101 +214,87 @@ namespace ft
             {   return this->_root; }
 
             Node_ptr& leftmost()
-            { return this->_root->left; }
+            { 
+                Node_ptr n = root();
+                return (n->minimum());
+            }
 
             Const_Node_ptr leftmost() const
-            { return this->_root->left; }
+            { 
+                Node_ptr n = root();
+                return (n->minimum());
+            }
 
             Node_ptr& rightmost()
-            { return this->_root->right; }
+            { 
+                Node_ptr n = root();
+                return (n->maximum());
+            }
 
             Const_Node_ptr rightmost() const
-            { return this->_root->right;  }
-
-            // Node_ptr begin()
-            // {  return static_cast<Node_ptr>(this->_root->parent); }
-
-            // Const_Node_ptr begin() const
-            // {  return static_cast<Const_Node_ptr>(this->_node->parent); }
-
-            // Const_Node_ptr end()
-            // { return static_cast<Node_ptr>(&this->_root); }
-
-            // Const_Node_ptr end() const
-            // { return static_cast<Const_Node_ptr>(&this->_root); }
+            { 
+                Node_ptr n = root();
+                return (n->maximum());
+            }
 
             iterator begin()
             {  return leftmost(); }
 
             const_iterator begin() const
-            {  return leftmost(); }
+            {  return const_iterator(leftmost()); }
 
             iterator end()
-            { return this->root; }
+            { return iterator(this->_end_node); }
 
             const_iterator end() const
-            { return this->root; }
+            { return const_iterator(this->_end_node); }
 
+            reverse_iterator rbegin() 
+            { return reverse_iterator(end()); }
 
-            // static const_reference S_value(Const_Node_ptr x)
-            // { return x->value; }
+            const_reverse_iterator rbegin() const 
+            { return const_reverse_iterator(end()); }
 
-            // static Node_ptr& S_left(Node_ptr x)
-            // { return (Node_ptr&)(x->left); }
+            reverse_iterator rend() 
+            { return reverse_iterator(begin()); }
 
-            // static Const_Node_ptr S_left(Const_Node_ptr x)
-            // { return (Const_Node_ptr&)(x->left); }
+            const_reverse_iterator rend() const 
+            { return const_reverse_iterator(begin()); }
 
-            // static Node_ptr& S_right(Node_ptr x)
-            // { return (Node_ptr&)(x->right); }
+            bool empty() const 
+            { return _node_count == 0; }
 
-            // static Const_Node_ptr S_right(Const_Node_ptr x)
-            // { return (Const_Node_ptr&)(x->right); }
+            size_type size() const 
+            { return _node_count; }
 
-            // // static const_reference S_value(Const_Node_ptr x)
-            // // { return static_cast<Const_Node_ptr>(x)->value; }
+            size_type max_size() const 
+            { return _node_alloc.max_size(); }
 
-            // static Node_ptr minimum(Node_ptr x)
-            // { return minimum(x); }
-
-            // static Const_Node_ptr minimum(Const_Node_ptr x)
-            // { return minimum(x); }
-
-            // static Node_ptr maximum(Node_ptr x)
-            // { return maximum(x); }
-
-            // static Const_Node_ptr maximum(Const_Node_ptr x)
-            // { return maximum(x); }
-            
-
-            // Node_ptr sibling()
-            // {
-            //     if (node == node->parent->left) //if the current node is left node of parent
-            //         return (node->parent->right);
-            //     else
-            //         return (node->parent.left);
-            // }
+            static const Key& S_key(Node_ptr x)
+            { return KeyOfValue()(x->_value); }
             
         public:
             // allocation/deallocation
             Rb_tree() { }
 
-            explicit Rb_tree(const value_compare& comp, const allocator_type& a)
-            : _node_count(0), _comp(comp), _alloc(a),_root()
+            explicit Rb_tree(const Compare& comp, const allocator_type& a)
+            : _root(),_node_count(0), _comp(comp), _alloc(a)
             {
-                _TNULL = get_node();
-                initialize(_TNULL);
-                _TNULL->color = black;
-                _root = _TNULL;
+                // _end_node = get_node();
+                // initialize(_end_node);
+                // _end_node->_color = black;
+                _end_node._color= black;
+                _end_node._parent = nullptr;
+                _end_node._left = nullptr;
+                _end_node._right = nullptr;
+
             }
             
             Rb_tree( Rb_tree const &x ) :_comp(x._comp), _alloc(x._alloc)                                
             {   
-                if (x.root() != 0)
-                {
-                    this->root() = this->copy(x.begin(), x.end());
-                    this->node_count = x.node_count;
-                }
+                _root = x._root;
+                _node_count = x._node_count;
+                _end_node = x._end_node;
             }
 
             // Rb_tree& operator = ( const Rb_tree &x )
@@ -319,8 +311,22 @@ namespace ft
             //     return *this;
             // };
 
-            // ~Rb_tree( void )                                                             
-            // {       this->erase(this->begin()); };
+            ~Rb_tree( void )                                                             
+            {       this->erase(this->begin()); };
+
+            void erase(Node_ptr x)
+            {
+                // Erase without rebalancing.
+                while (x != 0)
+                {
+                    erase(x->_right);
+                    Node_ptr y = x->_left;
+                    destroy_node(x);
+                    x = y;
+                }
+            }
+
+
             Node_allocator& get_Node_allocator()
             { return this->_node_alloc; }
 
@@ -330,40 +336,94 @@ namespace ft
             allocator_type get_allocator() const
             { return allocator_type(get_Node_allocator()); }
 
-            void insert(const value_type& v) //refer comment #2
+            pair<iterator, bool> insert_unique(const value_type & v) //refer comment #2
             {
                 Node_ptr n = create_node(v);
                 Node_ptr y = nullptr;
                 Node_ptr x = root();
-                //at the end of this loop y will be the parent of new node
-                while (x != 0) 
+                bool flag = true; //indicates if insert was a success
+                while (x != 0) //at the end of this loop y will be the parent of new node
                 {
                     y = x;
-                    if (n->value < x->value)
-                        x = x->left;
+                    if(S_key(n) <  S_key(x))
+                        x = x->_left;
                     else
-                        x = x->right;
+                        x = x->_right;
                 }
-                n->parent == y;
+                iterator i = n;
+                n->_parent == y;
                 //inserting the node
                 if (y == nullptr)
                     _root = n;
-                else if (n->value < y->value)
-                    y->left = n;
-                else
-                    y->right = n;
-                // if n is parent node make it black
-                if (n->parent == nullptr) 
+                else if (S_key(n) < S_key(y))
+                    y->_left = n; 
+                else if (S_key(n) > S_key(y))
+                    y->_right = n;
+                else //case of duplicate key
                 {
-                    n->color = black;
-                    return;
-		        }
-                //if granparent is nul i.e., parent is root do nothing
-                if (n->parent->parent == nullptr) 
-			        return;
+                    flag = false;
+                    destroy_node(n);
+                    return(i, flag);
+                }
+                if (n->_parent == nullptr) // if n is parent node make it black
+                {
+                    n->_color = black;
+                    return(i, flag);
+                }
+                if (n->_parent->_parent == nullptr) //if granparent is nul i.e., parent is root do nothing
+			        return(i, flag);
                 // rebalance the tree
                 rebalance_insert(n);
+                return(i, flag);
             }
+
+            template<typename InputIterator>
+			void	insert_range_unique(InputIterator first, InputIterator last,
+            typename ft::enable_if<!ft::is_integral<InputIterator>::value, InputIterator>::type* = NULL)
+            {
+				while (first != last) 
+                {
+					this->insert(*first);
+					++first;
+				}
+			}
+
+
+
+            // void insert(const value_type& v) //refer comment #2
+            // {
+            //     Node_ptr n = create_node(v);
+            //     Node_ptr y = nullptr;
+            //     Node_ptr x = root();
+            //     //at the end of this loop y will be the parent of new node
+            //     while (x != 0) 
+            //     {
+            //         y = x;
+            //         if (n->_value < x->_value)
+            //             x = x->_left;
+            //         else
+            //             x = x->_right;
+            //     }
+            //     n->_parent == y;
+            //     //inserting the node
+            //     if (y == nullptr)
+            //         _root = n;
+            //     else if (n->_value < y->_value)
+            //         y->_left = n;
+            //     else
+            //         y->_right = n;
+            //     // if n is parent node make it black
+            //     if (n->_parent == nullptr) 
+            //     {
+            //         n->_color = black;
+            //         return;
+		    //     }
+            //     //if granparent is nul i.e., parent is root do nothing
+            //     if (n->_parent->_parent == nullptr) 
+			//         return;
+            //     // rebalance the tree
+            //     rebalance_insert(n);
+            // }
 
             template<typename InputIterator>
 	        void insert(InputIterator first, InputIterator last)
@@ -375,46 +435,41 @@ namespace ft
 				}
             }
 
+            // iterator find(const key_type& __k);
 
+            // const_iterator
+            // find(const key_type& __k) const;
 
+            // size_type
+            // count(const key_type& __k) const;
 
-            // iterator insert(const value_type& v)
-            // {
-            //     Node_ptr n = create_node(v);
-            //     Node_ptr x = this->root();
-            //     Node_ptr y = nullptr;
-            //     if (x == NULL)
-                
-            //     while( x != NULL )
-            //     {
-            //         n.val < x.val
-            //     }
+            // iterator lower_bound(const key_type& k)
+            // { 
+            //     Node_ptr x = begin();
+            //     Node_ptr y = end();
+            //     while(x != 0)
 
-            //     // if (_y == _M_header || __x != 0 || 
-            //     //     _M_key_compare(_KeyOfValue()(__v), _S_key(__y))) {
-            //     //     __z = _M_create_node(__v);
-            //     //     _S_left(__y) = __z;               // also makes _M_leftmost() = __z 
-            //     //                                     //    when __y == _M_header
-            //     //     if (__y == _M_header) {
-            //     //     _M_root() = __z;
-            //     //     _M_rightmost() = __z;
-            //     //     }
-            //     //     else if (__y == _M_leftmost())
-            //     //     _M_leftmost() = __z;   // maintain _M_leftmost() pointing to min node
-            //     // }
-            //     // else {
-            //         z = create_node(v);
-            //         S_right(_y) = z;
-            //         if (__y == _M_rightmost())
-            //         _M_rightmost() = __z;  // maintain _M_rightmost() pointing to max node
-            //     }
-            //     _S_parent(__z) = __y;
-            //     _S_left(__z) = 0;
-            //     _S_right(__z) = 0;
-            //     _Rb_tree_rebalance(__z, _M_header->_M_parent);
-            //     ++_M_node_count;
-            //     return iterator(__z);
+            
             // }
+
+            // const_iterator
+            // lower_bound(const key_type& __k) const
+            // { return _M_lower_bound(_M_begin(), _M_end(), __k); }
+
+            // iterator
+            // upper_bound(const key_type& __k)
+            // { return _M_upper_bound(_M_begin(), _M_end(), __k); }
+
+            // const_iterator
+            // upper_bound(const key_type& __k) const
+            // { return _M_upper_bound(_M_begin(), _M_end(), __k); }
+
+            // pair<iterator, iterator>
+            // equal_range(const key_type& __k);
+
+            // pair<const_iterator, const_iterator>
+            // equal_range(const key_type& __k) const;
+
             
             // void erase(iterator pos)
             // {

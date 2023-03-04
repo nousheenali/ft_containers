@@ -580,7 +580,7 @@ protected:
 
   _Link_type& _M_root() const 
     { return (_Link_type&) _M_header->_M_parent; }
-  _Link_type&                                                               _M_leftmost() const 
+  _Link_type& _M_leftmost() const 
     { return (_Link_type&) _M_header->_M_left; }
   _Link_type& _M_rightmost() const 
     { return (_Link_type&) _M_header->_M_right; }

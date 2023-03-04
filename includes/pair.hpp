@@ -85,5 +85,17 @@ namespace ft
 			return (x < y);
 		}
 	};
+
+    template<typename Pair>
+    struct Select1st
+    // : public unary_function<_Pair, typename _Pair::first_type>
+    {
+      typename Pair::first_type& operator()(Pair& x) const
+      { return x.first; }
+
+      const typename Pair::first_type& operator()(const Pair& x) const
+      { return x.first; }
+
+    };
 }
 #endif
