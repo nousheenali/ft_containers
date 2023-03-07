@@ -56,7 +56,6 @@ namespace ft
             Node_ptr                        _root;
             // Node_ptr                        _end_node; //past-the-end element
             Node_type                       _end_node; //past-the-end element, is struct not a pointer
-            // Node_ptr                        _node;
             size_type                       _node_count; //node count of the tree
             Compare                         _comp;
             Node_allocator                  _node_alloc;
