@@ -41,7 +41,7 @@ namespace ft
         protected:
             typedef Rb_tree_node<Val>*        Node_ptr; //Link_type
             typedef const Rb_tree_node<Val>*  Const_Node_ptr; //const_Link_type
-            typedef Rb_tree_node<Val>         Node_type;
+            typedef Rb_tree_node<Val>         Node_type; 
             typedef const Rb_tree_node<Val>   Const_Node_type;
             // typedef Compare                 value_compare;
         
@@ -174,6 +174,159 @@ namespace ft
                 x->_parent = y;
             }
 
+            void swap_color(Node_ptr x)
+            {
+                if (x->_color == red)
+                    x->_color = black;
+                else
+                    x->_color = red;
+            }
+
+            void rebalance_delete(Node_ptr x) 
+            {
+                Node_ptr s; //sibling
+                while (x != _root && x->_color == black) 
+                {
+                    if (x == x->_parent->_left) 
+                    {
+                        s = x->_parent->_right; 
+                        if (s->_color == red) // case 3.1
+                        {
+                            swap_color(s);
+                            swap_color(x->_parent);
+                            leftRotate(x->_parent);
+                            s = x->_parent->_right; //new sibling
+                        }
+                        if(s->_color == black)
+                        {
+                            if (s->_left->_color == black && s->_right->_color == black) // case 3.2
+                            {
+                                s->_color = red;
+                                x = x->_parent;
+                            } 
+                            else 
+                            {
+                                if (s->_right->_color == black) // case 3.3
+                                {
+                                    s->_left->_color = black;
+                                    s->_color = red;
+                                    rightRotate(s);
+                                    s = x->_parent->_right;
+                                } 
+                                // case 3.4
+                                // s->_color = x->_parent->_color;
+                                x->_parent->_color = black;
+                                s->_right->_color = black;
+                                leftRotate(x->_parent);
+                                x = _root;
+                            }
+                        }
+                    } 
+                    else 
+                    {
+                        s = x->_parent->_left;
+                        if (s->_color == red) // case 3.1
+                        {
+                            swap_color(s);
+                            swap_color(x->_parent);
+                            rightRotate(x->_parent);
+                            s = x->_parent->_left;
+                        }
+                        if (s->_color == black)
+                        {
+                            if (s->_right->_color == black && s->_right->_color == black) // case 3.2
+                            {
+                                s->_color = red;
+                                x = x->_parent;
+                            } 
+                            else 
+                            {
+                                if (s->_left->_color == black)  // case 3.3
+                                {
+                                    s->_right->_color = black;
+                                    s->_color = red;
+                                    leftRotate(s);
+                                    s = x->_parent->_left;
+                                } 
+                                // case 3.4
+                                // s->_color = x->_parent->_color;
+                                x->_parent->_color = black;
+                                s->_left->_color = black;
+                                rightRotate(x->_parent);
+                                x = _root;
+                            }
+                        }
+                    } 
+                }
+                x->_color = black;
+	        }
+
+         
+            // this function replaces u node with v node by changing all links
+            // that point to u to point to v
+            void replace_node(Node_ptr u, Node_ptr v)
+            {
+                if (u->_parent == nullptr) 
+                    this->_root = v;
+                else if (u == u->_parent->_left)
+                    u->_parent->_left = v;
+                else
+                    u->_parent->_right = v;
+                v->_parent = u->_parent;
+            }
+
+            void delete_helper(Node_ptr node, key_type key) //Refer comment #3
+            {
+                Node_ptr z = this->end();
+                Node_ptr x, y;
+                while (node != end()) //find position of key
+                {
+                    if (S_key(node) == key)
+                        z = node;
+                    if (S_key(node) < key) 
+                        node = node->_right;
+                    else
+                        node = node->_left;
+                }
+                if (z == end()) //key not found
+                    return;
+                y = z;
+		        int y_original_color = y->_color;
+                //check if both child nodes or one of the child nodes is null. If yes, 
+                // replace the node to be deleted with the child node and delete the node.
+                if (z->_left == end()) 
+                {
+                    x = z->_right;
+                    replace_node(z, z->_right);
+                }
+                else if (z->_right == end()) 
+                {
+                    x = z->_left;
+                    replace_node(z, z->_left);
+                } 
+                else //if both childs are not null
+                {
+                    y = z->minimum(z->_right); //inorder successor
+                    y_original_color = y->_color;
+                    x = y->_right;
+                    // if (y->_parent == z)
+                    //     x->_parent = y;
+                    // else 
+                    if (y->_parent != z)
+                    {
+                        replace_node(y, y->_right); //moving y->_right to position of y
+                        y->_right = z->_right; //moving y to position of z
+                        y->_right->_parent = y;
+                    }
+                    replace_node(z, y);
+                    y->_left = z->_left;
+                    y->_left->_parent = y;
+                    y->_color = z->_color;
+                }
+                destroy_node(z);
+                if (y_original_color == black)
+                    rebalance_delete(x);
+	        }
 
         protected:
             Node_ptr get_node() //allocates
@@ -322,32 +475,7 @@ namespace ft
             // };
 
             ~Rb_tree( void )                                                             
-            {       this->erase(this->_root); };
-
-            void erase(Node_ptr x)
-            {
-                // Erase without rebalancing.
-                while (x != 0)
-                {
-                    erase(x->_right);
-                    Node_ptr y = x->_left;
-	                destroy_node(x);
-	                x = y;
-                }
-            }
-
-            void clear()
-            {
-                this->erase(this->_root);
-                this->reset();
-            }
-
-            void reset()
-            {
-                this._root = this->_end_node;
-                this->_node_count = 0;
-                this->_root = &(_end_node);
-            }
+            {       this->erase(begin()); };
 
 
             Node_allocator& get_Node_allocator()
@@ -411,43 +539,6 @@ namespace ft
 				}
 			}
 
-
-
-            // void insert(const value_type& v) //refer comment #2
-            // {
-            //     Node_ptr n = create_node(v);
-            //     Node_ptr y = nullptr;
-            //     Node_ptr x = root();
-            //     //at the end of this loop y will be the parent of new node
-            //     while (x != 0) 
-            //     {
-            //         y = x;
-            //         if (n->_value < x->_value)
-            //             x = x->_left;
-            //         else
-            //             x = x->_right;
-            //     }
-            //     n->_parent == y;
-            //     //inserting the node
-            //     if (y == nullptr)
-            //         _root = n;
-            //     else if (n->_value < y->_value)
-            //         y->_left = n;
-            //     else
-            //         y->_right = n;
-            //     // if n is parent node make it black
-            //     if (n->_parent == nullptr) 
-            //     {
-            //         n->_color = black;
-            //         return;
-		    //     }
-            //     //if granparent is nul i.e., parent is root do nothing
-            //     if (n->_parent->_parent == nullptr) 
-			//         return;
-            //     // rebalance the tree
-            //     rebalance_insert(n);
-            // }
-
             template<typename InputIterator>
 	        void insert(InputIterator first, InputIterator last)
 	        {
@@ -456,6 +547,59 @@ namespace ft
 					this->insert(*first);
 					++first;
 				}
+            }
+
+            void erase(const_iterator position)
+            {
+                if (position != end())
+                {
+                    Node_ptr y = position.base();
+				    this->delete_helper(this->root(), y);
+                    destroy_node(y);
+                }
+            }
+
+            void erase(const_iterator first, const_iterator last)
+            {
+                iterator tmp;
+                while (first != last) 
+                {   
+                    tmp = first;
+					this->erase(*tmp);
+					++first;
+				}
+            }
+
+            //deletes a key value pair with key value x
+            size_type erase(const key_type& x)
+            {
+                delete_helper(this->root, x);
+                return (_node_count);
+            }
+
+            //erases the entire tree
+            void erase(Node_ptr x)
+            {
+                // Erase without rebalancing.
+                while (x != 0)
+                {
+                    erase(x->_right);
+                    Node_ptr y = x->_left;
+	                destroy_node(x);
+	                x = y;
+                }
+            }
+
+            void clear()
+            {
+                this->erase(begin());
+                this->reset();
+            }
+
+            void reset()
+            {
+                this->_node_count = 0;
+                this->_root = &(_end_node);
             }
 
             // iterator find(const key_type& __k);
@@ -594,4 +738,10 @@ namespace ft
 /*  Comment #2
     reference : https://algorithmtutor.com/Data-Structures/Tree/Red-Black-Trees/
 
+*/
+
+/*  Comment #3
+    reference videos:
+        bst deletion: https://www.youtube.com/watch?v=cySVml6e_Fc
+        redbalck tree deletion: https://www.youtube.com/watch?v=w5cvkTXY0vQ&t=2422s
 */
