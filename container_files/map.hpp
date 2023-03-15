@@ -78,7 +78,7 @@ namespace ft
 
             // construct/copy/destroy:
             
-            //default constructors
+            // default constructors
             // map():tree(){}
 
             explicit map(const key_compare& comp = key_compare(), const allocator_type& alloc = allocator_type())
@@ -184,205 +184,113 @@ namespace ft
             {   tree.insert_range_unique(first, last);}
    
 
+            /*returns mapped value to key k. If key not present, this function inserts a new element
+             with that key and returns reference to its mappedvale*/
+            mapped_type& operator[](const key_type& k)
+            {
+                iterator i = lower_bound(k);
+                // i->first is greater than or equivalent to k.
+                if (i == end())
+                    i = (insert(make_pair(k,mapped_type())).first);
+                return (*i).second;
+            }
+
+            mapped_type& at(const key_type& k)
+            {
+                iterator i = lower_bound(k);
+                if (i == end())
+                    std::out_of_range("out of range");
+                return (*i).second;
+            }
+
+            const mapped_type& at(const key_type& k) const
+            {
+                const_iterator i = lower_bound(k);
+                if (i == end())
+                    std::out_of_range("out of range");
+                return (*i).second;
+            }
+
+            void erase(iterator position)
+            { tree.erase(position);}
+
+            size_type erase (const key_type& k)
+            { tree.erase(k);}
 
 
+            void erase (iterator first, iterator last)
+            { tree.erase(first, last);}
+
+            /*Exchanges the content of the container by the content of x, which is another 
+            map of the same type. Sizes may differ.*/
+            void swap (map& x)
+            { tree.swap(x.tree);}
+
+            void clear()
+            { tree.clear();}
+
+            key_compare key_comp() const
+            { return tree.key_comp(); }
 
 
+            value_compare value_comp() const
+            { return value_compare(tree.key_comp()); }
 
+            iterator find(const key_type& x)
+            { return tree.find(x); }
 
+            const_iterator find(const key_type& x) const
+            { return tree.find(x); }
 
+            size_type count (const key_type& k) const
+            { return tree.count(k); }
 
-        //     mapped_type& operator[](const key_type& k)
-        //     {
-        //         iterator i = lower_bound(k);
-        //     // __i->first is greater than or equivalent to __k.
-        //     if (__i == end() || key_comp()(__k, (*__i).first))
-        // #if __cplusplus >= 201103L
-        //     __i = _M_t._M_emplace_hint_unique(__i, std::piecewise_construct,
-        //                         std::tuple<const key_type&>(__k),
-        //                         std::tuple<>());
-        // #else
-        //     __i = insert(__i, value_type(__k, mapped_type()));
-        // #endif
-        //     return (*__i).second;
-        //     }
+            iterator lower_bound(const key_type& x)
+            { return tree.lower_bound(x);}
 
-        //     iterator lower_bound(const key_type& x)
-        //     { return tree.lower_bound(x); }
+            const_iterator lower_bound (const key_type& x) const
+            { return tree.lower_bound(x); }
 
+            iterator upper_bound (const key_type& k)
+            { return tree.upper_bound(k);}
+            
+            const_iterator upper_bound (const key_type& k) const
+            { return tree.upper_bound(k); }
 
-        //     map& operator=(const map& m);
-        //     map& operator=(map&& m)
-        //         noexcept(
-        //             allocator_type::propagate_on_container_move_assignment::value &&
-        //             is_nothrow_move_assignable<allocator_type>::value &&
-        //             is_nothrow_move_assignable<key_compare>::value);
-        //     map& operator=(initializer_list<value_type> il);
-
-        //     // iterators:
-        //         iterator begin() noexcept;
-        //     const_iterator begin() const noexcept;
-        //         iterator end() noexcept;
-        //     const_iterator end()   const noexcept;
-
-        //         reverse_iterator rbegin() noexcept;
-        //     const_reverse_iterator rbegin() const noexcept;
-        //         reverse_iterator rend() noexcept;
-        //     const_reverse_iterator rend()   const noexcept;
-
-        //     const_iterator         cbegin()  const noexcept;
-        //     const_iterator         cend()    const noexcept;
-        //     const_reverse_iterator crbegin() const noexcept;
-        //     const_reverse_iterator crend()   const noexcept;
-
-        //     // capacity:
-        //     bool      empty()    const noexcept;
-        //     size_type size()     const noexcept;
-        //     size_type max_size() const noexcept;
-
-        //     // element access:
-        //     mapped_type& operator[](const key_type& k);
-        //     mapped_type& operator[](key_type&& k);
-
-        //         mapped_type& at(const key_type& k);
-        //     const mapped_type& at(const key_type& k) const;
-
-        //     // modifiers:
-        //     template <class... Args>
-        //         pair<iterator, bool> emplace(Args&&... args);
-        //     template <class... Args>
-        //         iterator emplace_hint(const_iterator position, Args&&... args);
-        //     pair<iterator, bool> insert(const value_type& v);
-        //     pair<iterator, bool> insert(      value_type&& v);                                // C++17
-        //     template <class P>
-        //         pair<iterator, bool> insert(P&& p);
-        //     iterator insert(const_iterator position, const value_type& v);
-        //     iterator insert(const_iterator position,       value_type&& v);                   // C++17
-        //     template <class P>
-        //         iterator insert(const_iterator position, P&& p);
-        //     template <class InputIterator>
-        //         void insert(InputIterator first, InputIterator last);
-        //     void insert(initializer_list<value_type> il);
-
-        //     node_type extract(const_iterator position);                                       // C++17
-        //     node_type extract(const key_type& x);                                             // C++17
-        //     insert_return_type insert(node_type&& nh);                                        // C++17
-        //     iterator insert(const_iterator hint, node_type&& nh);                             // C++17
-
-        //     template <class... Args>
-        //         pair<iterator, bool> try_emplace(const key_type& k, Args&&... args);          // C++17
-        //     template <class... Args>
-        //         pair<iterator, bool> try_emplace(key_type&& k, Args&&... args);               // C++17
-        //     template <class... Args>
-        //         iterator try_emplace(const_iterator hint, const key_type& k, Args&&... args); // C++17
-        //     template <class... Args>
-        //         iterator try_emplace(const_iterator hint, key_type&& k, Args&&... args);      // C++17
-        //     template <class M>
-        //         pair<iterator, bool> insert_or_assign(const key_type& k, M&& obj);            // C++17
-        //     template <class M>
-        //         pair<iterator, bool> insert_or_assign(key_type&& k, M&& obj);                 // C++17
-        //     template <class M>
-        //         iterator insert_or_assign(const_iterator hint, const key_type& k, M&& obj);   // C++17
-        //     template <class M>
-        //         iterator insert_or_assign(const_iterator hint, key_type&& k, M&& obj);        // C++17
-
-        //     iterator  erase(const_iterator position);
-        //     iterator  erase(iterator position); // C++14
-        //     size_type erase(const key_type& k);
-        //     iterator  erase(const_iterator first, const_iterator last);
-        //     void clear() noexcept;
-
-        //     template<class C2>
-        //     void merge(map<Key, T, C2, Allocator>& source);         // C++17
-        //     template<class C2>
-        //     void merge(map<Key, T, C2, Allocator>&& source);        // C++17
-        //     template<class C2>
-        //     void merge(multimap<Key, T, C2, Allocator>& source);    // C++17
-        //     template<class C2>
-        //     void merge(multimap<Key, T, C2, Allocator>&& source);   // C++17
-
-        //     void swap(map& m)
-        //         noexcept(allocator_traits<allocator_type>::is_always_equal::value &&
-        //             is_nothrow_swappable<key_compare>::value); // C++17
-
-        //     // observers:
-        //     allocator_type get_allocator() const noexcept;
-        //     key_compare    key_comp()      const;
-        //     value_compare  value_comp()    const;
-
-        //     // map operations:
-        //         iterator find(const key_type& k);
-        //     const_iterator find(const key_type& k) const;
-        //     template<typename K>
-        //         iterator find(const K& x);              // C++14
-        //     template<typename K>
-        //         const_iterator find(const K& x) const;  // C++14
-        //     template<typename K>
-        //     size_type count(const K& x) const;        // C++14
-        //     size_type      count(const key_type& k) const;
-        //         bool contains(const key_type& x) const; // C++20
-        //         iterator lower_bound(const key_type& k);
-        //     const_iterator lower_bound(const key_type& k) const;
-        //     template<typename K>
-        //         iterator lower_bound(const K& x);              // C++14
-        //     template<typename K>
-        //         const_iterator lower_bound(const K& x) const;  // C++14
-
-        //         iterator upper_bound(const key_type& k);
-        //     const_iterator upper_bound(const key_type& k) const;
-        //     template<typename K>
-        //         iterator upper_bound(const K& x);              // C++14
-        //     template<typename K>
-        //         const_iterator upper_bound(const K& x) const;  // C++14
-
-        //     pair<iterator,iterator>             equal_range(const key_type& k);
-        //     pair<const_iterator,const_iterator> equal_range(const key_type& k) const;
-        //     template<typename K>
-        //         pair<iterator,iterator>             equal_range(const K& x);        // C++14
-        //     template<typename K>
-        //         pair<const_iterator,const_iterator> equal_range(const K& x) const;  // C++14
-        // };
-
-        // template <class Key, class T, class Compare, class Allocator>
-        // bool
-        // operator==(const map<Key, T, Compare, Allocator>& x,
-        //         const map<Key, T, Compare, Allocator>& y);
-
-        // template <class Key, class T, class Compare, class Allocator>
-        // bool
-        // operator< (const map<Key, T, Compare, Allocator>& x,
-        //         const map<Key, T, Compare, Allocator>& y);
-
-        // template <class Key, class T, class Compare, class Allocator>
-        // bool
-        // operator!=(const map<Key, T, Compare, Allocator>& x,
-        //         const map<Key, T, Compare, Allocator>& y);
-
-        // template <class Key, class T, class Compare, class Allocator>
-        // bool
-        // operator> (const map<Key, T, Compare, Allocator>& x,
-        //         const map<Key, T, Compare, Allocator>& y);
-
-        // template <class Key, class T, class Compare, class Allocator>
-        // bool
-        // operator>=(const map<Key, T, Compare, Allocator>& x,
-        //         const map<Key, T, Compare, Allocator>& y);
-
-        // template <class Key, class T, class Compare, class Allocator>
-        // bool
-        // operator<=(const map<Key, T, Compare, Allocator>& x,
-        //         const map<Key, T, Compare, Allocator>& y);
-
-        // // specialized algorithms:
-        // template <class Key, class T, class Compare, class Allocator>
-        // void
-        // swap(map<Key, T, Compare, Allocator>& x, map<Key, T, Compare, Allocator>& y)
-        //     noexcept(noexcept(x.swap(y)));
-
-        // template <class Key, class T, class Compare, class Allocator, class Predicate>
-        // void erase_if(map<Key, T, Compare, Allocator>& c, Predicate pred);  // C++20
+            pair<const_iterator,const_iterator> equal_range (const key_type& k) const
+            { return tree.equal_range(k);}
+            
+            pair<iterator,iterator> equal_range (const key_type& k)
+            { return tree.equal_range(k); }
 
     };
-          
+
+    template <class Key, class T, class Compare, class Alloc>  
+    bool operator== ( const map<Key,T,Compare,Alloc>& lhs, const map<Key,T,Compare,Alloc>& rhs)
+    {  return lhs.size() == rhs.size() && std::equal(lhs.begin(), lhs.end(), rhs.begin());}
+
+    template <class Key, class T, class Compare, class Alloc>  
+    bool operator!= ( const map<Key,T,Compare,Alloc>& lhs, const map<Key,T,Compare,Alloc>& rhs )
+    { return !(lhs == rhs); }
+    
+    template <class Key, class T, class Compare, class Alloc>  
+    bool operator<  ( const map<Key,T,Compare,Alloc>& lhs, const map<Key,T,Compare,Alloc>& rhs )
+    { return ft::lexicographical_compare(lhs.begin(), lhs.end(), rhs.begin(), rhs.end()); }
+    
+    template <class Key, class T, class Compare, class Alloc>  
+    bool operator<= ( const map<Key,T,Compare,Alloc>& lhs, const map<Key,T,Compare,Alloc>& rhs )
+    { return !(rhs < lhs); }
+    
+    template <class Key, class T, class Compare, class Alloc>  
+    bool operator>  ( const map<Key,T,Compare,Alloc>& lhs, const map<Key,T,Compare,Alloc>& rhs )
+    { return rhs < lhs; }
+    
+    template <class Key, class T, class Compare, class Alloc>  
+    bool operator>= ( const map<Key,T,Compare,Alloc>& lhs, const map<Key,T,Compare,Alloc>& rhs )
+    { return !(lhs < rhs); }  
+
+    template <typename Key, typename T, typename Compare, typename Alloc>
+	void  swap(ft::map<Key, T, Compare, Alloc>& lhs, ft::map<Key, T, Compare, Alloc>& rhs) 
+    { lhs.swap(rhs); }      
 }
 #endif

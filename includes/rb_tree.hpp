@@ -128,10 +128,10 @@ namespace ft
                             rightRotate(k->_parent->_parent);
                         }
 			        }
-                    if (k == root) 
+                    if (k == _root) 
                         break;
 		        }
-		        root->_color = black;
+		        _root->_color = black;
 	        }
             // https://algorithmtutor.com/Data-Structures/Tree/Red-Black-Trees/
             // refer fig 3
@@ -381,53 +381,53 @@ namespace ft
             { return (&this->_end_node); }
 
 
-            // Node_ptr& leftmost()
-            // { 
-            //     Node_ptr n = root();
-            //     return (n->minimum());
-            // }
+    //         // Node_ptr& leftmost()
+    //         // { 
+    //         //     Node_ptr n = root();
+    //         //     return (n->minimum());
+    //         // }
 
-            // Const_Node_ptr leftmost() const
-            // { 
-            //     Node_ptr n = root();
-            //     return (n->minimum());
-            // }
+    //         // Const_Node_ptr leftmost() const
+    //         // { 
+    //         //     Node_ptr n = root();
+    //         //     return (n->minimum());
+    //         // }
 
-            // Node_ptr& rightmost()
-            // { 
-            //     Node_ptr n = root();
-            //     return (n->maximum());
-            // }
+    //         // Node_ptr& rightmost()
+    //         // { 
+    //         //     Node_ptr n = root();
+    //         //     return (n->maximum());
+    //         // }
 
-            // Const_Node_ptr rightmost() const
-            // { 
-            //     Node_ptr n = root();
-            //     return (n->maximum());
-            // }
+    //         // Const_Node_ptr rightmost() const
+    //         // { 
+    //         //     Node_ptr n = root();
+    //         //     return (n->maximum());
+    //         // }
 
-            // iterator begin()
-            // {  return iterator(leftmost()); }
+    //         // iterator begin()
+    //         // {  return iterator(leftmost()); }
 
-            // const_iterator begin() const
-            // {  return const_iterator(leftmost()); }
+    //         // const_iterator begin() const
+    //         // {  return const_iterator(leftmost()); }
 
-            // iterator end()
-            // { return iterator(this->_end_node); }
+    //         // iterator end()
+    //         // { return iterator(this->_end_node); }
 
-            // const_iterator end() const
-            // { return const_iterator(this->_end_node); }
+    //         // const_iterator end() const
+    //         // { return const_iterator(this->_end_node); }
 
-            // reverse_iterator rbegin() 
-            // { return reverse_iterator(end()); }
+    //         // reverse_iterator rbegin() 
+    //         // { return reverse_iterator(end()); }
 
-            // const_reverse_iterator rbegin() const 
-            // { return const_reverse_iterator(end()); }
+    //         // const_reverse_iterator rbegin() const 
+    //         // { return const_reverse_iterator(end()); }
 
-            // reverse_iterator rend() 
-            // { return reverse_iterator(begin()); }
+    //         // reverse_iterator rend() 
+    //         // { return reverse_iterator(begin()); }
 
-            // const_reverse_iterator rend() const 
-            // { return const_reverse_iterator(begin()); }
+    //         // const_reverse_iterator rend() const 
+    //         // { return const_reverse_iterator(begin()); }
 
             bool empty() const 
             { return _node_count == 0; }
@@ -464,18 +464,62 @@ namespace ft
                 _end_node = x._end_node;
             }
 
-            // Rb_tree& operator = ( const Rb_tree &x )
-            // {
-            //     clear(); // Replacement allocator cannot free existing storage, we need to erase nodes first.
-            //     this->_comp = x._comp;
-            //     if (x.root() != 0)
-	        //         root() = copy(x, __roan);
+            Rb_tree& operator=( const Rb_tree &x )
+            {
+                if(this != x)
+                {
+                    clear(); // Replacement allocator cannot free existing storage, we need to erase nodes first.
+                    this->_node_count = 0;
+                    this->_comp = x._comp;
+                    if (x.root() == 0) 
+                    {
+                        root() = 0;
+                        // leftmost() = &_end_node;
+                        // rightmost() = &_end_node;
+                    }
+                    else
+                    {
+                        root() = copy(x.root(), end());
+                        // leftmost() = x._S_minimum(_M_root());
+                        // ightmost() = _S_maximum(_M_root());
+                        _node_count = x._node_count;
+                    }
+                }
+                return *this;
+            }
 
-            //     return *this;
-            // };
 
             ~Rb_tree( void )                                                             
             {       this->erase(begin()); };
+
+    //         Node_ptr copy(Node_ptr x, Node_ptr p)
+    //         {
+    //                                 // structural copy.  __x and __p must be non-null.
+    //             Node_ptr top = clone_node(x);
+    //             top->_parent= p;
+    //             try
+    //             {
+    //                 if (x->_right)
+    //                     top->_right = copy(x->_right, top);
+    //                 p = top;
+    //                 x = x->_left;
+
+    //                 while (x != 0) 
+    //                 {
+    //                     Node_ptr y = clone_node(x);
+    //                     p->_left = y;
+    //                     y->_parent = p;
+    //                     if (x->_right)
+    //                         y->_right = copy(x->_right, y);
+    //                     p = y;
+    //                     x = x->_left;
+    //             }
+    //             catch(const std::exception& e)
+    //             {
+    //                 erase(top);
+    //             }
+    //             return top;
+    //         }
 
 
             Node_allocator& get_Node_allocator()
@@ -487,67 +531,67 @@ namespace ft
             allocator_type get_allocator() const
             { return allocator_type(get_Node_allocator()); }
 
-            pair<iterator, bool> insert_unique(const value_type & v) //refer comment #2
-            {
-                Node_ptr n = create_node(v);
-                Node_ptr y = nullptr;
-                Node_ptr x = begin();
-                bool flag = true; //indicates if insert was a success
-                while (x != 0) //at the end of this loop y will be the parent of new node
-                {
-                    y = x;
-                    if(S_key(n) <  S_key(x))
-                        x = x->_left;
-                    else
-                        x = x->_right;
-                }
-                iterator i = n;
-                n->_parent == y;
-                //inserting the node
-                if (y == nullptr)
-                    _root = n;
-                else if (S_key(n) < S_key(y))
-                    y->_left = n; 
-                else if (S_key(n) > S_key(y))
-                    y->_right = n;
-                else //case of duplicate key
-                {
-                    flag = false;
-                    destroy_node(n);
-                    return(i, flag);
-                }
-                if (n->_parent == nullptr) // if n is parent node make it black
-                {
-                    n->_color = black;
-                    return(i, flag);
-                }
-                if (n->_parent->_parent == nullptr) //if granparent is nul i.e., parent is root do nothing
-			        return(i, flag);
-                // rebalance the tree
-                rebalance_insert(n);
-                return(i, flag);
-            }
+    //         pair<iterator, bool> insert_unique(const value_type & v) //refer comment #2
+    //         {
+    //             Node_ptr n = create_node(v);
+    //             Node_ptr y = nullptr;
+    //             Node_ptr x = begin();
+    //             bool flag = true; //indicates if insert was a success
+    //             while (x != 0) //at the end of this loop y will be the parent of new node
+    //             {
+    //                 y = x;
+    //                 if(S_key(n) <  S_key(x))
+    //                     x = x->_left;
+    //                 else
+    //                     x = x->_right;
+    //             }
+    //             iterator i = n;
+    //             n->_parent == y;
+    //             //inserting the node
+    //             if (y == nullptr)
+    //                 _root = n;
+    //             else if (S_key(n) < S_key(y))
+    //                 y->_left = n; 
+    //             else if (S_key(n) > S_key(y))
+    //                 y->_right = n;
+    //             else //case of duplicate key
+    //             {
+    //                 flag = false;
+    //                 destroy_node(n);
+    //                 return(i, flag);
+    //             }
+    //             if (n->_parent == nullptr) // if n is parent node make it black
+    //             {
+    //                 n->_color = black;
+    //                 return(i, flag);
+    //             }
+    //             if (n->_parent->_parent == nullptr) //if granparent is nul i.e., parent is root do nothing
+	// 		        return(i, flag);
+    //             // rebalance the tree
+    //             rebalance_insert(n);
+    //             return(i, flag);
+    //         }
 
-            template<typename InputIterator>
-			void	insert_range_unique(InputIterator first, InputIterator last,
-            typename ft::enable_if<!ft::is_integral<InputIterator>::value, InputIterator>::type* = NULL)
-            {
-				while (first != last) 
-                {
-					this->insert(*first);
-					++first;
-				}
-			}
+    //         template<typename InputIterator>
+	// 		void	insert_range_unique(InputIterator first, InputIterator last,
+    //         typename ft::enable_if<!ft::is_integral<InputIterator>::value, InputIterator>::type* = NULL)
+    //         {
+	// 			while (first != last) 
+    //             {
+	// 				this->insert(*first);
+	// 				++first;
+	// 			}
+	// 		}
 
-            template<typename InputIterator>
-	        void insert(InputIterator first, InputIterator last)
-	        {
-                while (first != last) 
-                {
-					this->insert(*first);
-					++first;
-				}
-            }
+    //         template<typename InputIterator>
+	//         void insert(InputIterator first, InputIterator last)
+	//         {
+    //             while (first != last) 
+    //             {
+	// 				this->insert(*first);
+	// 				++first;
+	// 			}
+    //         }
 
             void erase(const_iterator position)
             {
@@ -602,117 +646,156 @@ namespace ft
                 this->_root = &(_end_node);
             }
 
-            // iterator find(const key_type& __k);
+            iterator find(const key_type& k)
+            {
+                iterator j = lower_bound(k);
+                return (j);
+            }
 
-            // const_iterator
-            // find(const key_type& __k) const;
+            const_iterator find(const key_type& k) const
+            {
+                const_iterator j = lower_bound(k);
+                return (j);
+            }
 
-            // size_type
-            // count(const key_type& __k) const;
+            size_type count(const key_type& k) const
+            {  return (this->find(k) == this->end() ? 0 : 1);}
 
-            // iterator lower_bound(const key_type& k)
-            // { 
-            //     Node_ptr x = begin();
-            //     Node_ptr y = end();
-            //     while(x != 0)
+            /* Returns an iterator pointing to the first element in the container
+             whose key is not considered to go before k (i.e., either it is equivalent or goes after).*/
+            iterator lower_bound(const key_type& k)
+            { 
+                Node_ptr x = begin();
+                Node_ptr y = end();
+                while(x != 0)
+                {
+                    if (!this->_comp(s_key(x), k))
+                    {
+                        y = x;
+                        x = x->_left;
+                    }
+                    else
+                        x = x->_right;
+                }
+                return iterator(y);
+            }
+
+
+            const_iterator lower_bound(const key_type& k) const
+            { 
+                Node_ptr x = begin();
+                Node_ptr y = end();
+                while(x != 0)
+                {
+                    if (!this->_comp(s_key(x), k))
+                    {
+                        y = x;
+                        x = x->_left;
+                    }
+                    else
+                        x = x->_right;
+                }
+                return const_iterator(y); 
+            }
+
+            iterator upper_bound(const key_type& k)
+            { 
+                Node_ptr x = begin();
+                Node_ptr y = end();
+                while (x != 0)
+                {
+                    if (this->key_comp(k, S_key(x)))
+                    {
+                        y = x;
+                        x = x->_left;
+                    }
+                    else
+                        x = x->_right;
+                }
+                return iterator(y);
+            }
+
+            const_iterator upper_bound(const key_type& k) const
+            { 
+                Node_ptr x = begin();
+                Node_ptr y = end();
+                while (x != 0)
+                {
+                    if (this->key_comp(k, S_key(x)))
+                    {
+                        y = x;
+                        x = x->_left;
+                    }
+                    else
+                        x = x->_right;
+                }
+                return const_iterator(y); 
+            }
+
+            void swap(Rb_tree& t)
+            {
+                std::swap(this.root(),t.root());
+                // std::swap(_M_leftmost(),__t._M_leftmost());
+                // std::swap(_M_rightmost(),__t._M_rightmost());
+                root()->_parent = end();
+                t.root()->_parent = t.end();
+                std::swap(this->_node_count, t._node_count);                    // No need to swap header's color as it does not change.
+                std::swap(this->_comp, t._comp);
+                std::__alloc_on_swap(this->get_Node_allocator(), t.get_Node_allocator());
+            }
+
+            Compare key_comp() const
+            { return _comp; }
+
+            /*Returns the bounds of a range that includes all the elements in the container which 
+            have a key equivalent to k. Because the elements in a map container have unique keys, 
+            the range returned will contain a single element at most.
+            If no matches are found, the range returned has a length of zero, with both iterators 
+            pointing to the first element that has a key considered to go after k*/
+            pair<iterator, iterator> equal_range(const key_type& k)
+            {
+                Node_ptr x = begin();
+                Node_ptr y = end();
+                while (x != 0)
+                {
+                    if (this->key_comp(S_key(x), k))
+                        x = x->_right;
+                    else if (this->key_comp(k, S_key(x)))
+                    {
+                        y = x;
+                        x = x->_left;
+                    }
+                    else
+                    {
+                        Node_ptr xu(x);
+                        Node_ptr yu(y);
+                        y = x, x = x->_left;
+                        xu = xu->_right;
+                        return pair<iterator,iterator>(lower_bound(k),lower_bound(k));
+                    }
+                }
+                return pair<iterator, iterator>(iterator(y),iterator(y));
+            }
+
+
+
+
 
             
-            // }
-
-            // const_iterator
-            // lower_bound(const key_type& __k) const
-            // { return _M_lower_bound(_M_begin(), _M_end(), __k); }
-
-            // iterator
-            // upper_bound(const key_type& __k)
-            // { return _M_upper_bound(_M_begin(), _M_end(), __k); }
-
-            // const_iterator
-            // upper_bound(const key_type& __k) const
-            // { return _M_upper_bound(_M_begin(), _M_end(), __k); }
-
-            // pair<iterator, iterator>
-            // equal_range(const key_type& __k);
-
-            // pair<const_iterator, const_iterator>
-            // equal_range(const key_type& __k) const;
-
-            
-            // void erase(iterator pos)
-            // {
-            //     if (node_count != 0) 
-            //     {
-            //         _M_erase(_M_root());
-            //         root() = 0;
-            //         // _M_leftmost() = _M_header;
-            //         // _M_rightmost() = _M_header;
-            //         node_count = 0;
-            //     }
+    //         // void erase(iterator pos)
+    //         // {
+    //         //     if (node_count != 0) 
+    //         //     {
+    //         //         _M_erase(_M_root());
+    //         //         root() = 0;
+    //         //         // _M_leftmost() = _M_header;
+    //         //         // _M_rightmost() = _M_header;
+    //         //         node_count = 0;
+    //         //     }
                 
-            // }
+    //         // }
 
-            
-
-
-            /* Accessors */
-
-
-
-            // Link_type begin()
-            // { return static_cast<Link_type>(this->node->parent); }
-
-            // Const_Link_type begin() const
-            // {
-            //     return static_cast<Const_Link_type>(this->node->parent);
-            // }
-
-            // Link_type end()
-            // { return static_cast<Link_type>(&this->node); }
-
-            // Const_Link_type end() const
-            // { return static_cast<Const_Link_type>(&this->node); }
-
-            // static const_reference value(Const_Link_type x)
-            // { return x->value; }
-
-            // static const Key& key(Const_Link_type x)
-            // { return _KeyOfValue()(_S_value(__x)); }
-
-            // static Link_type
-            // _S_left(Node_ptr __x)
-            // { return static_cast<Link_type>(__x->left); }
-
-            // static Const_Link_type
-            // _S_left(Const_Node_ptr __x)
-            // { return static_cast<Const_Link_type>(__x->left); }
-
-            // static Link_type
-            // _S_right(Node_ptr __x)
-            // { return static_cast<Link_type>(__x->right); }
-
-            // static Const_Link_type
-            // _S_right(Const_Node_ptr __x)
-            // { return static_cast<Const_Link_type>(__x->right); }
-
-            // static const_reference
-            // _S_value(Const_Node_ptr __x)
-            // { return static_cast<Const_Link_type>(__x)->_M_value_field; }
-
-            // static const _Key&
-            // _S_key(Const_Node_ptr __x)
-            // { return _KeyOfValue()(_S_value(__x)); }
-
-            // static Node_ptr minimum(Node_ptr x)
-            // { return x->minimum(x->right); }
-
-            // static Const_Node_ptr minimum(Const_Node_ptr x)
-            // { return x->minimum(x->right); }
-
-            // static Node_ptr maximum(Node_ptr x)
-            // { return x->maximum(x->left); }
-
-            // static Const_Node_ptr maximum(Const_Node_ptr x)
-            // { return x->maximum(x->left); }
+      
     };
 }
 
