@@ -14,6 +14,7 @@
 #define RB_TREE_ITERATOR_HPP
 
 #include "tree_node.hpp"
+#include "iterators.hpp"
 
 namespace ft
 {
@@ -25,19 +26,18 @@ namespace ft
         typedef T* pointer;
         
         typedef ft::bidirectional_iterator_tag  iterator_category;
-        typedef ptrdiff_t                       difference_type;
+        typedef std::ptrdiff_t                       difference_type;
         
         typedef Rb_tree_iterator<T>                 Self;
-        typedef Rb_tree_node<T>                     node_type;
-        typedef typename node_type::node_ptr        base_ptr;
+        typedef typename Rb_tree_node<T>::node_ptr  base_ptr;
         typedef Rb_tree_node<T>*                    Link_type;
 
         base_ptr node;
 
-        Rb_tree_iterator(): node() { }
+        Rb_tree_iterator(): node(){ }
         
         explicit Rb_tree_iterator(Link_type x):node(x) { }
-        
+
         reference operator*() const
         { return node->_value;}
    
@@ -47,17 +47,17 @@ namespace ft
         base_ptr    Rb_tree_increment(base_ptr node)
         {
             //Take a step down to the right, Then run down to the left as far as possible
-            if (node->_right != 0) 
+            if (node->_right->_type != 0) 
             {
                 base_ptr y = node->_right;
-                while (y->_left != 0)
+                while (y->_left->_type != 0)
                     y = y->_left;
                 node = y;
             }
             else //move up the tree until we have moved over a left child link
             {
                 base_ptr y = node->_parent;
-                while (node == y->_right) 
+                while (y != 0 && node == y->_right) 
                 {
                     node = y;
                     y = y->_parent;
@@ -70,25 +70,43 @@ namespace ft
 
         base_ptr Rb_tree_decrement(base_ptr node)
         {
-            if (node->_color == red && node->_parent->_parent == node)
-                node = node->_right;
+            // if (node->_color == red && node->_parent->_parent == node)
+            //     node = node->_right;
             //Take a step down to the left, Then run down to the right as far as possible
-            else if (node->_left != 0) 
+            // if (node == 0)
+            // {
+            //     std::cout <<"tring\n";
+            //     // node = 
+                
+            //     // // error! ++ requested for an empty tree
+            //     // if (nodePtr == nullptr)
+            //     //     throw UnderflowException { };
+                
+            //     // // move to the smallest value in the tree,
+            //     // // which is the first node inorder
+            //     // while (nodePtr->left != nullptr) 
+            //     //     nodePtr = nodePtr->left;
+            // }
+            // else
             {
-                base_ptr y = node->_left;
-                while (y->_right != 0)
-                    y = y->_right;
-                node = y;
-            }
-            else //move up the tree until we have moved over a right child link
-            {
-                base_ptr y = node->_parent;
-                while (node == y->_left) 
+                if (node->_left->_type != 0) 
                 {
+                    base_ptr y = node->_left;
+                    while (y->_right->_type != 0)
+                        y = y->_right;
                     node = y;
-                    y = y->_parent;
                 }
-                node = y;
+                else //move up the tree until we have moved over a right child link
+                {
+                    std::cout <<"tring 2\n";
+                    base_ptr y = node->_parent;
+                    while (y!= 0 && node == y->_left) 
+                    {
+                        node = y;
+                        y = y->_parent;
+                    }
+                    node = y;
+                }
             }
             return node;
         }
@@ -149,18 +167,20 @@ namespace ft
         typedef Rb_tree_iterator<T> iterator;
         
         typedef std::bidirectional_iterator_tag             iterator_category;
-        typedef ptrdiff_t                                   difference_type;
+        typedef std::ptrdiff_t                                   difference_type;
         typedef Rb_tree_const_iterator<T>                   Self;            
         typedef typename  Rb_tree_node<T>::const_node_ptr   base_ptr;
         typedef Rb_tree_node<T>*                            Link_type;
 
         base_ptr node;
   
-        Rb_tree_const_iterator(): node() { }
+        Rb_tree_const_iterator(): node(){ }
             
-        explicit Rb_tree_const_iterator(Link_type x): node(x){ }
+        explicit Rb_tree_const_iterator(const Rb_tree_node<T>* x): node(x){ }
  
-        Rb_tree_const_iterator(const iterator& it): node(it.node) { }
+        Rb_tree_const_iterator(const  Rb_tree_const_iterator& it) : node(it.node){}
+
+        Rb_tree_const_iterator(const iterator& it): node(it.node){ }
 
         reference operator*() const
         { return node->_value; }
@@ -171,43 +191,46 @@ namespace ft
         base_ptr    Rb_tree_increment(base_ptr node)
         {
             //Take a step down to the right, Then run down to the left as far as possible
-            if (node->_right != 0) 
+            if (node->_right->_type != 0) 
             {
                 base_ptr y = node->_right;
-                while (y->_left != 0)
+                while (y->_left->_type != 0)
                     y = y->_left;
                 node = y;
             }
             else //move up the tree until we have moved over a left child link
             {
                 base_ptr y = node->_parent;
-                while (node == y->_right)                     
+                while (y!= 0 && node == y->_right)   //if current node is right node move to parent                  
                 {
                     node = y;
                     y = y->_parent;
                 }
-                if (node->_right != y)                        
+                if (node->_right != y)  
+                {                      
                     node = y;
+                }
             }
             return node;
         }
 
         base_ptr Rb_tree_decrement(base_ptr node)
         {
-            if (node->_color == red && node->_parent->_parent == node)
-                node = node->_right;
+            std::cout << "hi---\n";
+            // if (node->_color == red && node->_parent->_parent == node)
+            //     node = node->_right;
             //Take a step down to the left, Then run down to the right as far as possible
-            else if (node->_left != 0) 
+            if (node->_left->_type != 0) 
             {
                 base_ptr y = node->_left;
-                while (y->_right != 0)
+                while (y->_right->_type != 0)
                     y = y->_right;
                 node = y;
             }
             else //move up the tree until we have moved over a right child link
             {
                 base_ptr y = node->_parent;
-                while (node == y->_left) 
+                while (y!= 0 && node == y->_left) 
                 {
                     node = y;
                     y = y->_parent;

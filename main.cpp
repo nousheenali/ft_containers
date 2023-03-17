@@ -22,7 +22,7 @@
 int main() 
 {
     ft::map<int, int> m1;
-	std::map<int, int> m2;
+	// std::map<int, int> m2;
 	// m2.insert(std::pair<int,int>(20,200) );
 	// m2.insert(std::pair<int,int>(30,300) );
 	// m2.insert(std::pair<int,int>(10,100) );

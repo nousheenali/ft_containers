@@ -22,7 +22,7 @@
 
 namespace ft
 {
-    template < class T, class Alloc = std::allocator<T> >
+    template <class T, class Alloc = std::allocator<T> >
     class vector
     {    
         public:

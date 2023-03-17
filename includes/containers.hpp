@@ -25,6 +25,8 @@
 #include "stack_test.hpp"
 #include "iterators.hpp"
 #include "pair.hpp"
+#include "compare_utils.hpp"
+#include "type_traits.hpp"
 
 #define GREEN "\033[1;32m"
 #define RED "\031[1;32m"

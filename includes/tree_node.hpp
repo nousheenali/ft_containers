@@ -24,6 +24,7 @@ namespace ft
         typedef const Rb_tree_node<Val>*    const_node_ptr;
 
         Val             _value;
+        int             _type; //0-leaf node, 1-other nodes
         Rb_tree_color   _color;
         node_ptr        _parent;
         node_ptr        _left;

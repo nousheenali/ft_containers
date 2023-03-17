@@ -33,7 +33,7 @@ namespace ft
         can inherit from this class to save some work.  The typedefs are then
         used in specializations and overloading.*/
         
-    template<typename _Category, typename _Tp, typename _Distance = ptrdiff_t, 
+    template<typename _Category, typename _Tp, typename _Distance = std::ptrdiff_t, 
               typename _Pointer = _Tp*, typename _Reference = _Tp&>
     struct iterator
     {
@@ -67,7 +67,7 @@ namespace ft
     {
       typedef random_access_iterator_tag iterator_category;
       typedef _Tp                         value_type;
-      typedef ptrdiff_t                   difference_type;
+      typedef std::ptrdiff_t                   difference_type;
       typedef _Tp*                        pointer;
       typedef _Tp&                        reference;
     };
@@ -79,7 +79,7 @@ namespace ft
     {
       typedef random_access_iterator_tag iterator_category;
       typedef _Tp                         value_type;
-      typedef ptrdiff_t                   difference_type;
+      typedef std::ptrdiff_t                   difference_type;
       typedef const _Tp*                  pointer;
       typedef const _Tp&                  reference;
     };

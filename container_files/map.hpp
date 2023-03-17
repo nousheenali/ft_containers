@@ -15,6 +15,9 @@
 
 #include "../includes/pair.hpp"
 #include "../includes/rb_tree.hpp"
+// #include "../includes/iterators.hpp"
+#include "../includes/compare_utils.hpp"
+#include "../includes/type_traits.hpp"
 // #include <functional> //to access std::less
 
 namespace ft
@@ -108,16 +111,16 @@ namespace ft
             { return allocator_type(tree.get_allocator()); }
 
             iterator begin() 
-            { return tree.begin(); }
+            { return tree._begin(); }
 
             const_iterator begin() const 
-            { return tree.begin(); }
+            { return tree._begin(); }
 
             iterator end() 
-            { return tree.end(); }
+            { return tree._end(); }
 
             const_iterator end() const 
-            { return tree.end(); }
+            { return tree._end(); }
 
             reverse_iterator rbegin() 
             { return tree.rbegin(); }
@@ -141,6 +144,8 @@ namespace ft
             /** Returns the maximum size of the %map.  */
             size_type max_size() const 
             { return tree.max_size(); }
+
+
 
 
             /*
@@ -181,7 +186,8 @@ namespace ft
             /*inserts a range of elements.*/
             template <class InputIterator>  
             void insert (InputIterator first, InputIterator last)
-            {   tree.insert_range_unique(first, last);}
+            {  
+                tree.insert_range_unique(first, last);}
    
 
             /*returns mapped value to key k. If key not present, this function inserts a new element
@@ -223,8 +229,8 @@ namespace ft
 
             /*Exchanges the content of the container by the content of x, which is another 
             map of the same type. Sizes may differ.*/
-            void swap (map& x)
-            { tree.swap(x.tree);}
+            // void swap (map& x)
+            // { tree.swap(x.tree);}
 
             void clear()
             { tree.clear();}
@@ -262,7 +268,6 @@ namespace ft
             
             pair<iterator,iterator> equal_range (const key_type& k)
             { return tree.equal_range(k); }
-
     };
 
     template <class Key, class T, class Compare, class Alloc>  
@@ -289,8 +294,8 @@ namespace ft
     bool operator>= ( const map<Key,T,Compare,Alloc>& lhs, const map<Key,T,Compare,Alloc>& rhs )
     { return !(lhs < rhs); }  
 
-    template <typename Key, typename T, typename Compare, typename Alloc>
-	void  swap(ft::map<Key, T, Compare, Alloc>& lhs, ft::map<Key, T, Compare, Alloc>& rhs) 
-    { lhs.swap(rhs); }      
+    // template <typename Key, typename T, typename Compare, typename Alloc>
+	// void  swap(ft::map<Key, T, Compare, Alloc>& lhs, ft::map<Key, T, Compare, Alloc>& rhs) 
+    // { lhs.swap(rhs); }      
 }
 #endif
