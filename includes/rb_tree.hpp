@@ -329,11 +329,82 @@ namespace ft
                     rebalance_delete(x);
 	        }
 
+            Node_ptr copy(Node_ptr x, Node_ptr p)
+            {
+                // structural copy.  x and p must be non-null.
+                // std::cout <<"hello "<< (int)S_key(x)<<std::endl;
+                Node_ptr top = clone_node(x);
+                top->_parent = p;
+                try
+                {
+                    if (S_key(x->_right))
+                        top->_right = copy(x->_right, top);
+                    p = top;
+                    x = x->_left;
+                    while (S_key(x))
+                    {
+                        Node_ptr y = clone_node(x);
+                        p->_left = y;
+                        y->_parent = p;
+                        if (S_key(x->_right))
+                            y->_right = copy(x->_right, y);
+                        p = y;
+                        x = x->_left;
+                    }
+                }
+                catch(const std::exception& e)
+                {
+                    this->erase(top); 
+                }
+                return top;
+            }
+
             // Node_ptr	end_node() 
             // {  return (&this->_end_node);}
 
 			// Const_Node_ptr	end_node() const 
             // {  return (const_cast<const_node_ptr>(&this->_end_node));}
+        public:
+        
+            Node_ptr Rb_tree_decrement(Node_ptr node)
+            {
+                if (node == 0)
+                {
+                    node = rightmost();
+                    // node = 
+                    
+                    // // error! ++ requested for an empty tree
+                    // if (nodePtr == nullptr)
+                    //     throw UnderflowException { };
+                    
+                    // // move to the smallest value in the tree,
+                    // // which is the first node inorder
+                    // while (nodePtr->left != nullptr) 
+                    //     nodePtr = nodePtr->left;
+                }
+                else
+                {
+                    if (node->_left->_type != 0) 
+                    {
+                        Node_ptr y = node->_left;
+                        while (y->_right->_type != 0)
+                            y = y->_right;
+                        node = y;
+                    }
+                    else //move up the tree until we have moved over a right child link
+                    {
+                        // std::cout <<"tring 2\n";
+                        Node_ptr y = node->_parent;
+                        while (y!= 0 && node == y->_left) 
+                        {
+                            node = y;
+                            y = y->_parent;
+                        }
+                        node = y;
+                    }
+                }
+                return node;
+            }
 
         public:
             Node_ptr get_node() //allocates
@@ -365,8 +436,8 @@ namespace ft
             {
                 Node_ptr tmp = create_node(x->_value);
                 tmp->_color = x->_color;
-                tmp->_left = 0;
-                tmp->_right = 0;
+                tmp->_left = &_end_node;
+                tmp->_right = &_end_node;
                 return tmp;
             }
 
@@ -393,6 +464,8 @@ namespace ft
 
             iterator _begin() 
             {   
+                if (_root == end()) // if empty
+                    return (_end());
                 Node_ptr i = _root;
                 while (i->_left != end()) 
                     i = i->_left;
@@ -401,6 +474,8 @@ namespace ft
 
             const_iterator _begin() const 
             {
+               if (_root == end()) //if empty
+                    return (_end());
                 Node_ptr i = _root;
                 while (i->_left != end()) 
                     i = i->_left;
@@ -409,11 +484,11 @@ namespace ft
 
             iterator _end()
             { 
-               return iterator (this->_end_node._parent);
+               return iterator(this->_end_node._parent);
             } 
 
             const_iterator _end() const
-            { 
+            {
                 return const_iterator(this->_end_node._parent);
             }
 
@@ -454,6 +529,20 @@ namespace ft
                     i = i->_right;
                 return (i);
             }
+
+            // Node_ptr minimum(Node_ptr x)
+            // {
+            //     while (x->_left != &_end_node) 
+            //         x = x->_left;
+            //     return x;
+            // }
+
+            // Node_ptr maximum(Node_ptr x)
+            // {
+            //     while (x->_right != &_end_node) 
+            //         x = x->_right;
+            //     return x;
+            // }
             
         public:
             // allocation/deallocation
@@ -479,9 +568,9 @@ namespace ft
                 _end_node = x._end_node;
             }
 
-            Rb_tree& operator=( const Rb_tree &x )
+            Rb_tree& operator=(const Rb_tree &x)
             {
-                if(this != x)
+                if(this != &x)
                 {
                     clear(); // Replacement allocator cannot free existing storage, we need to erase nodes first.
                     this->_node_count = 0;
@@ -489,14 +578,13 @@ namespace ft
                     if (x.root() == 0) 
                     {
                         root() = 0;
-                        // leftmost() = &_end_node;
-                        // rightmost() = &_end_node;
+                        _root->_left = &_end_node;
+                        _root->_right = &_end_node;
                     }
                     else
                     {
-                        root() = copy(x.root(), end());
-                        // leftmost() = x._S_minimum(_M_root());
-                        // ightmost() = _S_maximum(_M_root());
+                        root() = copy(x._root, end());
+                        this->_root->_parent = x._root->_parent;
                         _node_count = x._node_count;
                     }
                 }
@@ -506,36 +594,6 @@ namespace ft
 
             ~Rb_tree( void )                                                             
             {       this->erase(begin()); };
-
-    //         Node_ptr copy(Node_ptr x, Node_ptr p)
-    //         {
-    //                                 // structural copy.  __x and __p must be non-null.
-    //             Node_ptr top = clone_node(x);
-    //             top->_parent= p;
-    //             try
-    //             {
-    //                 if (x->_right)
-    //                     top->_right = copy(x->_right, top);
-    //                 p = top;
-    //                 x = x->_left;
-
-    //                 while (x != 0) 
-    //                 {
-    //                     Node_ptr y = clone_node(x);
-    //                     p->_left = y;
-    //                     y->_parent = p;
-    //                     if (x->_right)
-    //                         y->_right = copy(x->_right, y);
-    //                     p = y;
-    //                     x = x->_left;
-    //             }
-    //             catch(const std::exception& e)
-    //             {
-    //                 erase(top);
-    //             }
-    //             return top;
-    //         }
-
 
             Node_allocator& get_Node_allocator()
             { return this->_node_alloc; }
@@ -577,18 +635,13 @@ namespace ft
                 }
                 if (n->_parent == 0) // if n is root node make it black
                 {
-                    // _end_node._parent = rightmost();
                     n->_color = black;
                     return(ft::make_pair(i, flag));
                 }
                 if (n->_parent->_parent == 0) //if granparent is nul i.e., parent is root do nothing
-                {   
-                    // _end_node._parent = rightmost();
                     return(ft::make_pair(i, flag));
-                }
                 // rebalance the tree
                 rebalance_insert(n);
-                // _end_node._parent = rightmost();
                 return (ft::make_pair(i, flag));
             }
 

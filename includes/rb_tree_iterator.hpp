@@ -15,6 +15,7 @@
 
 #include "tree_node.hpp"
 #include "iterators.hpp"
+#include "rb_tree.hpp"
 
 namespace ft
 {
@@ -29,7 +30,7 @@ namespace ft
         typedef std::ptrdiff_t                       difference_type;
         
         typedef Rb_tree_iterator<T>                 Self;
-        typedef typename Rb_tree_node<T>::node_ptr  base_ptr;
+        typedef typename ft::Rb_tree_node<T>::node_ptr  base_ptr;
         typedef Rb_tree_node<T>*                    Link_type;
 
         base_ptr node;
@@ -70,25 +71,23 @@ namespace ft
 
         base_ptr Rb_tree_decrement(base_ptr node)
         {
-            // if (node->_color == red && node->_parent->_parent == node)
-            //     node = node->_right;
-            //Take a step down to the left, Then run down to the right as far as possible
-            // if (node == 0)
-            // {
-            //     std::cout <<"tring\n";
-            //     // node = 
-                
-            //     // // error! ++ requested for an empty tree
-            //     // if (nodePtr == nullptr)
-            //     //     throw UnderflowException { };
-                
-            //     // // move to the smallest value in the tree,
-            //     // // which is the first node inorder
-            //     // while (nodePtr->left != nullptr) 
-            //     //     nodePtr = nodePtr->left;
-            // }
-            // else
+            
+            if (node == 0)
             {
+                std::cout <<"tring\n";
+            
+                // // error! ++ requested for an empty tree
+                // if (nodePtr == nullptr)
+                //     throw UnderflowException { };
+                
+                // // move to the smallest value in the tree,
+                // // which is the first node inorder
+                // while (nodePtr->left != nullptr) 
+                //     nodePtr = nodePtr->left;
+            }
+            else
+            {
+                //Take a step down to the left, Then run down to the right as far as possible
                 if (node->_left->_type != 0) 
                 {
                     base_ptr y = node->_left;
@@ -98,7 +97,6 @@ namespace ft
                 }
                 else //move up the tree until we have moved over a right child link
                 {
-                    std::cout <<"tring 2\n";
                     base_ptr y = node->_parent;
                     while (y!= 0 && node == y->_left) 
                     {
