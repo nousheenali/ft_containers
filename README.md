@@ -9,6 +9,10 @@ https://www.codeproject.com/Articles/36530/An-Introduction-to-Iterator-Traits
 - https://www.internalpointers.com/post/writing-custom-iterators-modern-cpp
 - https://stackoverflow.com/questions/3582608/how-to-correctly-implement-custom-iterators-and-const-iterators
 - https://codereview.stackexchange.com/questions/198035/implementing-a-custom-iterator-by-inheriting-from-an-existing-iterator-class-and
+- https://stackoverflow.com/questions/71737631/what-is-the-design-purpose-of-iterator-traits
+- https://stackoverflow.com/questions/6742008/what-are-the-typical-use-cases-of-an-iterator-trait
+- DEREFERENCING in reverse iterator : https://devblogs.microsoft.com/oldnewthing/20211112-00/?p=105908
+
 
 ### SFINAE and enable_if
  https://eli.thegreenplace.net/2014/sfinae-and-enable_if/
@@ -22,6 +26,11 @@ https://www.codeproject.com/Articles/36530/An-Introduction-to-Iterator-Traits
 
 - vector iterators
     https://www.youtube.com/watch?v=F9eDv-YIOQ0*/
+    
+- Iterator base class
+    // https://cplusplus.com/reference/iterator/iterator/
+
+
 
 ## Map references
 - STL_MAP implementation :
@@ -29,6 +38,13 @@ https://www.codeproject.com/Articles/36530/An-Introduction-to-Iterator-Traits
 
 - RED_BLACK tree implementation :
   https://github.com/gcc-mirror/gcc/blob/master/libstdc%2B%2B-v3/include/bits/stl_tree.h
+  
+- STL MAP and TREE Standard code
+    http://ld2014.scusa.lsu.edu/STL_doc/stl_tree.h
+    
+- Iterating through a tree
+    https://www.cs.odu.edu/~zeil/cs361/latest/Public/treetraversal/index.html
+    
 
 - RED BLACK tree isertion deletion : https://algorithmtutor.com/Data-Structures/Tree/Red-Black-Trees/
 - bst deletion: https://www.youtube.com/watch?v=cySVml6e_Fc
