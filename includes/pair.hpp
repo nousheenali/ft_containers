@@ -6,7 +6,7 @@
 /*   By: nali <nali@42abudhabi.ae>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/06 10:53:53 by nali              #+#    #+#             */
-/*   Updated: 2023/02/28 14:48:39 by nali             ###   ########.fr       */
+/*   Updated: 2023/03/29 11:41:07 by nali             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,7 +34,7 @@ namespace ft
         template< class U1, class U2 >
         pair( const pair<U1, U2>& p ): first(p.first), second(p.second) { } //copy const
 
-        pair& operator=( const pair& other )
+        pair& operator=(const pair& other )
         {
             first = other.first;
             second = other.second;

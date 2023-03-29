@@ -6,7 +6,7 @@
 /*   By: nali <nali@42abudhabi.ae>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/06 10:21:29 by nali              #+#    #+#             */
-/*   Updated: 2023/03/01 09:57:31 by nali             ###   ########.fr       */
+/*   Updated: 2023/03/29 20:30:41 by nali             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,10 +15,9 @@
 
 #include "../includes/pair.hpp"
 #include "../includes/rb_tree.hpp"
-// #include "../includes/iterators.hpp"
 #include "../includes/compare_utils.hpp"
 #include "../includes/type_traits.hpp"
-// #include <functional> //to access std::less
+#include <vector>
 
 namespace ft
 {
@@ -85,7 +84,7 @@ namespace ft
             // map():tree(){}
 
             explicit map(const key_compare& comp = key_compare(), const allocator_type& alloc = allocator_type())
-            :tree(comp,alloc){}
+            : tree(comp,alloc){ }
             
             template <class InputIterator>
             map(InputIterator first, InputIterator last, const key_compare& comp = key_compare(), const allocator_type& alloc = allocator_type(), 
@@ -97,7 +96,6 @@ namespace ft
 
             map(const map& m):tree(m.tree){}
 
-
             map& operator=(const map& m) 
             {
                 if (this != &m)
@@ -105,7 +103,7 @@ namespace ft
                 return (*this);
 		    }
 
-           ~map(){}
+            ~map(){}
 
             allocator_type get_allocator() const 
             { return allocator_type(tree.get_allocator()); }
@@ -145,11 +143,7 @@ namespace ft
             size_type max_size() const 
             { return tree.max_size(); }
 
-
-
-
-            /*
-                This function attempts to insert a (key, value) pair into the map.
+            /*  This function attempts to insert a (key, value) pair into the map.
                 A pair is only inserted if its first element (the key) is not already 
                 present in the map. Insertion requires logarithmic time.
 
@@ -157,12 +151,11 @@ namespace ft
                 Return -  A pair, of which the first element is an iterator that 
                 points to the possibly inserted pair, and the second is a bool 
                 that is true if the pair was actually inserted.*/
-            pair<iterator,bool> insert (const value_type& val)
+            pair<iterator,bool> insert(const value_type& val)
             { return tree.insert_unique(val); }
 
 
-            /*
-                Attempts to insert a std::pair into the %map.
+            /*  Attempts to insert a std::pair into the %map.
 
                 position - An iterator that serves as a hint as to where the pair should be inserted.
                 val  - Pair to be inserted 
@@ -174,8 +167,7 @@ namespace ft
                 *  single-argument insert() does.  Note that the first
                 *  parameter is only a hint and can potentially improve the
                 *  performance of the insertion process.  A bad hint would
-                *  cause no gains in efficiency.
-            */
+                *  cause no gains in efficiency.*/
     
             iterator insert (iterator position, const value_type& val)
             { 
@@ -194,10 +186,7 @@ namespace ft
              with that key and returns reference to its mappedvale*/
             mapped_type& operator[](const key_type& k)
             {
-                iterator i = lower_bound(k);
-                // i->first is greater than or equivalent to k.
-                if (i == end())
-                    i = (insert(make_pair(k,mapped_type())).first);
+                iterator i = (insert(ft::make_pair(k,mapped_type())).first);
                 return (*i).second;
             }
 
@@ -221,16 +210,23 @@ namespace ft
             { tree.erase(position);}
 
             size_type erase (const key_type& k)
-            { tree.erase(k);}
-
+            { 
+                size_t size_before = this->size();
+                size_t size_after = tree.erase(k);
+                return (size_before - size_after);
+            }
 
             void erase (iterator first, iterator last)
-            { tree.erase(first, last);}
+            { 
+                tree.erase(first, last);
+            }
 
             /*Exchanges the content of the container by the content of x, which is another 
             map of the same type. Sizes may differ.*/
-            // void swap (map& x)
-            // { tree.swap(x.tree);}
+            void swap (map& x)
+            { 
+                tree.swap(x.tree);
+            }
 
             void clear()
             { tree.clear();}
@@ -294,8 +290,8 @@ namespace ft
     bool operator>= ( const map<Key,T,Compare,Alloc>& lhs, const map<Key,T,Compare,Alloc>& rhs )
     { return !(lhs < rhs); }  
 
-    // template <typename Key, typename T, typename Compare, typename Alloc>
-	// void  swap(ft::map<Key, T, Compare, Alloc>& lhs, ft::map<Key, T, Compare, Alloc>& rhs) 
-    // { lhs.swap(rhs); }      
+    template <typename Key, typename T, typename Compare, typename Alloc>
+	void  swap(ft::map<Key, T, Compare, Alloc>& lhs, ft::map<Key, T, Compare, Alloc>& rhs) 
+    { lhs.swap(rhs); }      
 }
 #endif

@@ -6,7 +6,7 @@
 /*   By: nali <nali@42abudhabi.ae>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/06 17:59:19 by nali              #+#    #+#             */
-/*   Updated: 2023/03/03 09:32:42 by nali             ###   ########.fr       */
+/*   Updated: 2023/03/29 20:34:09 by nali             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,110 @@
 /*br tree test*/
 int main() 
 {
-    ft::map<int, int> m1;
+	ft::map<int, int > test1;
+	test1.insert(ft::make_pair<int,int>(1,100));
+	test1.insert(ft::make_pair<int,int>(2,200));
+	test1.insert(ft::make_pair<int,int>(3,300));
+	test1.insert(ft::make_pair<int,int>(4,400));
+	test1.insert(ft::make_pair<int,int>(5,500));
+	test1.insert(ft::make_pair<int,int>(6,600));
+	test1.insert(ft::make_pair<int,int>(7,800));
+	test1.insert(ft::make_pair<int,int>(8,800));
+	test1.insert(ft::make_pair<int,int>(9,900));
+	test1.insert(ft::make_pair<int,int>(10,400));
+	test1.insert(ft::make_pair<int,int>(11,500));
+	test1.insert(ft::make_pair<int,int>(12,600));
+	test1.insert(ft::make_pair<int,int>(13,100));
+	test1.insert(ft::make_pair<int,int>(14,200));
+	test1.insert(ft::make_pair<int,int>(15,300));
+	test1.insert(ft::make_pair<int,int>(16,400));
+	test1.insert(ft::make_pair<int,int>(17,500));
+	test1.insert(ft::make_pair<int,int>(18,600));
+	test1.insert(ft::make_pair<int,int>(19,100));
+	test1.insert(ft::make_pair<int,int>(20,200));
+	test1.insert(ft::make_pair<int,int>(21,300));
+	test1.insert(ft::make_pair<int,int>(22,400));
+	test1.insert(ft::make_pair<int,int>(23,500));
+	test1.insert(ft::make_pair<int,int>(24,600));
+	test1.insert(ft::make_pair<int,int>(25,100));
+	test1.insert(ft::make_pair<int,int>(26,200));
+	test1.insert(ft::make_pair<int,int>(27,300));
+	test1.insert(ft::make_pair<int,int>(28,400));
+	test1.insert(ft::make_pair<int,int>(29,500));
+	test1.insert(ft::make_pair<int,int>(30,600));
+	
+	
+
+	ft::map<int, int>::iterator it = test1.begin(), ite = test1.end();
+	for (; it != ite; ++it)
+		std::cout << "key = " << it->first << "  |  Val = " << it->second << std::endl;
+	std::cout << "----------------------- " <<std::endl;
+	test1.erase(++test1.begin(), test1.end());
+	it = test1.begin(), ite = test1.end();
+	for (; it != ite; ++it)
+		std::cout << "key = " << it->first << "  |  Val = " << it->second << std::endl;
+	
+
+
+	//  // string key
+	// ft::map<std::string, int > test1;
+	// test1.insert(ft::make_pair<std::string,int>("a",100));
+	// test1.insert(ft::make_pair<std::string,int>("b",200));
+	// test1.insert(ft::make_pair<std::string,int>("c",300));
+
+	// ft::map<std::string, int >::iterator i= test1.begin(), ie = test1.end();
+	// for(;i != ie; ++i)
+	// 	std::cout <<"key: "<< i->first << "-" << "val: " <<i->second <<std::endl;
+		
+	// ft::map<std::string, int > test5 = test1;
+
+	// i= test5.begin(), ie = test5.end();
+	// for(;i != ie; ++i)
+	// 	std::cout <<"key: "<< i->first << "-" << "val: " <<i->second <<std::endl;
+
+	// //map of maps
+	// ft::map<std::string, ft::map<int, int> > test;
+    // ft::map<int, int> m1[3];
+	
+	// m1[0].insert(ft::make_pair<int,int>(1,100) );
+	// m1[0].insert(ft::make_pair<int,int>(2,200) );
+	// m1[0].insert(ft::make_pair<int,int>(3,300) );
+
+	// m1[1].insert(ft::make_pair<int,int>(4,400) );
+	// m1[1].insert(ft::make_pair<int,int>(5,500) );
+	// m1[1].insert(ft::make_pair<int,int>(6,600) );
+
+	// m1[2].insert(ft::make_pair<int,int>(7,700) );
+	// m1[2].insert(ft::make_pair<int,int>(8,800) );
+	// m1[2].insert(ft::make_pair<int,int>(9,900) );
+	
+	// test.insert(ft::make_pair("a", m1[0]));
+	// test.insert(ft::make_pair("b", m1[1]));
+	// test.insert(ft::make_pair("c", m1[2]));
+	
+	// ft::map<std::string, ft::map<int, int> >::iterator it = test.begin(), ite = test.end();
+	// for (; it != ite; ++it)
+	// {
+	// 	std::cout << "Key = " << it->first << std::endl;
+	// 	for (ft::map<int, int>::iterator in = it->second.begin(); in != it->second.end(); in++) {
+	// 		std::cout << "Value->first = " << in->first << "  |  Value->second = " << in->second << std::endl;
+	// 	}
+	// }
+	// std::cout << "hello------------------ " <<std::endl;
+	// ft::map<std::string, ft::map<int, int> > test2 = test;
+
+	//  it = test2.begin(), ite = test2.end();
+	// for (; it != ite; ++it)
+	// {
+	// 	std::cout << "Key = " << it->first << std::endl;
+	// 	for (ft::map<int, int>::iterator in = it->second.begin(); in != it->second.end(); in++) {
+	// 		std::cout << "Value->first = " << in->first << "  |  Value->second = " << in->second << std::endl;
+	// 	}
+	// }
+	
+	
+
+	
 	// std::map<int, int> m2;
 	// m2.insert(std::pair<int,int>(20,200) );
 	// m2.insert(std::pair<int,int>(30,300) );

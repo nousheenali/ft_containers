@@ -6,7 +6,7 @@
 /*   By: nali <nali@42abudhabi.ae>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/23 17:24:00 by nali              #+#    #+#             */
-/*   Updated: 2023/02/24 09:17:51 by nali             ###   ########.fr       */
+/*   Updated: 2023/03/26 23:00:41 by nali             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,7 @@ namespace ft
         typedef const Rb_tree_node<Val>*    const_node_ptr;
 
         Val             _value;
-        int             _type; //0-leaf node, 1-other nodes
+        bool            _end_element; //true(1) - end node, false(0)-other nodes
         Rb_tree_color   _color;
         node_ptr        _parent;
         node_ptr        _left;
@@ -52,28 +52,28 @@ namespace ft
 
         static node_ptr minimum(node_ptr x)
         {
-            while (x->_left != 0) 
+            while (x->_left->_end_element != true) 
                 x = x->_left;
             return x;
         }
 
         static const_node_ptr minimum(const_node_ptr x)
         {
-            while (x->_left != 0) 
+            while (x->_left->_end_element != true) 
                 x = x->_left;
             return x;
         }
 
         static node_ptr maximum(node_ptr x)
         {
-            while (x->_right != 0) 
+            while (x->_right->_end_element != true) 
                 x = x->_right;
             return x;
         }
 
         static const_node_ptr maximum(const_node_ptr x)
         {
-            while (x->_right != 0) 
+            while (x->_right->_end_element != true) 
                 x = x->_right;
               return x;
         }

@@ -78,5 +78,6 @@
         "filesystem": "cpp",
         "__bits": "cpp",
         "variant": "cpp"
-    }
+    },
+    "C_Cpp.dimInactiveRegions": false
 }

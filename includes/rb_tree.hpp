@@ -6,7 +6,7 @@
 /*   By: nali <nali@42abudhabi.ae>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/20 10:35:00 by nali              #+#    #+#             */
-/*   Updated: 2023/03/01 10:55:19 by nali             ###   ########.fr       */
+/*   Updated: 2023/03/29 23:13:08 by nali             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,6 @@
 
 namespace ft
 {
-
     // T here is a pair<const key_type, mapped_type> from map
     template<typename Key, typename Val, typename KeyOfValue, typename Compare, typename Alloc >
     class Rb_tree
@@ -55,7 +54,7 @@ namespace ft
         
          private:
             Node_ptr                        _root;
-            Node_type                       _end_node; //past-the-end element, is struct not a pointer
+            Node_ptr                        _end_node; //past-the-end element, is struct not a pointer
             size_type                       _node_count; //node count of the tree
             Compare                         _comp;
             Node_allocator                  _node_alloc;
@@ -64,11 +63,11 @@ namespace ft
         private:
             void initialize(Node_ptr n)
             {
-                n->_type = 0;
+                n->_end_element = false;
                 n->_color= red;
-                n->_parent = &_end_node;
-                n->_left = &_end_node;
-                n->_right = &_end_node;
+                n->_parent = _end_node;
+                n->_left = _end_node;
+                n->_right = _end_node;
             }
 
 
@@ -87,7 +86,7 @@ namespace ft
 					        uncle->_color = black;
                             k->_parent->_color = black;
 					        k->_parent->_parent->_color = red;
-					        k = k->_parent->_parent;
+					        k = k->_parent->_parent; // to repeat 
 				        } 
                         else 
                         {
@@ -144,7 +143,7 @@ namespace ft
                     y->_left->_parent = x;
 
                 y->_parent = x->_parent;
-                if (x->_parent == 0) 
+                if (x->_parent == end()) 
                     this->_root = y;
                 else if (x == x->_parent->_left) 
                     x->_parent->_left = y;
@@ -164,7 +163,7 @@ namespace ft
                     y->_right->_parent = x;
 
                 y->_parent = x->_parent;
-                if (x->_parent == 0) 
+                if (x->_parent == end()) 
                     this->_root = y;
                 else if (x == x->_parent->_right) 
                     x->_parent->_right = y;
@@ -203,6 +202,7 @@ namespace ft
                             if (s->_left->_color == black && s->_right->_color == black) // case 3.2
                             {
                                 s->_color = red;
+                                // x->_parent->_color = black;
                                 x = x->_parent;
                             } 
                             else 
@@ -215,7 +215,7 @@ namespace ft
                                     s = x->_parent->_right;
                                 } 
                                 // case 3.4
-                                // s->_color = x->_parent->_color;
+                                s->_color = x->_parent->_color;
                                 x->_parent->_color = black;
                                 s->_right->_color = black;
                                 leftRotate(x->_parent);
@@ -238,6 +238,7 @@ namespace ft
                             if (s->_right->_color == black && s->_right->_color == black) // case 3.2
                             {
                                 s->_color = red;
+                                // x->_parent->_color = black;
                                 x = x->_parent;
                             } 
                             else 
@@ -250,7 +251,7 @@ namespace ft
                                     s = x->_parent->_left;
                                 } 
                                 // case 3.4
-                                // s->_color = x->_parent->_color;
+                                s->_color = x->_parent->_color;
                                 x->_parent->_color = black;
                                 s->_left->_color = black;
                                 rightRotate(x->_parent);
@@ -262,12 +263,27 @@ namespace ft
                 x->_color = black;
 	        }
 
-         
+            Node_ptr find_position(Node_ptr node, key_type key)
+            {
+                while (node != end()) //find position of key
+                {
+                    if (S_key(node) == key)
+                    {
+                        return (node);
+                    }
+                    else if (_comp(S_key(node),key)) //node < key
+                        node = node->_right;
+                    else
+                        node = node->_left;
+                }
+                return (end());
+            }
+            
             // this function replaces u node with v node by changing all links
             // that point to u to point to v
             void replace_node(Node_ptr u, Node_ptr v)
             {
-                if (u->_parent == 0) 
+                if (u->_parent == end()) 
                     this->_root = v;
                 else if (u == u->_parent->_left)
                     u->_parent->_left = v;
@@ -278,19 +294,10 @@ namespace ft
 
             void delete_helper(Node_ptr node, key_type key) //Refer comment #3
             {
-                Node_ptr z = this->end();
                 Node_ptr x, y;
-                while (node != end()) //find position of key
-                {
-                    if (S_key(node) == key)
-                        z = node;
-                    if (S_key(node) < key) 
-                        node = node->_right;
-                    else
-                        node = node->_left;
-                }
+                Node_ptr z = find_position(node, key);
                 if (z == end()) //key not found
-                    return;
+                    return ;  
                 y = z;
 		        int y_original_color = y->_color;
                 //check if both child nodes or one of the child nodes is null. If yes, 
@@ -298,7 +305,7 @@ namespace ft
                 if (z->_left == end()) 
                 {
                     x = z->_right;
-                    replace_node(z, z->_right);
+                    replace_node(z, z->_right);  
                 }
                 else if (z->_right == end()) 
                 {
@@ -310,10 +317,9 @@ namespace ft
                     y = z->minimum(z->_right); //inorder successor
                     y_original_color = y->_color;
                     x = y->_right;
-                    // if (y->_parent == z)
-                    //     x->_parent = y;
-                    // else 
-                    if (y->_parent != z)
+                    if (y->_parent == z)
+                        x->_parent = y;
+                    else //y->_parent != z
                     {
                         replace_node(y, y->_right); //moving y->_right to position of y
                         y->_right = z->_right; //moving y to position of z
@@ -331,22 +337,21 @@ namespace ft
 
             Node_ptr copy(Node_ptr x, Node_ptr p)
             {
-                // structural copy.  x and p must be non-null.
-                // std::cout <<"hello "<< (int)S_key(x)<<std::endl;
+                // std::cout <<S_key(x)<<std::endl;
                 Node_ptr top = clone_node(x);
                 top->_parent = p;
                 try
                 {
-                    if (S_key(x->_right))
+                    if (x->_right->_end_element != true)
                         top->_right = copy(x->_right, top);
                     p = top;
                     x = x->_left;
-                    while (S_key(x))
+                    while (x->_end_element != true)
                     {
                         Node_ptr y = clone_node(x);
                         p->_left = y;
                         y->_parent = p;
-                        if (S_key(x->_right))
+                        if (x->_right->_end_element != true)
                             y->_right = copy(x->_right, y);
                         p = y;
                         x = x->_left;
@@ -359,51 +364,25 @@ namespace ft
                 return top;
             }
 
-            // Node_ptr	end_node() 
-            // {  return (&this->_end_node);}
-
-			// Const_Node_ptr	end_node() const 
-            // {  return (const_cast<const_node_ptr>(&this->_end_node));}
-        public:
-        
-            Node_ptr Rb_tree_decrement(Node_ptr node)
+            Node_ptr find_parent_node(Node_ptr x, Node_ptr n, bool *flag)
             {
-                if (node == 0)
+                Node_ptr y = end();
+                //at the end of this loop y will be the parent of new node
+                while (x != end()) 
                 {
-                    node = rightmost();
-                    // node = 
-                    
-                    // // error! ++ requested for an empty tree
-                    // if (nodePtr == nullptr)
-                    //     throw UnderflowException { };
-                    
-                    // // move to the smallest value in the tree,
-                    // // which is the first node inorder
-                    // while (nodePtr->left != nullptr) 
-                    //     nodePtr = nodePtr->left;
-                }
-                else
-                {
-                    if (node->_left->_type != 0) 
+                    y = x;
+                    if(_comp(S_key(n), S_key(x)))
+                        x = x->_left;
+                    else if(_comp(S_key(x), S_key(n)))
+                        x = x->_right;
+                    else //if duplicate key
                     {
-                        Node_ptr y = node->_left;
-                        while (y->_right->_type != 0)
-                            y = y->_right;
-                        node = y;
-                    }
-                    else //move up the tree until we have moved over a right child link
-                    {
-                        // std::cout <<"tring 2\n";
-                        Node_ptr y = node->_parent;
-                        while (y!= 0 && node == y->_left) 
-                        {
-                            node = y;
-                            y = y->_parent;
-                        }
-                        node = y;
+                        *flag = false;
+                        destroy_node(n);
+                        return (x);
                     }
                 }
-                return node;
+                return (y);
             }
 
         public:
@@ -420,7 +399,6 @@ namespace ft
                 // value not the entire node structure which contains other values also
                 _alloc.construct(&tmp->_value, x); 
                 initialize(tmp);
-                tmp->_type = 1; //changing type from leaf node to regular node
                 _node_count++;
                 return tmp;
             }
@@ -436,8 +414,6 @@ namespace ft
             {
                 Node_ptr tmp = create_node(x->_value);
                 tmp->_color = x->_color;
-                tmp->_left = &_end_node;
-                tmp->_right = &_end_node;
                 return tmp;
             }
 
@@ -448,67 +424,56 @@ namespace ft
             {   return this->_root; }
 
             Node_ptr begin()
-            { return static_cast<Node_ptr>(this->_end_node._parent); }
+            { 
+                if (_root == end()) // if empty
+                    return (end());
+                return(_end_node->_right);
+                // Node_ptr i = _root;
+                // while (i->_left->_end_element != true) // can use condition (i->_left != end()), but creates problem after swap
+                //     i = i->_left;
+                // return (i);
+            }
 
             Const_Node_ptr begin() const
             {
-                return static_cast<Const_Node_ptr>(this->_end_node._parent);
+                if (_root == end()) // if empty
+                    return (end());
+                return(_end_node->_right);
+                // Const_Node_ptr i = _root;
+                // while (i->_left->_end_element != true)  // can use condition (i->_left != end()), but creates problem after swap
+                //     i = i->_left;
+                // return (i);
             }
 
             Node_ptr end()
-            { return (&this->_end_node); }
+            { return (this->_end_node); }
 
             Const_Node_ptr end() const
-            { return static_cast<Const_Node_ptr>(&this->_end_node); }
-
+            { return (this->_end_node); }
 
             iterator _begin() 
-            {   
-                if (_root == end()) // if empty
-                    return (_end());
-                Node_ptr i = _root;
-                while (i->_left != end()) 
-                    i = i->_left;
-                return iterator(i); 
-            }
+            { return iterator(begin()); }
 
             const_iterator _begin() const 
-            {
-               if (_root == end()) //if empty
-                    return (_end());
-                Node_ptr i = _root;
-                while (i->_left != end()) 
-                    i = i->_left;
-                return const_iterator(i);
-            }
+            { return const_iterator(begin());}
 
             iterator _end()
-            { 
-               return iterator(this->_end_node._parent);
-            } 
+            { return iterator(end());} 
 
             const_iterator _end() const
-            {
-                return const_iterator(this->_end_node._parent);
-            }
+            { return const_iterator(end());}
 
-    //         // iterator end()
-    //         // { return iterator(this->_end_node); }
+            reverse_iterator rbegin() 
+            { return reverse_iterator(_end()); }
 
-    //         // const_iterator end() const
-    //         // { return const_iterator(this->_end_node); }
+            const_reverse_iterator rbegin() const 
+            { return const_reverse_iterator(_end()); }
 
-    //         // reverse_iterator rbegin() 
-    //         // { return reverse_iterator(end()); }
+            reverse_iterator rend() 
+            { return reverse_iterator(_begin()); }
 
-    //         // const_reverse_iterator rbegin() const 
-    //         // { return const_reverse_iterator(end()); }
-
-    //         // reverse_iterator rend() 
-    //         // { return reverse_iterator(begin()); }
-
-    //         // const_reverse_iterator rend() const 
-    //         // { return const_reverse_iterator(begin()); }
+            const_reverse_iterator rend() const 
+            { return const_reverse_iterator(_begin()); }
 
             bool empty() const 
             { return _node_count == 0; }
@@ -525,47 +490,49 @@ namespace ft
             Node_ptr rightmost() const 
             { 
                 Node_ptr i = _root;
-                while (i->_right != end()) 
-                    i = i->_right;
+                if (i != end())
+                {
+                    while (i->_right->_end_element != true) 
+                        i = i->_right;
+                }
                 return (i);
             }
 
-            // Node_ptr minimum(Node_ptr x)
-            // {
-            //     while (x->_left != &_end_node) 
-            //         x = x->_left;
-            //     return x;
-            // }
-
-            // Node_ptr maximum(Node_ptr x)
-            // {
-            //     while (x->_right != &_end_node) 
-            //         x = x->_right;
-            //     return x;
-            // }
+            Node_ptr lefttmost() const 
+            { 
+                Node_ptr i = _root;
+                while (i->_left->_end_element != true) 
+                    i = i->_left;
+                return (i);
+            }
             
         public:
             // allocation/deallocation
-            Rb_tree() { }
 
             explicit Rb_tree(const Compare& comp, const allocator_type& a)
             : _root(),_node_count(0), _comp(comp), _alloc(a)
             {
-                // creates an end node struct
-                _end_node._color= black;
-                _end_node._type = 0; //specifying type as leaf node
-                _end_node._parent = 0;
-                _end_node._left = &_end_node;
-                _end_node._right = &_end_node;
-                _root = &(_end_node);
-
+                _end_node = get_node();
+                initialize(_end_node);
+                _end_node->_color= black;
+                _end_node->_end_element = true; //specifying type as leaf node
+                _root = _end_node;
             }
             
             Rb_tree( Rb_tree const &x ) :_comp(x._comp), _alloc(x._alloc)                                
             {   
-                _root = x._root;
-                _node_count = x._node_count;
-                _end_node = x._end_node;
+                _end_node = get_node();
+                initialize(_end_node);
+                _end_node->_color = black;
+                _end_node->_end_element = true; //specifying type as leaf node
+                _root = _end_node;
+                if (x.size() != 0) 
+                {
+                    this->root() = copy(x._root, end());
+                    _node_count = x._node_count;
+                    _end_node->_left = rightmost();
+                    _end_node->_right = lefttmost();
+                }
             }
 
             Rb_tree& operator=(const Rb_tree &x)
@@ -573,19 +540,15 @@ namespace ft
                 if(this != &x)
                 {
                     clear(); // Replacement allocator cannot free existing storage, we need to erase nodes first.
-                    this->_node_count = 0;
                     this->_comp = x._comp;
-                    if (x.root() == 0) 
+                    this->_alloc = x._alloc;
+                    if (x.size() != 0) 
                     {
-                        root() = 0;
-                        _root->_left = &_end_node;
-                        _root->_right = &_end_node;
-                    }
-                    else
-                    {
-                        root() = copy(x._root, end());
-                        this->_root->_parent = x._root->_parent;
+                        // this->insert(x.begin(), x.end());
+                        this->root() = copy(x._root, end());
                         _node_count = x._node_count;
+                        _end_node->_left = rightmost();
+                        _end_node->_right = lefttmost();
                     }
                 }
                 return *this;
@@ -593,7 +556,10 @@ namespace ft
 
 
             ~Rb_tree( void )                                                             
-            {       this->erase(begin()); };
+            {  
+                clear();
+                put_node(_end_node);
+            };
 
             Node_allocator& get_Node_allocator()
             { return this->_node_alloc; }
@@ -607,44 +573,39 @@ namespace ft
             ft::pair<iterator, bool> insert_unique(const value_type & v) //refer comment #2
             {
                 Node_ptr n = create_node(v);
-                Node_ptr y = 0;
                 Node_ptr x = this->_root;
                 bool flag = true; //indicates if insert was a success
-                while (x != end()) //at the end of this loop y will be the parent of new node
-                {
-                    y = x;
-                    if(S_key(n) <  S_key(x))
-                        x = x->_left;
-                    else
-                        x = x->_right;
-                }
+                Node_ptr y = find_parent_node(x, n, &flag);
+                if (!flag)
+                    return (ft::make_pair(iterator(y), flag));
                 iterator i(n);
                 n->_parent = y;
                 //inserting the node
-                if (y == 0)
+                if (y == end())
                     _root = n;
-                else if (S_key(n) < S_key(y))
+                else if (_comp(S_key(n),S_key(y)))
                     y->_left = n;
-                else if (S_key(n) > S_key(y))
+                else 
                     y->_right = n;
-                else //case of duplicate key
-                {
-                    flag = false;
-                    destroy_node(n);
-                    return (ft::make_pair(i, flag));
-                }
-                if (n->_parent == 0) // if n is root node make it black
+                if (n->_parent == end()) // if n is root node make it black
                 {
                     n->_color = black;
+                    _end_node->_left = rightmost();
+                    _end_node->_right = lefttmost();
                     return(ft::make_pair(i, flag));
                 }
-                if (n->_parent->_parent == 0) //if granparent is nul i.e., parent is root do nothing
+                if (n->_parent->_parent == end()) //if granparent is nul i.e., parent is root do nothing
+                {
+                    _end_node->_left = rightmost();
+                    _end_node->_right = lefttmost();
                     return(ft::make_pair(i, flag));
-                // rebalance the tree
-                rebalance_insert(n);
+                }
+                rebalance_insert(n);  // rebalance the tree
+                _end_node->_left = rightmost();
+                _end_node->_right = lefttmost();
                 return (ft::make_pair(i, flag));
             }
-
+            
             template<typename InputIterator>
 			void	insert_range_unique(InputIterator first, InputIterator last,
             typename ft::enable_if<!ft::is_integral<InputIterator>::value, InputIterator>::type* = NULL)
@@ -668,22 +629,23 @@ namespace ft
 
             void erase(const_iterator position)
             {
-                if (position != end())
+                if (position != _end())
                 {
                     Node_ptr y = (Node_ptr)position.base();
 				    this->delete_helper(this->root(), y->_value.first);
-                    destroy_node(y);
+                    _end_node->_left = rightmost();
+                    _end_node->_right = lefttmost();
                 }
             }
 
             void erase(const_iterator first, const_iterator last)
             {
-                iterator tmp;
+                const_iterator tmp;
                 while (first != last) 
                 {   
                     tmp = first;
-					this->erase(*tmp);
 					++first;
+					this->erase(tmp);
 				}
             }
 
@@ -691,6 +653,8 @@ namespace ft
             size_type erase(const key_type& x)
             {
                 delete_helper(this->root(), x);
+                _end_node->_left = rightmost();
+                _end_node->_right = lefttmost();
                 return (_node_count);
             }
 
@@ -698,41 +662,64 @@ namespace ft
             void erase(Node_ptr x)
             {
                 // Erase without rebalancing.
-                while (x != 0)
+                while (x->_end_element != true) // can use condition (x != end()), buts after swap creates problem
                 {
                     erase(x->_right);
                     Node_ptr y = x->_left;
 	                destroy_node(x);
 	                x = y;
                 }
+                // _end_node->_left = _end_node;
+                // _end_node->_right = _end_node;
             }
 
             void clear()
             {
-                this->erase(begin());
+                if (!this->empty())
+                    this->erase(root());
                 this->reset();
             }
 
             void reset()
             {
                 this->_node_count = 0;
-                this->_root = &(_end_node);
+                this->_root = _end_node;
+                _end_node->_left = _end_node;
+                _end_node->_right = _end_node;
             }
 
             iterator find(const key_type& k)
             {
-                iterator j = lower_bound(k);
-                return (j);
+                Node_ptr n = root();
+                while(n != end())
+                {
+                    if (this->_comp(k, S_key(n)))
+                        n = n->_left;
+                    else if (this->_comp(S_key(n), k))
+                        n = n->_right;
+                    else
+                        return (iterator(n));
+                }
+                return (this->_end());
             }
 
             const_iterator find(const key_type& k) const
             {
-                const_iterator j = lower_bound(k);
-                return (j);
+                Const_Node_ptr n = root();
+                while(n != end())
+                {
+                    if (this->_comp(k, S_key(n)))
+                        n = n->_left;
+                    else if (this->_comp(S_key(n), k))
+                        n = n->_right;
+                    else
+                        return (const_iterator(n));
+                }
+                return (this->_end());
             }
 
             size_type count(const key_type& k) const
-            {  return (this->find(k) == this->end() ? 0 : 1);}
+            {  return (this->find(k) == this->_end() ? 0 : 1);}
 
             /* Returns an iterator pointing to the first element in the container
              whose key is not considered to go before k (i.e., either it is equivalent or goes after).*/
@@ -740,11 +727,11 @@ namespace ft
             { 
                 Node_ptr x = root();
                 iterator y = _end();
-                while(x->_type!= 0)
+                while(x->_end_element!= true)
                 {
                     if (!this->_comp(S_key(x), k)) //if k < x
                     {
-                        y= iterator(x);
+                        y = iterator(x);
                         x = x->_left;
                     }
                     else
@@ -758,7 +745,7 @@ namespace ft
             { 
                 Const_Node_ptr x = root();
                 const_iterator y = _end();
-                while(x->_type!= 0)
+                while(x->_end_element != true)
                 {
                     if (!this->_comp(S_key(x), k))
                     {
@@ -775,7 +762,7 @@ namespace ft
             { 
                 Node_ptr x = root();
                 iterator y = _end();
-                while(x->_type!= 0)
+                while(x->_end_element != true)
                 {
                     if (this->_comp(k, S_key(x)))
                     {
@@ -792,7 +779,7 @@ namespace ft
             { 
                 Const_Node_ptr x = root();
                 const_iterator y = _end();
-                while(x->_type!= 0)
+                while(x->_end_element!= true)
                 {
                     if (this->_comp(k, S_key(x)))
                     {
@@ -805,17 +792,54 @@ namespace ft
                 return const_iterator(y); 
             }
 
-            // void swap(Rb_tree& t)
-            // {
-            //     std::swap(this.root(),t.root());
-            //     // std::swap(_M_leftmost(),__t._M_leftmost());
-            //     // std::swap(_M_rightmost(),__t._M_rightmost());
-            //     root()->_parent = end();
-            //     t.root()->_parent = t.end();
-            //     std::swap(this->_node_count, t._node_count);                    // No need to swap header's color as it does not change.
-            //     std::swap(this->_comp, t._comp);
-            //     std::__alloc_on_swap(this->get_Node_allocator(), t.get_Node_allocator());
-            // }
+            template <class T> 
+            void _swap ( T& a, T& b )
+            {
+                T c(a); a=b; b=c;
+            }
+            
+            void swap(Rb_tree& t)
+            {
+                if (this != &t)
+                {
+                    this->_swap(this->_root, t._root);
+                    this->_swap(_end_node, t._end_node);
+                    this->_swap(_node_count, t._node_count);
+                    this->_swap(_comp, t._comp);
+                    this->_swap(_alloc, t._alloc);
+                    // this->_swap(this->_end_node->_left, t._end_node->_left);
+                    
+                    // this->_root->_parent = _end_node;
+                    // this->_end_node->_left = this->rightmost();
+                    // this->_end_node->_right = lefttmost();
+                    // t._root->_parent = &t._end_node;
+                    // t._end_node->_left = t.rightmost();
+                    // t._end_node->_right = t.lefttmost();
+                }
+                // Node_ptr tmp_root = this->_root;
+                // Node_ptr tmp_rightmost = this->rightmost();
+                // size_type tmp_node_count = this->_node_count;
+                // Compare tmp_comp = this->_comp;
+                // allocator_type tmp_alloc = this->_alloc;
+
+                // this->_root = t._root;
+                // _end_node->_left = t.rightmost();
+                // this->_node_count = t._node_count;
+                // this->_comp = t._comp;
+                // this->_alloc = t._alloc;
+            
+                // t._root = tmp_root;
+                // t._end_node->_left = tmp_rightmost;
+                // t._node_count = tmp_node_count;
+                // t._comp = tmp_comp;
+                // t._alloc = tmp_alloc;
+                
+                
+
+                // t._end_node->_left = t.rightmost();
+                // this->_end_node->_left = this->rightmost();
+
+            }
 
             Compare key_comp() const
             { return _comp; }
@@ -833,53 +857,7 @@ namespace ft
             ft::pair<const_iterator,const_iterator> equal_range(const key_type& k) const 
             {
                 return pair<const_iterator,const_iterator>(lower_bound(k), upper_bound(k));
-			}
-
-
-
-    
-
-    // ft::pair<iterator, iterator> equal_range(const key_type& k)
-    //         {
-                
-    //             Node_ptr x = root();
-    //             Node_ptr y = end();
-    //             while (x->_type != 0)
-    //             {
-    //                 if (this->_comp(S_key(x), k))
-    //                     x = x->_right;
-    //                 else if (this->_comp(k, S_key(x)))
-    //                 {
-    //                     y = x;
-    //                     x = x->_left;
-    //                 }
-    //                 else
-    //                 {
-    //                     // Node_ptr xu(x);
-    //                     // Node_ptr yu(y);
-    //                     // y = x, x = x->_left;
-    //                     // xu = xu->_right;
-    //                     return ft::make_pair(lower_bound(k),upper_bound(k));
-    //                 }
-    //             }
-    //             // return ft::make_pair(iterator(y),iterator(y));
-    //         }
-
-            
-            // void erase(iterator pos)
-            // {
-            //     if (node_count != 0) 
-            //     {
-            //         _M_erase(_M_root());
-            //         root() = 0;
-            //         // _M_leftmost() = _M_header;
-            //         // _M_rightmost() = _M_header;
-            //         node_count = 0;
-            //     }
-                
-            // }
-
-      
+            }
     };
 }
 
