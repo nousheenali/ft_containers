@@ -6,7 +6,7 @@
 /*   By: nali <nali@42abudhabi.ae>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/20 16:44:10 by nali              #+#    #+#             */
-/*   Updated: 2023/02/06 10:13:16 by nali             ###   ########.fr       */
+/*   Updated: 2023/03/30 23:04:45 by nali             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,6 +18,7 @@
 #include "../includes/reverse_iterator.hpp"
 #include "../includes/type_traits.hpp"
 #include "../includes/compare_utils.hpp"
+#include "../includes/iterator_validity.hpp"
 #include <memory> //to access allocator
 
 namespace ft
@@ -72,6 +73,7 @@ namespace ft
             vector (InputIterator first, InputIterator last, const allocator_type& alloc = allocator_type(),
             typename ft::enable_if<!ft::is_integral<InputIterator>::value, InputIterator>::type* = NULL)
             {
+                ft::check_range(first, last);
                 size_type d = 0;
                 InputIterator tmp = first;
                 while ( tmp != last)
