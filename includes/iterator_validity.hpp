@@ -6,7 +6,7 @@
 /*   By: nali <nali@42abudhabi.ae>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/30 22:58:59 by nali              #+#    #+#             */
-/*   Updated: 2023/03/30 23:35:05 by nali             ###   ########.fr       */
+/*   Updated: 2023/04/01 13:31:41 by nali             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,7 +46,7 @@ namespace ft
     template <class It>
     void iterator_validity(It first, It last, typename ft::random_access_iterator_tag) {
     	if (first > last) {
-    		throw std::length_error("Iterator exceeds the size");
+    		throw std::length_error("Iterator exceeds size");
     	}
     }
 

@@ -268,7 +268,7 @@ namespace ft
 
     template <class Key, class T, class Compare, class Alloc>  
     bool operator== ( const map<Key,T,Compare,Alloc>& lhs, const map<Key,T,Compare,Alloc>& rhs)
-    {  return lhs.size() == rhs.size() && std::equal(lhs.begin(), lhs.end(), rhs.begin());}
+    {  return lhs.size() == rhs.size() && ft::equal(lhs.begin(), lhs.end(), rhs.begin());}
 
     template <class Key, class T, class Compare, class Alloc>  
     bool operator!= ( const map<Key,T,Compare,Alloc>& lhs, const map<Key,T,Compare,Alloc>& rhs )

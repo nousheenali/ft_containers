@@ -267,17 +267,37 @@
 /*vector test*/
 int main(void)
 {
+    std::string array[] = { "lorem", "ipsum", "dolor", "sit", "amet", ",", "consectetur", "adipiscing",
+                        "lorem", "ipsum", "dolor", "sit", "amet", ",", "consectetur", "adipiscing",
+                        "lorem", "ipsum", "dolor", "sit", "amet", ",", "consectetur", "adipiscing" };
+
+  {ft::vector<int> test;}
+  {
+    std::cout << (sizeof(array) / sizeof(std::string)) << std::endl;
+    ft::vector<std::string> test(array, array + (sizeof(array) / sizeof(std::string)));
+    for (size_t i = 0; i < test.size(); i++) 
+    {
+		std::cout << "vector[" << i << "] = " << test[i] << std::endl;
+	}
+    test.erase(test.begin(), ++(++test.begin()));
+    std::cout <<  "=================================================="<< std::endl;
+    for (size_t i = 0; i < test.size(); i++) 
+    {
+		std::cout << "vector[" << i << "] = " << test[i] << std::endl;
+	}
+}
+
     // default construvtor
-    std::vector<int> vec_s1;
-    ft::vector<int> vec_f1;
+    // std::vector<int> vec_s1;
+    // ft::vector<int> vec_f1;
 
-	for (size_t i = 0; i < vec_f1.size(); i++) {
-		std::cout << "vector[" << i << "] = " << vec_s1[i] << std::endl;
-	}
+	// for (size_t i = 0; i < vec_f1.size(); i++) {
+	// 	std::cout << "vector[" << i << "] = " << vec_s1[i] << std::endl;
+	// }
 
-	for (size_t i = 0; i < vec_f1.size(); i++) {
-		std::cout << "vector[" << i << "] = " << vec_f1[i] << std::endl;
-	}
+	// for (size_t i = 0; i < vec_f1.size(); i++) {
+	// 	std::cout << "vector[" << i << "] = " << vec_f1[i] << std::endl;
+	// }
 
     // //fill constructor
     // std::vector<int> vec_s2(5, 13);
