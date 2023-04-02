@@ -1,6 +1,0 @@
-Stack empty?TRUE(1)/FALSE(0): 1
-Pushing a values 3, 11 , 12 to stack...
-Is stack empty?(1-TRUE/0-FALSE): 0
-Top value of stack: 12
-Top value of stack: 11
-empty: 0

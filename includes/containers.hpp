@@ -6,7 +6,7 @@
 /*   By: nali <nali@42abudhabi.ae>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/18 09:02:05 by nali              #+#    #+#             */
-/*   Updated: 2023/02/28 13:18:09 by nali             ###   ########.fr       */
+/*   Updated: 2023/04/02 14:54:15 by nali             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,6 +27,7 @@
 #include "pair.hpp"
 #include "compare_utils.hpp"
 #include "type_traits.hpp"
+#include <sys/time.h>
 
 #define GREEN "\033[1;32m"
 #define RED "\031[1;32m"
@@ -36,6 +37,6 @@
 
 void begin_stack_test(void);
 int ft_compare_files(std::string f1, std::string f2);
-void    ft_print_result(std::string path1, std::string path2);
+void ft_print_result(std::string path1, std::string path2);
 
 #endif

@@ -1,4 +1,3 @@
-
 #include "../../includes/containers.hpp"
 std::string create_file_path(std::string path, std::string str)
 {
@@ -8,7 +7,7 @@ std::string create_file_path(std::string path, std::string str)
 void check_capacity(std::string p1, std::string p2)
 {
     
-    ft::Stack<int> stck1; //custom stack
+    ft::stack<int> stck1; //custom stack
     std::stack<int> stck2; //std stack
 
     p1 = create_file_path(p1, "capacity");
@@ -25,10 +24,9 @@ void begin_stack_test(void)
     std::string str,p1,p2;
     std::streambuf *coutbuf;
 
-    p1 = "./outputs/stack/custom/"; //location for custom stack output
+    p1 = "./outputs/stack/ft/"; //location for custom stack output
     p2 = "./outputs/stack/std/"; //location for std stack output
     check_capacity(p1, p2);
-
 }
 
 

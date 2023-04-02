@@ -6,7 +6,7 @@
 /*   By: nali <nali@42abudhabi.ae>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/06 17:59:19 by nali              #+#    #+#             */
-/*   Updated: 2023/03/30 22:52:59 by nali             ###   ########.fr       */
+/*   Updated: 2023/04/02 11:28:16 by nali             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,6 +17,23 @@
 // #include <stack>
 
 // #include <__tree>
+
+int main(void)
+{
+    NAMESPACE::stack<int> stck1; 
+    // std::cout << "The value of MY_VAR is: " << NAMESPACE<< std::endl;
+    // std::string choice;
+    // std::cout << "Please enter your choice: ";
+    // std::cin >> choice;
+    // if (choice == "STACK")
+    // {
+    //     std::cout << BLUE << "TESTING FEATURES OF STACK\n" << END;
+    //     begin_stack_test();
+    // }
+    // return (0);
+}
+
+
 
 /*br tree test*/
 // int main() 
@@ -229,18 +246,7 @@
 // }
 
 
-// int main(void)
-// {
-//     std::string choice;
-//     std::cout << "Please enter your choice: ";
-//     std::cin >> choice;
-//     if (choice == "STACK")
-//     {
-//         std::cout << BLUE << "TESTING FEATURES OF STACK\n" << END;
-//         begin_stack_test();
-//     }
-//     return (0);
-// }
+
 
 /* stack test*/
 // int main(void)
@@ -265,27 +271,27 @@
 
 
 /*vector test*/
-int main(void)
-{
-    std::string array[] = { "lorem", "ipsum", "dolor", "sit", "amet", ",", "consectetur", "adipiscing",
-                        "lorem", "ipsum", "dolor", "sit", "amet", ",", "consectetur", "adipiscing",
-                        "lorem", "ipsum", "dolor", "sit", "amet", ",", "consectetur", "adipiscing" };
+// int main(void)
+// {
+//     std::string array[] = { "lorem", "ipsum", "dolor", "sit", "amet", ",", "consectetur", "adipiscing",
+//                         "lorem", "ipsum", "dolor", "sit", "amet", ",", "consectetur", "adipiscing",
+//                         "lorem", "ipsum", "dolor", "sit", "amet", ",", "consectetur", "adipiscing" };
 
-  {ft::vector<int> test;}
-  {
-    std::cout << (sizeof(array) / sizeof(std::string)) << std::endl;
-    ft::vector<std::string> test(array, array + (sizeof(array) / sizeof(std::string)));
-    for (size_t i = 0; i < test.size(); i++) 
-    {
-		std::cout << "vector[" << i << "] = " << test[i] << std::endl;
-	}
-    test.erase(test.begin(), ++(++test.begin()));
-    std::cout <<  "=================================================="<< std::endl;
-    for (size_t i = 0; i < test.size(); i++) 
-    {
-		std::cout << "vector[" << i << "] = " << test[i] << std::endl;
-	}
-}
+//   {ft::vector<int> test;}
+//   {
+//     std::cout << (sizeof(array) / sizeof(std::string)) << std::endl;
+//     ft::vector<std::string> test(array, array + (sizeof(array) / sizeof(std::string)));
+//     for (size_t i = 0; i < test.size(); i++) 
+//     {
+// 		std::cout << "vector[" << i << "] = " << test[i] << std::endl;
+// 	}
+//     test.erase(test.begin(), ++(++test.begin()));
+//     std::cout <<  "=================================================="<< std::endl;
+//     for (size_t i = 0; i < test.size(); i++) 
+//     {
+// 		std::cout << "vector[" << i << "] = " << test[i] << std::endl;
+// 	}
+// }
 
     // default construvtor
     // std::vector<int> vec_s1;
@@ -487,6 +493,6 @@ int main(void)
 
 
 
-    return (0);
-}
+//     return (0);
+// }
 
