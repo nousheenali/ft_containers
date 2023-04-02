@@ -1,0 +1,7 @@
+Stack empty?: 1
+Pushing a values 3, 11 , 12 to stack...
+Stack empty?: 0
+Top value of stack: 12
+Top value of stack: 11
+Stack empty?: 0
+0.256 ms

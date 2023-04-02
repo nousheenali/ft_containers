@@ -42,18 +42,18 @@ print_test_results()
 	for file in $TEST_DIR/$1/*.txt; do
 		printf $PURPLE'%-37s' " • $(basename -- $file .txt)$DEFAULT"
 		if [ -f $TEST_DIR/$2/${file##*/} ]; then
-			echo -ne "Compiled:$GREEN OK $DEFAULT |  "
+			echo -ne "Compiled:$GREEN SUCCESS $DEFAULT |  "
 			diff <(sed '$d' $file) <(sed '$d' $TEST_DIR/$2/${file##*/}) > diff
 			if [ -s diff ]; then
-				echo -ne "Result:$RED KO $DEFAULT"
+				echo -ne "Result:$RED FAILURE $DEFAULT"
 			else
-				echo -ne "Result:$GREEN OK $DEFAULT |  "
+				echo -ne "Result:$GREEN SUCCESS $DEFAULT |  "
 				echo -ne "FT Time:$GREEN" $(tail -n 1 $TEST_DIR/$2/${file##*/}) "$DEFAULT |  "
 				echo -ne "STD Time:$GREEN" $(tail -n 1 $file)" $DEFAULT"
 			fi
 			rm diff
 		else
-			printf "Compiled:$RED KO $DEFAULT |  Result:$RED KO $DEFAULT"
+			printf "Compiled:$RED FAILURE $DEFAULT |  Result:$RED FAILURE $DEFAULT"
 		fi
 		echo #new line
 	done
@@ -74,7 +74,9 @@ execute_and_redirect_output()
 
 start_tests() 
 {
-	echo -e $YELLOW"++++++++++++++++++++++++++++++++++++++++++++ $3 Tester ++++++++++++++++++++++++++++++++++++++++++++"$DEFAULT
+	echo -e $YELLOW"+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++"$DEFAULT
+	echo -e $YELLOW"                                                  $3 Tester                                                 "$DEFAULT
+	echo -e $YELLOW"+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++"$DEFAULT
 	execute_and_redirect_output $1 
 	execute_and_redirect_output $2 
 	print_test_results $2 $1
@@ -83,7 +85,7 @@ start_tests()
 
 #execution starts here with checking of the arguments
 if [ "$#" -eq 0 ]; then
-	echo -e $YELLOW"Please provide a valid container name (stack / vector / map)"$DEFAULT
+	echo -e $YELLOW"Please provide a valid container name (stack / vector / map / all)"$DEFAULT
 	exit 1
 
 elif [ $1 == "stack" ]; then
@@ -99,7 +101,15 @@ elif [ $1 == "map" ]; then
 	make clean && make -k map 2> $LOG
 	start_tests $FT_MAP $STD_MAP "map"
 
+elif [ $1 == "all" ]; then
+	make clean && make -k stack
+	start_tests $FT_STACK $STD_STACK "stack"
+	make -k vector
+	start_tests $FT_VEC $STD_VEC "vector"
+	make -k stack
+	start_tests $FT_MAP $STD_MAP "map"
+
 else
-	echo -e $YELLOW"Please enter a valid container name (stack / vector / map)"$DEFAULT
+	echo -e $YELLOW"Please enter a valid container name (stack / vector / map / all)"$DEFAULT
 	exit 1
 fi
