@@ -6,7 +6,7 @@
 /*   By: nali <nali@42abudhabi.ae>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/05 13:31:54 by nali              #+#    #+#             */
-/*   Updated: 2023/04/02 00:22:22 by nali             ###   ########.fr       */
+/*   Updated: 2023/04/02 17:46:57 by nali             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,7 @@
 #include "vector.hpp"
 namespace ft
 {
-    template <class T, class Container = ft::vector<T> >
+    template <class T, class Container = std::vector<T> >
     class stack
     {
         public:

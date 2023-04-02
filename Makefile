@@ -6,7 +6,7 @@
 #    By: nali <nali@42abudhabi.ae>                  +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/04/02 13:45:26 by nali              #+#    #+#              #
-#    Updated: 2023/04/02 14:06:46 by nali             ###   ########.fr        #
+#    Updated: 2023/04/02 20:13:37 by nali             ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -20,7 +20,7 @@ CPPFLAGS	=	-Wall -Wextra -Werror -std=c++98 -g3
 RM			=	rm -rf
 
 # --------------------STACK--------------------
-STK_TEST	=  capacity.cpp
+STK_TEST	=  capacity.cpp constructors.cpp push_pop.cpp relational.cpp 
 STD_STK_OUT =  output/std_stack/
 FT_STK_OUT  =  output/ft_stack/
 STK_SRCS	=  tests/stack

@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-DEFAULT=$(tput sgr0)
+DEFAULT=$(tput sgr0) #resets all set attributes such as color
 RED='\033[1;31m'
 GREEN='\033[1;32m'
 YELLOW='\033[1;33m'
@@ -10,11 +10,9 @@ BLUE='\033[1;34m'
 
 CC=c++
 CFLAGS='-Wall -Wextra -Werror'
-VALGRIND=valgrind
-VFLAGS='--leak-check=full --show-leak-kinds=all'
 RM='rm -rf'
-LOG=compilation.log
-TEST_DIR=output
+LOG=error.log
+OUT_DIR=output
 
 STACK_DIR=stack_tests
 STD_STACK=std_stack
@@ -39,16 +37,16 @@ check_compilation_log_file()
 
 print_test_results()
 {
-	for file in $TEST_DIR/$1/*.txt; do
+	for file in $OUT_DIR/$1/*.txt; do
 		printf $PURPLE'%-37s' " • $(basename -- $file .txt)$DEFAULT"
-		if [ -f $TEST_DIR/$2/${file##*/} ]; then
+		if [ -f $OUT_DIR/$2/${file##*/} ]; then
 			echo -ne "Compiled:$GREEN SUCCESS $DEFAULT |  "
-			diff <(sed '$d' $file) <(sed '$d' $TEST_DIR/$2/${file##*/}) > diff
+			diff <(sed '$d' $file) <(sed '$d' $OUT_DIR/$2/${file##*/}) > diff
 			if [ -s diff ]; then
 				echo -ne "Result:$RED FAILURE $DEFAULT"
 			else
 				echo -ne "Result:$GREEN SUCCESS $DEFAULT |  "
-				echo -ne "FT Time:$GREEN" $(tail -n 1 $TEST_DIR/$2/${file##*/}) "$DEFAULT |  "
+				echo -ne "FT Time:$GREEN" $(tail -n 1 $OUT_DIR/$2/${file##*/}) "$DEFAULT |  "
 				echo -ne "STD Time:$GREEN" $(tail -n 1 $file)" $DEFAULT"
 			fi
 			rm diff
@@ -63,12 +61,10 @@ print_test_results()
 
 execute_and_redirect_output() 
 {
-	for file in $TEST_DIR/$1/*.o; do
-		# compile object files then run and redirect output to a text file
-		$CC $CFLAGS $file -o ${file%%.o}
-		./${file%%.o} > ${file%%.o}.txt
-		# delete object and executable file
-		rm $file ${file%%.o}
+	for file in $OUT_DIR/$1/*.o; do
+		$CC $CFLAGS $file -o ${file%%.o} # compile object files then run
+		./${file%%.o} > ${file%%.o}.txt #redirect o/p to text file
+		rm $file ${file%%.o} # delete object and executable file
 	done
 }
 
