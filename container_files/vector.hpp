@@ -6,7 +6,7 @@
 /*   By: nali <nali@42abudhabi.ae>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/20 16:44:10 by nali              #+#    #+#             */
-/*   Updated: 2023/04/01 13:52:12 by nali             ###   ########.fr       */
+/*   Updated: 2023/04/03 18:21:10 by nali             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -136,8 +136,6 @@ namespace ft
                 if (d > capacity())
                     reserve(d);
                 clear();
-                // if (first > last)
-                //     throw std::length_error("cannot create ft::vector larger than max_size()");
                 while(first != last)
                 {
                     _alloc.construct(_finish, *first);
@@ -177,6 +175,7 @@ namespace ft
             }
             
             /*Element Access*/
+            
             reference at (size_type n)
             {
                 if ( n >= size())
@@ -255,7 +254,7 @@ namespace ft
                     allocator_type	tmp_alloc;
                     pointer 		tmp_start 	= tmp_alloc.allocate(n);
                     size_type		tmp_size	= size();
-
+                
                     for (size_type i = 0; i < tmp_size; i++)
                         tmp_alloc.construct(tmp_start + i, *(_start + i));
                     this->~vector();
@@ -296,26 +295,29 @@ namespace ft
                 if (size() + n >= capacity())
                     this->reserve(ft::max(capacity() * 2, size() + n));
 
-                allocator_type t_alloc;
-                pointer temp = t_alloc.allocate(size() + n);
+                //saving vector to temp location
+                allocator_type tmp_alloc;
+                pointer temp = tmp_alloc.allocate(size() + n);
                 for (size_type i = 0; i < size(); i++) 
-                    t_alloc.construct(temp + i, *(_start + i));
-
+                    tmp_alloc.construct(temp + i, *(_start + i));
+                //shifting values
                 for (size_type i = static_cast<size_type>(d) + n; i < new_size; i++)
                 {
                     if (i < size())
                         _alloc.destroy(_start + i);
                     _alloc.construct(_start + i, *(temp + i - n));
                 }
+                //inserting new values
                 for (size_type i = d; i < static_cast<size_type>(d) + n; i++)
                 {
                     if (i < size())
                         _alloc.destroy(_start + i);
                     _alloc.construct(_start + i, val);
                 }
+                //freeing temp allocation
                 for (size_type i = 0; i < size(); i++)
-                    t_alloc.destroy(temp + i);
-                t_alloc.deallocate(temp, size());
+                    tmp_alloc.destroy(temp + i);
+                tmp_alloc.deallocate(temp, size());
                 _finish = _finish + n;
             }
     	
@@ -336,11 +338,11 @@ namespace ft
                 if (l + n >= capacity())
                     this->reserve(ft::max(capacity() * 2, l + n));
 
-                allocator_type t_alloc;
-                pointer 	   temp = t_alloc.allocate(l);
+                allocator_type tmp_alloc;
+                pointer 	   temp = tmp_alloc.allocate(l);
 
                 for (size_type i = 0; i < l; i++)
-                    t_alloc.construct(temp + i, *(_start + i));
+                    tmp_alloc.construct(temp + i, *(_start + i));
 
                 for (size_type i = static_cast<size_type>(range); i < l + n; i++)
                 {
@@ -357,8 +359,8 @@ namespace ft
                 }
 
                 for (size_type i = 0; i < l; i++)
-                    t_alloc.destroy(temp + i);
-                t_alloc.deallocate(temp, l);
+                    tmp_alloc.destroy(temp + i);
+                tmp_alloc.deallocate(temp, l);
                 _finish += n;
             }
 
@@ -370,17 +372,6 @@ namespace ft
 			    _alloc.destroy(_start + l - 1);
 			    _finish--;
 			    return position;
-                // size_type d = position - this->begin();
-                // size_type l = size();
-                // while(d < l - 1)
-                // {
-                //     // *(_start + d) = *(_start + d + 1);
-                //     _alloc.construct(_start + d + 1, *(_start + d + 1));
-                //     d++;
-                // }
-                // _alloc.destroy(_finish - 1);
-                // _finish--;
-                // return (position);
             }
 
         
@@ -396,7 +387,6 @@ namespace ft
                 {
                     for(size_t i = 0; i < l - d - offset; i++)
                         *(_start + offset + i) = *(_start + offset + d + i);
-                        // _alloc.construct(_start + offset + i , *(_start + offset + d + i));
                 }
                 for (size_type j = l - d; j < l; j++) 
 				    _alloc.destroy(_start + j);
@@ -438,7 +428,7 @@ namespace ft
                 else
                 {
                     if (this->capacity() < n)
-						reserve(n);
+						reserve(ft::max(capacity() * 2, n));
 					while (this->size() != n) 
                     {
 						this->_alloc.construct(_finish, val);

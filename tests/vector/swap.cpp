@@ -1,16 +1,17 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   relational.cpp                                     :+:      :+:    :+:   */
+/*   swap.cpp                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: nali <nali@42abudhabi.ae>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/04/02 20:10:38 by nali              #+#    #+#             */
-/*   Updated: 2023/04/02 23:45:57 by nali             ###   ########.fr       */
+/*   Created: 2023/04/03 12:40:43 by nali              #+#    #+#             */
+/*   Updated: 2023/04/03 15:04:17 by nali             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../includes/containers.hpp"
+#include "../common.hpp"
 
 int main(void)
 {
@@ -19,22 +20,22 @@ int main(void)
 	double start = 1.0e6 * exec.tv_sec + exec.tv_usec;
     
     {
-        /*Default constructor*/
-        NAMESPACE::stack<int> stck1;
-        for (int i = 0; i < 10; i++)
-            stck1.push(i);
-        std::cout <<"stck2 created from stck1 through copy constructor\n";
-        NAMESPACE::stack<int> stck2(stck1);
-        std::cout <<"stck3 created from stck1 through copy assignment\n";
-        NAMESPACE::stack<int> stck3 = stck1;
+        NAMESPACE::vector<int> vec1(3,100);   // three ints with a value of 100
+        NAMESPACE::vector<int> vec2(5,200);   // five ints with a value of 200
+        
+        std::cout<< "Elements in vec1\n";
+        print_vector(vec1);
+        std::cout<< "Elements in vec2\n";
+        print_vector(vec2);
+        
+        vec1.swap(vec2);
 
-        std::cout <<"stck1 == stck2 : " << (stck1 == stck2) <<std::endl;
-        stck1.pop();
-        std::cout <<"Check after popping an element of stck1\n";
-        std::cout <<"stck1 == stck2 : " << (stck1 == stck2) <<std::endl;
-        std::cout <<"stck1 != stck2 : " << (stck1 != stck2) <<std::endl;
+        std::cout<< "Elements in vec1\n";
+        print_vector(vec1);
+        std::cout<< "Elements in vec2\n";
+        print_vector(vec2);
     }
-
+    
     std::cout <<std::endl;
     gettimeofday(&exec, NULL);
 	double end = 1.0e6 * exec.tv_sec + exec.tv_usec;

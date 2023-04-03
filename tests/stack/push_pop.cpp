@@ -6,24 +6,12 @@
 /*   By: nali <nali@42abudhabi.ae>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/02 17:46:33 by nali              #+#    #+#             */
-/*   Updated: 2023/04/02 20:18:55 by nali             ###   ########.fr       */
+/*   Updated: 2023/04/03 00:00:40 by nali             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../includes/containers.hpp"
-
-template<typename T>
-void print_stack(T &stck)
-{
-    std::cout << "size: " << stck.size() << std::endl;
-	std::cout << "Elements:" << std::endl;
-	while (stck.size() != 0) 
-    {
-		std::cout << "- " << stck.top() << std::endl;
-		stck.pop();
-	}
-    std::cout << "---------------------------------------\n";
-}
+#include "../common.hpp"
 
 int main(void)
 {

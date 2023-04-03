@@ -1,16 +1,18 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   relational.cpp                                     :+:      :+:    :+:   */
+/*   assign.cpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: nali <nali@42abudhabi.ae>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/04/02 20:10:38 by nali              #+#    #+#             */
-/*   Updated: 2023/04/02 23:45:57 by nali             ###   ########.fr       */
+/*   Created: 2023/04/02 17:46:33 by nali              #+#    #+#             */
+/*   Updated: 2023/04/02 23:41:57 by nali             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../includes/containers.hpp"
+#include "../common.hpp"
+
 
 int main(void)
 {
@@ -19,20 +21,27 @@ int main(void)
 	double start = 1.0e6 * exec.tv_sec + exec.tv_usec;
     
     {
-        /*Default constructor*/
-        NAMESPACE::stack<int> stck1;
-        for (int i = 0; i < 10; i++)
-            stck1.push(i);
-        std::cout <<"stck2 created from stck1 through copy constructor\n";
-        NAMESPACE::stack<int> stck2(stck1);
-        std::cout <<"stck3 created from stck1 through copy assignment\n";
-        NAMESPACE::stack<int> stck3 = stck1;
+        NAMESPACE::vector<int> vec1;
+        vec1.assign(7, 100);
+        std::cout << "vec1 created using assign fill version\n";
+        print_vector(vec1);
 
-        std::cout <<"stck1 == stck2 : " << (stck1 == stck2) <<std::endl;
-        stck1.pop();
-        std::cout <<"Check after popping an element of stck1\n";
-        std::cout <<"stck1 == stck2 : " << (stck1 == stck2) <<std::endl;
-        std::cout <<"stck1 != stck2 : " << (stck1 != stck2) <<std::endl;
+        NAMESPACE::vector<int> vec2(7);
+        NAMESPACE::vector<int>::iterator it = vec2.begin(), ite = vec2.end();
+        for (int i = 0; it != ite; ++it,++i)
+            *it = rand()%10;
+        std::cout << "contents of vec2\n";
+        print_vector(vec2);
+       
+        it = vec2.begin(), ite = vec2.end();
+        NAMESPACE::vector<int> vec3;
+        std::cout << "vec3 created using assign range version\n";
+        vec3.assign(++it, --ite);
+        print_vector(vec3);
+
+        vec2.assign(4,200);
+        std::cout << "vec2 re-assigned using assign fill version\n";
+        print_vector(vec2);
     }
 
     std::cout <<std::endl;

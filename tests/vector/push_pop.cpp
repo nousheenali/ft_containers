@@ -1,16 +1,17 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   relational.cpp                                     :+:      :+:    :+:   */
+/*   push_pop.cpp                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: nali <nali@42abudhabi.ae>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/04/02 20:10:38 by nali              #+#    #+#             */
-/*   Updated: 2023/04/02 23:45:57 by nali             ###   ########.fr       */
+/*   Created: 2023/04/03 12:40:43 by nali              #+#    #+#             */
+/*   Updated: 2023/04/03 15:15:31 by nali             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../includes/containers.hpp"
+#include "../common.hpp"
 
 int main(void)
 {
@@ -19,22 +20,27 @@ int main(void)
 	double start = 1.0e6 * exec.tv_sec + exec.tv_usec;
     
     {
-        /*Default constructor*/
-        NAMESPACE::stack<int> stck1;
-        for (int i = 0; i < 10; i++)
-            stck1.push(i);
-        std::cout <<"stck2 created from stck1 through copy constructor\n";
-        NAMESPACE::stack<int> stck2(stck1);
-        std::cout <<"stck3 created from stck1 through copy assignment\n";
-        NAMESPACE::stack<int> stck3 = stck1;
+        NAMESPACE::vector<int> vec;
+        std::cout << "Pushing values 100, 200 and 300 into vec\n";
+        vec.push_back (100);
+        vec.push_back (200);
+        vec.push_back (300);
 
-        std::cout <<"stck1 == stck2 : " << (stck1 == stck2) <<std::endl;
-        stck1.pop();
-        std::cout <<"Check after popping an element of stck1\n";
-        std::cout <<"stck1 == stck2 : " << (stck1 == stck2) <<std::endl;
-        std::cout <<"stck1 != stck2 : " << (stck1 != stck2) <<std::endl;
+        std::cout << "Elements in vec\n";
+        print_vector(vec);
+        
+        std::cout << "Pop elements of vec and print\n";
+        while (!vec.empty())
+        {
+            std::cout << "- " << vec.back() << std::endl;
+            vec.pop_back();
+        }
+        std::cout << "----------------------------------\n";
+
+        std::cout << "Elements in vec\n";
+        print_vector(vec);
     }
-
+    
     std::cout <<std::endl;
     gettimeofday(&exec, NULL);
 	double end = 1.0e6 * exec.tv_sec + exec.tv_usec;

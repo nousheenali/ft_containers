@@ -6,7 +6,7 @@
 #    By: nali <nali@42abudhabi.ae>                  +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/04/02 13:45:26 by nali              #+#    #+#              #
-#    Updated: 2023/04/02 20:13:37 by nali             ###   ########.fr        #
+#    Updated: 2023/04/03 15:07:33 by nali             ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -37,7 +37,8 @@ $(FT_STK_OUT)%.o : $(STK_SRCS)/%.cpp
 			@$(CXX) $(CPPFLAGS) -D NAMESPACE=ft -I$(CONTAINERS)  -c $< -o $@
 
 # --------------------VECTOR--------------------
-VEC_TEST	=  
+VEC_TEST	=  constructors.cpp assign.cpp element_access.cpp iterators.cpp\
+			capacity.cpp insert.cpp erase.cpp swap.cpp push_pop.cpp
 STD_VEC_OUT =  output/std_vector/
 FT_VEC_OUT  =  output/ft_vector/
 VEC_SRCS	=  tests/vector
@@ -46,30 +47,28 @@ STD_VEC_OBJ	=	$(addprefix $(STD_VEC_OUT), $(VEC_TEST:%cpp=%o))
 FT_VEC_OBJ	=	$(addprefix $(FT_VEC_OUT), $(VEC_TEST:%cpp=%o))
 
 $(STD_VEC_OUT)%.o : $(VEC_SRCS)/%.cpp
-			@mkdir -p output && mkdir -p output/std_stack
+			@mkdir -p output && mkdir -p output/std_vector
 			@$(CXX) $(CPPFLAGS) -D NAMESPACE=std -I$(CONTAINERS)  -c $< -o $@
 
 $(FT_VEC_OUT)%.o : $(VEC_SRCS)/%.cpp
-			@mkdir -p output && mkdir -p output/ft_stack
+			@mkdir -p output && mkdir -p output/ft_vector
 			@$(CXX) $(CPPFLAGS) -D NAMESPACE=ft -I$(CONTAINERS)  -c $< -o $@
 
 # --------------------MAP--------------------
 MAP_TEST	=  
 STD_MAP_OUT =  output/std_stack/
 FT_MAP_OUT  =  output/ft_stack/
-MAP_SRCS	=  tests/stack
+MAP_SRCS	=  tests/map
 
 STD_MAP_OBJ	=	$(addprefix $(STD_MAP_OUT), $(MAP_TEST:%cpp=%o))
 FT_MAP_OBJ	=	$(addprefix $(FT_MAP_OUT), $(MAP_TEST:%cpp=%o))
 
-# STD MAP
 $(STD_MAP_OUT)%.o : $(MAP_SRCS)/%.cpp
-			@mkdir -p output && mkdir -p output/std_stack
+			@mkdir -p output && mkdir -p output/std_map
 			@$(CXX) $(CPPFLAGS) -D NAMESPACE=std -I$(CONTAINERS)  -c $< -o $@
 
-# # FT MAP
 $(FT_MAP_OUT)%.o : $(MAP_SRCS)/%.cpp
-			@mkdir -p output && mkdir -p output/ft_stack
+			@mkdir -p output && mkdir -p output/ft_map
 			@$(CXX) $(CPPFLAGS) -D NAMESPACE=ft -I$(CONTAINERS)  -c $< -o $@
 
 # --------------------RULES--------------------
