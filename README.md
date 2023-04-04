@@ -1,9 +1,11 @@
 # ft_containers
 
-
-To run tests:
-
-./run_test all
+```bash
+./run_tests all     # to run all tests
+./run_tests stack   # to run stack tests only
+./run_tests vector  # to run vector tests only
+./run_tests map     # to run map tests only
+```
 
 ### Concept of container/iterator/algorithm
 
