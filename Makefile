@@ -81,6 +81,6 @@ vector:		$(STD_VEC_OBJ) $(FT_VEC_OBJ)
 map:		$(STD_MAP_OBJ) $(FT_MAP_OBJ)
 
 clean:
-			@$(RM) $(OBJ_DIR)
+			@$(RM) $(OBJ_DIR) *.log
 
 .PHONY:		vector map stack clean

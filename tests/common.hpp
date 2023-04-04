@@ -13,6 +13,7 @@
 #ifndef COMMON_HPP
 #define COMMON_HPP
 
+#include <iomanip> //for setprecision
 
 template<typename T>
 void print_stack(T &stck)

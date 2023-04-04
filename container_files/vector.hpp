@@ -19,6 +19,7 @@
 #include "../includes/compare_utils.hpp"
 #include "../includes/iterator_validity.hpp"
 #include <memory> //to access allocator
+#include <stddef.h>
 
 namespace ft
 {
