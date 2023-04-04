@@ -1,5 +1,10 @@
 # ft_containers
 
+
+To run tests:
+
+./run_test all
+
 ### Concept of container/iterator/algorithm
 
 https://www.codeproject.com/Articles/36530/An-Introduction-to-Iterator-Traits

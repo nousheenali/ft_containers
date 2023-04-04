@@ -6,7 +6,7 @@
 /*   By: nali <nali@42abudhabi.ae>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/18 09:02:05 by nali              #+#    #+#             */
-/*   Updated: 2023/04/02 14:54:15 by nali             ###   ########.fr       */
+/*   Updated: 2023/04/03 20:10:33 by nali             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,6 +16,8 @@
 #include <stdio.h>
 #include <iostream>
 #include <stack>
+#include <map>
+#include <vector>
 #include <fstream>
 #include "../container_files/stack.hpp"
 #include "../container_files/vector.hpp"

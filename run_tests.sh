@@ -14,7 +14,7 @@ RM='rm -rf'
 LOG=error.log
 OUT_DIR=output
 
-STACK_DIR=stack_tests
+STACK_DIR=stack
 STD_STACK=std_stack
 FT_STACK=ft_stack
 
@@ -22,11 +22,11 @@ VEC_DIR=vector
 STD_VEC=std_vector
 FT_VEC=ft_vector
 
-MAP_DIR=map_tests
+MAP_DIR=map
 STD_MAP=std_map
 FT_MAP=ft_map
 
-check_compilation_log_file() 
+check_compilation_status() 
 {
 	if [ -s $LOG ]; then
 		echo -e $RED"Compilation error, check $LOG for more details"$DEFAULT
@@ -35,31 +35,40 @@ check_compilation_log_file()
 	fi
 }
 
-print_test_results()
+print_results()
 {
 	for file in $OUT_DIR/$1/*.txt; do
 		printf $PURPLE'%-37s' " • $(basename -- $file .txt)$DEFAULT"
 		if [ -f $OUT_DIR/$2/${file##*/} ]; then
-			echo -ne "Compiled:$GREEN SUCCESS $DEFAULT |  "
+			echo -ne "Compiled: ✅  |  "
 			diff <(sed '$d' $file) <(sed '$d' $OUT_DIR/$2/${file##*/}) > diff
 			if [ -s diff ]; then
-				echo -ne "Result:$RED FAILURE $DEFAULT"
+				echo -ne "Output: ❌"
 			else
-				echo -ne "Result:$GREEN SUCCESS $DEFAULT |  "
-				echo -ne "FT Time:$GREEN" $(tail -n 1 $OUT_DIR/$2/${file##*/}) "$DEFAULT |  "
-				echo -ne "STD Time:$GREEN" $(tail -n 1 $file)" $DEFAULT"
+				echo -ne "Output: ✅  |  "
+				FTTIME=$(tail -n 1 $OUT_DIR/$2/${file##*/}| sed 's/[^0-9\.]*//g') #truncate everything from time value except digits and decimals
+				STDTIME=$(tail -n 1 $file| sed 's/[^0-9\.]*//g')
+				echo -ne "FT Time:$GREEN" $FTTIME ms"$DEFAULT |  "
+				echo -ne "STD Time:$GREEN" $STDTIME ms"$DEFAULT |  "
+				STDTIME=$(expr $STDTIME*20 | bc)
+				if [ $(bc <<< "$STDTIME < $FTTIME") -eq 1 ] #FT can be upto 20 times slower than the STD container
+					then
+						echo -ne "Time Compare: 🔴"
+					else
+						echo -ne "Time Compare: 🟢"
+				fi
 			fi
 			rm diff
 		else
-			printf "Compiled:$RED FAILURE $DEFAULT |  Result:$RED FAILURE $DEFAULT"
+			printf "Compiled: ❌  |  Output: ❌ "
 		fi
 		echo #new line
 	done
 	echo -e $BLUE"Checks outputs directory for results"$DEFAULT
-	check_compilation_log_file
+	check_compilation_status
 }
 
-execute_and_redirect_output() 
+run_tests() 
 {
 	for file in $OUT_DIR/$1/*.o; do
 		$CC $CFLAGS $file -o ${file%%.o} # compile object files then run
@@ -70,12 +79,12 @@ execute_and_redirect_output()
 
 start_tests() 
 {
-	echo -e $YELLOW"+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++"$DEFAULT
-	echo -e $YELLOW"                                                  $3 Tester                                                 "$DEFAULT
-	echo -e $YELLOW"+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++"$DEFAULT
-	execute_and_redirect_output $1 
-	execute_and_redirect_output $2 
-	print_test_results $2 $1
+	echo -e $YELLOW"++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++"
+	echo -e "                                                          $3 Tester                                                      "
+	echo -e "++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++"$DEFAULT
+	run_tests $1 
+	run_tests $2 
+	print_results $2 $1
 }
 
 
@@ -102,7 +111,7 @@ elif [ $1 == "all" ]; then
 	start_tests $FT_STACK $STD_STACK "stack"
 	make -k vector
 	start_tests $FT_VEC $STD_VEC "vector"
-	make -k stack
+	make -k map
 	start_tests $FT_MAP $STD_MAP "map"
 
 else

@@ -6,7 +6,7 @@
 #    By: nali <nali@42abudhabi.ae>                  +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/04/02 13:45:26 by nali              #+#    #+#              #
-#    Updated: 2023/04/03 15:07:33 by nali             ###   ########.fr        #
+#    Updated: 2023/04/04 13:09:52 by nali             ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -37,8 +37,8 @@ $(FT_STK_OUT)%.o : $(STK_SRCS)/%.cpp
 			@$(CXX) $(CPPFLAGS) -D NAMESPACE=ft -I$(CONTAINERS)  -c $< -o $@
 
 # --------------------VECTOR--------------------
-VEC_TEST	=  constructors.cpp assign.cpp element_access.cpp iterators.cpp\
-			capacity.cpp insert.cpp erase.cpp swap.cpp push_pop.cpp
+VEC_TEST	=  assign.cpp capacity.cpp constructors.cpp element_access.cpp \
+			erase.cpp insert.cpp iterators.cpp push_pop.cpp relational.cpp swap.cpp
 STD_VEC_OUT =  output/std_vector/
 FT_VEC_OUT  =  output/ft_vector/
 VEC_SRCS	=  tests/vector
@@ -55,9 +55,10 @@ $(FT_VEC_OUT)%.o : $(VEC_SRCS)/%.cpp
 			@$(CXX) $(CPPFLAGS) -D NAMESPACE=ft -I$(CONTAINERS)  -c $< -o $@
 
 # --------------------MAP--------------------
-MAP_TEST	=  
-STD_MAP_OUT =  output/std_stack/
-FT_MAP_OUT  =  output/ft_stack/
+MAP_TEST	=  capacity.cpp constructors.cpp element_access.cpp erase.cpp \
+			insert.cpp iterators.cpp lookup.cpp relational.cpp swap.cpp
+STD_MAP_OUT =  output/std_map/
+FT_MAP_OUT  =  output/ft_map/
 MAP_SRCS	=  tests/map
 
 STD_MAP_OBJ	=	$(addprefix $(STD_MAP_OUT), $(MAP_TEST:%cpp=%o))
