@@ -8,7 +8,7 @@ CYAN='\033[1;36m'
 BLUE='\033[1;34m'
 
 CC=c++
-CFLAGS='-Wall -Wextra -Werror'
+CFLAGS='-Wall -Wextra -Werror -std=c++98'
 RM='rm -rf'
 LOG=error.log
 OUT_DIR=output
