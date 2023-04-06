@@ -14,6 +14,7 @@
 #define COMMON_HPP
 
 #include <iomanip> //for setprecision
+#include <cstdlib> //for rand()
 
 template<typename T>
 void print_stack(T &stck)
