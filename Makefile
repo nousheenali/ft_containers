@@ -6,7 +6,7 @@
 #    By: nali <nali@42abudhabi.ae>                  +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/04/02 13:45:26 by nali              #+#    #+#              #
-#    Updated: 2023/04/06 13:28:21 by nali             ###   ########.fr        #
+#    Updated: 2023/04/06 23:50:25 by nali             ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -40,7 +40,9 @@ $(FT_STK_OUT)%.o : $(STK_SRCS)/%.cpp
 
 # --------------------VECTOR--------------------
 VEC_TEST	=  assign.cpp capacity.cpp constructors.cpp element_access.cpp \
-			erase.cpp insert.cpp iterators.cpp push_pop.cpp relational.cpp swap.cpp
+			erase.cpp insert.cpp invalidation.cpp iterators.cpp push_pop.cpp \
+			relational.cpp swap.cpp
+			
 STD_VEC_OUT =  output/std_vector/
 FT_VEC_OUT  =  output/ft_vector/
 VEC_SRCS	=  tests/vector

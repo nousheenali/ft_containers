@@ -6,7 +6,7 @@
 /*   By: nali <nali@42abudhabi.ae>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/02 17:46:33 by nali              #+#    #+#             */
-/*   Updated: 2023/04/06 12:40:42 by nali             ###   ########.fr       */
+/*   Updated: 2023/04/06 23:01:08 by nali             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,11 +57,10 @@ int main(void)
             NAMESPACE::vector<int>::iterator it = vec.begin();
             NAMESPACE::vector<int>::const_iterator cit = vec.begin();
 
-            if(it == cit && cit == it)
+            if(it == cit)
             std::cout << "iterators equal" << std::endl;
 
-        }
-        
+        } 
     }
     std::cout <<std::endl;
     gettimeofday(&exec, NULL);

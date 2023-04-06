@@ -6,7 +6,7 @@
 /*   By: nali <nali@42abudhabi.ae>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/30 22:58:59 by nali              #+#    #+#             */
-/*   Updated: 2023/04/01 13:31:41 by nali             ###   ########.fr       */
+/*   Updated: 2023/04/07 00:04:39 by nali             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,8 +50,10 @@ namespace ft
     	}
     }
 
-    //std iterator categories have been included to accomodate the tester
-    //condition where it uses std iterators of list to fill in vector
+    /* ----------std iterator categories have been included to accomodate the tester
+    condition where it uses std iterators of list to fill in vector--------- */
+
+    
     template <class It>
     void iterator_validity(It first, It last, typename std::input_iterator_tag) {
     	(void)first;
@@ -69,7 +71,7 @@ namespace ft
     	(void)first;
     	(void)last;
     }
-
+    
     template <class It>
     void iterator_validity(It first, It last, typename std::bidirectional_iterator_tag) {
     	(void)first;

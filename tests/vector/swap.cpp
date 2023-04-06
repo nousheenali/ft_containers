@@ -6,7 +6,7 @@
 /*   By: nali <nali@42abudhabi.ae>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/03 12:40:43 by nali              #+#    #+#             */
-/*   Updated: 2023/04/06 12:34:27 by nali             ###   ########.fr       */
+/*   Updated: 2023/04/06 23:11:34 by nali             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,7 +40,6 @@ int main(void)
         std::cout << (it1 == vec2.begin()) << std::endl;
         std::cout << (it2 == vec1.begin()) << std::endl;
 
-        
     }
     
     std::cout <<std::endl;
