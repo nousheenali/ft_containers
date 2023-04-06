@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   swap.cpp                                           :+:      :+:    :+:   */
+/*   pair.cpp                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: nali <nali@42abudhabi.ae>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/04/03 12:40:43 by nali              #+#    #+#             */
-/*   Updated: 2023/04/06 12:34:27 by nali             ###   ########.fr       */
+/*   Created: 2023/04/03 19:41:37 by nali              #+#    #+#             */
+/*   Updated: 2023/04/06 13:11:31 by nali             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,27 +20,17 @@ int main(void)
 	double start = 1.0e6 * exec.tv_sec + exec.tv_usec;
     
     {
-        NAMESPACE::vector<int> vec1(3,100);   // three ints with a value of 100
-        NAMESPACE::vector<int> vec2(5,200);   // five ints with a value of 200
-        NAMESPACE::vector<int>::iterator it1 = vec1.begin(), it2 = vec2.begin();
-        
-        std::cout<< "Elements in vec1\n";
-        print_vector(vec1);
-        std::cout<< "Elements in vec2\n";
-        print_vector(vec2);
-        
-        vec1.swap(vec2);
-
-        std::cout<< "Elements in vec1\n";
-        print_vector(vec1);
-        std::cout<< "Elements in vec2\n";
-        print_vector(vec2);
-
-        std::cout << "Checking Iterator validity:" << std::endl;
-        std::cout << (it1 == vec2.begin()) << std::endl;
-        std::cout << (it2 == vec1.begin()) << std::endl;
-
-        
+        NAMESPACE::map<std::string,int> mp;
+        std::cout << "Demostrates mak_pair and insertion into map\n";
+        mp.insert (NAMESPACE::make_pair<std::string,int>("aa", 100) );
+        mp.insert (NAMESPACE::make_pair<std::string,int>("bb", 200) );
+        mp.insert (NAMESPACE::make_pair<std::string,int>("cc", 300) );
+        print_map(mp);
+       
+        std::cout << "Demostrates duplicate key is not inserted into Map But duplicate value is.\n";
+        mp.insert (NAMESPACE::make_pair<std::string,int>("aa", 400) );
+        mp.insert (NAMESPACE::make_pair<std::string,int>("dd", 100) );
+        print_map(mp);
     }
     
     std::cout <<std::endl;

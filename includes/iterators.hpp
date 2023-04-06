@@ -6,7 +6,7 @@
 /*   By: nali <nali@42abudhabi.ae>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/24 09:46:03 by nali              #+#    #+#             */
-/*   Updated: 2023/02/05 15:36:20 by nali             ###   ########.fr       */
+/*   Updated: 2023/04/05 13:13:18 by nali             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,9 +65,9 @@ namespace ft
     template<typename _Tp>
     struct iterator_traits<_Tp*>
     {
-      typedef random_access_iterator_tag iterator_category;
+      typedef random_access_iterator_tag  iterator_category;
       typedef _Tp                         value_type;
-      typedef std::ptrdiff_t                   difference_type;
+      typedef std::ptrdiff_t              difference_type;
       typedef _Tp*                        pointer;
       typedef _Tp&                        reference;
     };
@@ -77,9 +77,9 @@ namespace ft
     template<typename _Tp>
     struct iterator_traits<const _Tp*>
     {
-      typedef random_access_iterator_tag iterator_category;
+      typedef random_access_iterator_tag  iterator_category;
       typedef _Tp                         value_type;
-      typedef std::ptrdiff_t                   difference_type;
+      typedef std::ptrdiff_t              difference_type;
       typedef const _Tp*                  pointer;
       typedef const _Tp&                  reference;
     };
@@ -105,5 +105,12 @@ all iterators - including pointers. That is the purpose of std::iterator_traits.
 
 https://stackoverflow.com/questions/71737631/what-is-the-design-purpose-of-iterator-traits
 https://stackoverflow.com/questions/6742008/what-are-the-typical-use-cases-of-an-iterator-trait
+
+# Iterator Tags are used to select the most efficient algorithm if your container
+  is passed to one of the Standard Library functions from the <algorithm> library.
+  Wrong tags mean sub-optimal performance! The iterator category is also used to 
+  set algorithm requirements, for example: std::fill wants a Forward Iterator, 
+  while std::reverse wants a Bidirectional Iterator. Passing the wrong iterator
+  will result in a compilation error.
 
 */

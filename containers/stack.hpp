@@ -6,7 +6,7 @@
 /*   By: nali <nali@42abudhabi.ae>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/05 13:31:54 by nali              #+#    #+#             */
-/*   Updated: 2023/04/03 23:40:23 by nali             ###   ########.fr       */
+/*   Updated: 2023/04/06 13:26:31 by nali             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,12 +14,16 @@
 #define STACK_HPP
 
 #include "vector.hpp"
+// #include <vector>
+// #include <list>
+
 namespace ft
 {
     template <class T, class Container = ft::vector<T> >
     class stack
     {
         public:
+            /* -- Member Types -- */
             typedef Container                                container_type;
             typedef typename container_type::value_type      value_type;
             typedef typename container_type::reference       reference;
@@ -27,26 +31,37 @@ namespace ft
             typedef typename container_type::size_type       size_type;
 
         protected:
-            container_type c;
+            container_type c; //member object
 
         public:
+            /* -- member functions -- */
             //Default constructor - creates a container adaptor with underlying container obj.
             // This container object is a copy of the 'cntr' argument passed to the constructor
             explicit stack (const container_type& cntr = container_type()):c(cntr){}
+            
             /*destructor*/
             ~stack(){}
+            
             /*copy constructor*/
             stack(const stack& q) 
             {
                 this->c = q.c;
             }
+            
             /*copy assignment*/
             stack& operator=(const stack& q)
             {
                 this->c = q.c;
                 return(*this);
             }
-            /*capacity*/
+            
+            /* -- Element Access -- */
+            T& top()
+            {
+                return (this->c.back());
+            }
+            
+            /* -- Capacity --*/
             bool empty() const
             {
                 return (this->c.empty());
@@ -55,11 +70,7 @@ namespace ft
             {
                 return(this->c.size());
             }
-            T& top()
-            {
-                return (this->c.back());
-            }
-            /*modifiers*/
+            /* -- Modifiers -- */
             void push(const T& x)
             {
                 this->c.push_back(x);

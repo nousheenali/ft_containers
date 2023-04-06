@@ -6,7 +6,7 @@
 /*   By: nali <nali@42abudhabi.ae>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/20 16:44:10 by nali              #+#    #+#             */
-/*   Updated: 2023/04/03 23:49:53 by nali             ###   ########.fr       */
+/*   Updated: 2023/04/06 12:28:25 by nali             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,6 +27,7 @@ namespace ft
     class vector
     {    
         public:
+            /* -- Member Types -- */
             typedef T                                           value_type;
             typedef Alloc                                       allocator_type;
             typedef size_t					                    size_type;
@@ -35,21 +36,20 @@ namespace ft
             typedef typename allocator_type::const_pointer	    const_pointer;
             typedef typename allocator_type::reference	        reference;
             typedef typename allocator_type::const_reference	const_reference;
-            typedef ft::normal_iterator <T>              iterator;
-            typedef ft::normal_iterator <const T>       const_iterator;
-            typedef ft::reverse_iterator<const_iterator>	    const_reverse_iterator;
+            typedef ft::normal_iterator <T>                     iterator;
+            typedef ft::normal_iterator <const T>               const_iterator;
             typedef ft::reverse_iterator<iterator>		        reverse_iterator;
+            typedef ft::reverse_iterator<const_iterator>	    const_reverse_iterator;
         
         private:
-            T*                  _start;    // Point to the first element
-            T*                  _finish;   // Point to one-past the last element
+            T*                  _start;     // Point to the first element
+            T*                  _finish;    // Point to one-past the last element
             T*                  _capacity;  // Point to the end of the internal array(max elements it can hold)
-            allocator_type     _alloc;
+            allocator_type      _alloc;
         
         public:
-            /*constructors*/
+            /* -- Constructors -- */
             /*default constructor*/
-		
             explicit vector (const allocator_type &alloc = allocator_type())
             :_start(NULL),_finish(NULL),_capacity(NULL),_alloc(alloc)
             {}	
@@ -69,6 +69,7 @@ namespace ft
             }	
             
             /*range constructor*/ //refer comment #1
+            //enable_if - a compile-time switch for templates
             template <class InputIterator>  
             vector (InputIterator first, InputIterator last, const allocator_type& alloc = allocator_type(),
             typename ft::enable_if<!ft::is_integral<InputIterator>::value, InputIterator>::type* = NULL)
@@ -121,7 +122,7 @@ namespace ft
                 return(*this);
             }
 
-            /*member functions*/
+            /* -- Member Functions -- */
             template <class InputIterator>  
             void assign (InputIterator first, InputIterator last,
             typename ft::enable_if<!ft::is_integral<InputIterator>::value, InputIterator>::type* = NULL)
@@ -174,7 +175,7 @@ namespace ft
                 return _alloc;
             }
             
-            /*Element Access*/
+            /* -- Element Access -- */
             
             reference at (size_type n)
             {
@@ -208,7 +209,7 @@ namespace ft
 		    const_reference back() const 
             {   return *(this->end() - 1);}
             
-            /*Iterators*/
+            /* -- Iterators -- */
             iterator begin()
             {   return iterator(this->_start);}
             
@@ -233,7 +234,7 @@ namespace ft
             const_reverse_iterator rend() const
             {   return const_reverse_iterator(begin()); }
 
-            /*Capacity*/
+            /* -- Capacity -- */
             bool empty() const 
             { return begin() == end(); }
 
@@ -269,7 +270,7 @@ namespace ft
             size_type   capacity() const
             { return size_type(this->_capacity - this->_start); }
 
-            /* Modifiers */
+            /* -- Modifiers -- */
             
             void clear()
             {   
@@ -457,7 +458,8 @@ namespace ft
 				this->_capacity = tmp_capacity;
 			}
     };
-    /* relational operators */
+    
+    /* -- Relational Operators -- */
     template <class T, class Alloc>  
     bool operator== (const vector<T,Alloc>& lhs, const vector<T,Alloc>& rhs)
     {
@@ -524,8 +526,23 @@ namespace ft
     https://stackoverflow.com/questions/45847787/how-to-differentiate-fill-constructor-and-range-constructor-in-c11
  
     Better explanation (also explains SFINAE and enable_if)
-    https://eli.thegreenplace.net/2014/sfinae-and-enable_if/
+    https://eli.thegreenplace.net/2014/sfinae-and-enable_if/ 
+    (refer under the heading "Uses of enable_if")
 
     https://learn.microsoft.com/en-us/cpp/standard-library/enable-if-class?view=msvc-170
+
+    In C++, substitution failure of template parameters isn't an error in itself—this is
+     referred to as SFINAE (substitution failure isn't an error). Typically, enable_if 
+     is used to remove candidates from overload resolution—that is, it culls the overload
+     set—so that one definition can be rejected in favor of another. 
+    
+    For example: when a fill constructor is called ft::vector<int> vec(7,20)
+    this creates a vector with 7 elements having value 20. 
+    Since we have a fill constructor and range constructor defined in our 
+    vector class and  both constructors take two arguments. The second 
+    one has the catch-all property of templates.  So when the above statement 
+    is executed it tends to call the range constructor instead of fill constructor. 
+    so we have to use enable_if condition for range constructor in which case it is 
+    executed only if the arguments are not integral vals.
  
  */

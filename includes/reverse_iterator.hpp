@@ -6,7 +6,7 @@
 /*   By: nali <nali@42abudhabi.ae>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/24 22:16:41 by nali              #+#    #+#             */
-/*   Updated: 2023/02/05 18:07:41 by nali             ###   ########.fr       */
+/*   Updated: 2023/04/05 13:17:28 by nali             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,6 +15,8 @@
 
 #include "iterators.hpp"
 
+/*  Reverse iterators are implemented using an underlying iterator
+    Current refers to underlying iterator*/
 namespace ft
 {
     template<class _Iterator>

@@ -6,7 +6,7 @@
 /*   By: nali <nali@42abudhabi.ae>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/20 16:44:10 by nali              #+#    #+#             */
-/*   Updated: 2023/03/28 19:57:51 by nali             ###   ########.fr       */
+/*   Updated: 2023/04/06 11:54:02 by nali             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,7 +53,8 @@ namespace ft
                 return true;
             ++first1; ++first2;
         }
-        return (first2!=last2);
+        return (first2!=last2);//If both sequences compare equal until one of them ends, the shorter 
+        // sequence is lexicographically less than the longer one.
     }
 
     template <class InputIterator1, class InputIterator2, class Compare>
@@ -68,7 +69,7 @@ namespace ft
                 return true;
             ++first1; ++first2;
         }
-        return (first2!=last2);
+        return (first2!=last2); 
     }
     
     template<typename T>
@@ -80,5 +81,17 @@ namespace ft
     }
 
 }
+
+/*  A lexicographical comparison is the kind of comparison generally used
+    to sort words alphabetically in dictionaries; It involves comparing 
+    sequentially the elements that have the same position in both ranges 
+    against each other until one element is not equivalent to the other. 
+    The result of comparing these first non-matching elements is the result
+    of the lexicographical comparison.
+
+    If both sequences compare equal until one of them ends, the shorter 
+    sequence is lexicographically less than the longer one.
+
+*/
 
 #endif

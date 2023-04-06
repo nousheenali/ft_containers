@@ -6,7 +6,7 @@
 /*   By: nali <nali@42abudhabi.ae>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/02 17:46:33 by nali              #+#    #+#             */
-/*   Updated: 2023/04/03 11:17:25 by nali             ###   ########.fr       */
+/*   Updated: 2023/04/06 12:40:42 by nali             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,6 +50,16 @@ int main(void)
                 *rit = ++i;
             std::cout << "vec3 after insertion using reverse iterator:\n";
             print_vector(vec3);
+        }
+        {
+            std::cout << "Check if const iterator and iterator are comparable\n" ;
+            NAMESPACE::vector<int> vec;
+            NAMESPACE::vector<int>::iterator it = vec.begin();
+            NAMESPACE::vector<int>::const_iterator cit = vec.begin();
+
+            if(it == cit && cit == it)
+            std::cout << "iterators equal" << std::endl;
+
         }
         
     }

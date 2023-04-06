@@ -6,7 +6,7 @@
 /*   By: nali <nali@42abudhabi.ae>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/06 10:53:53 by nali              #+#    #+#             */
-/*   Updated: 2023/03/29 11:41:07 by nali             ###   ########.fr       */
+/*   Updated: 2023/04/06 12:58:22 by nali             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,7 +40,10 @@ namespace ft
             second = other.second;
             return *this;
         }
+        
+        ~pair(){}
     };
+    
     template <class T1, class T2>  
     bool operator== (const pair<T1,T2>& lhs, const pair<T1,T2>& rhs)
     { return lhs.first == rhs.first && lhs.second == rhs.second; }
@@ -68,27 +71,25 @@ namespace ft
 
     template <class T1, class T2>  
     pair<T1,T2> make_pair (T1 x, T2 y)
-    {
-        return ( pair<T1,T2>(x,y) );
-    }
+    { return ( pair<T1,T2>(x,y) );}
 
     template<typename Arg1, typename Arg2, typename Result>
-	struct binary_function {
+	struct binary_function 
+    {
 		typedef Arg1	frist_argument_type;
 		typedef Arg2	second_argument_type;
 		typedef Result	result_type;
 	};
 	
 	template<typename T>
-	struct less: binary_function<T,T,bool> {
-		bool operator()(const T& x, const T& y) const {
-			return (x < y);
-		}
+	struct less: binary_function<T,T,bool> 
+    {
+		bool operator()(const T& x, const T& y) const 
+        {   return (x < y);}
 	};
 
     template<typename Pair>
     struct Select1st
-    // : public unary_function<_Pair, typename _Pair::first_type>
     {
       typename Pair::first_type& operator()(Pair& x) const
       { return x.first; }

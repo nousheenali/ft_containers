@@ -6,7 +6,7 @@
 /*   By: nali <nali@42abudhabi.ae>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/23 15:43:53 by nali              #+#    #+#             */
-/*   Updated: 2023/03/29 13:39:39 by nali             ###   ########.fr       */
+/*   Updated: 2023/04/06 11:46:42 by nali             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -123,12 +123,6 @@ namespace ft
 
         base_ptr	base() const 
         {   return (this->node);}
-    
-        // bool operator==(const Self& x) const
-        // { return node == x.node; }
-    
-        // bool operator!=(const Self& x) const
-        // { return node != x.node; }
       
     };
     template<typename Val>
@@ -256,54 +250,15 @@ namespace ft
         base_ptr	base() const 
         {   return (this->node);}
 
-};
+    };
 
-template<typename Val>
-inline bool operator==(const Rb_tree_iterator<Val>& x,const Rb_tree_const_iterator<Val>& y)
-{ return x.node == y.node; }
+    template<typename Val>
+    inline bool operator==(const Rb_tree_iterator<Val>& x,const Rb_tree_const_iterator<Val>& y)
+    { return x.node == y.node; }
 
-template<typename Val>
-inline bool operator!=(const Rb_tree_iterator<Val>& x, const Rb_tree_const_iterator<Val>& y)
-{ return x.node != y.node; }
-
-
-// template<typename Const_node_ptr, typename Value>
-// inline bool operator==(const const_tree_iterator<Const_node_ptr,Value>& rhs,
-// 				const const_tree_iterator<Const_node_ptr,Value>& lhs) {
-// 		return (rhs.base() == lhs.base());
-// 	}
-
-// 	template<typename Const_node_ptr, typename Value>
-// 	inline bool operator!=(const const_tree_iterator<Const_node_ptr,Value>& rhs,
-// 				const const_tree_iterator<Const_node_ptr,Value>& lhs) {
-// 		return (rhs.base() != lhs.base());
-// 	}
-
-
-// 	template<typename Const_node_ptr, typename Node_ptr, typename Value>
-// 	inline bool operator==(const const_tree_iterator<Const_node_ptr,Value>& rhs,
-// 				const tree_iterator<Node_ptr,Value>& lhs) {
-// 		return (rhs.base() == lhs.base());
-// 	}
-
-// 	template<typename Const_node_ptr, typename Node_ptr, typename Value>
-// 	inline bool operator!=(const const_tree_iterator<Const_node_ptr,Value>& rhs,
-// 				const tree_iterator<Node_ptr,Value>& lhs) {
-// 		return (rhs.base() != lhs.base());
-// 	}
-
-// 	template<typename Const_node_ptr, typename Node_ptr, typename Value>
-// 	inline bool operator==(const tree_iterator<Node_ptr,Value>& rhs,
-// 				const const_tree_iterator<Const_node_ptr,Value>& lhs) {
-// 		return (rhs.base() == lhs.base());
-// 	}
-
-// 	template<typename Const_node_ptr, typename Node_ptr, typename Value>
-// 	inline bool operator!=(const tree_iterator<Node_ptr,Value>& rhs,
-// 				const const_tree_iterator<Const_node_ptr,Value>& lhs) {
-// 		return (rhs.base() != lhs.base());
-// 	}
-
+    template<typename Val>
+    inline bool operator!=(const Rb_tree_iterator<Val>& x, const Rb_tree_const_iterator<Val>& y)
+    { return x.node != y.node; }
 
 }
 

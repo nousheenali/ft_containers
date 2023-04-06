@@ -6,18 +6,19 @@
 #    By: nali <nali@42abudhabi.ae>                  +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/04/02 13:45:26 by nali              #+#    #+#              #
-#    Updated: 2023/04/04 13:09:52 by nali             ###   ########.fr        #
+#    Updated: 2023/04/06 13:28:21 by nali             ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
-CONTAINERS	=	./container_files/
+CONTAINERS	=	./containers/
 
 SRC_DIR		=	tests
 OBJ_DIR		=	output
 
 CXX			=	c++
-CPPFLAGS	=	-Wall -Wextra -Werror -std=c++98 -g3 
+CPPFLAGS	=	-Wall -Wextra -Werror -std=c++98 
 RM			=	rm -rf
+
 
 # --------------------STACK--------------------
 STK_TEST	=  capacity.cpp constructors.cpp push_pop.cpp relational.cpp 
@@ -35,6 +36,7 @@ $(STD_STK_OUT)%.o : $(STK_SRCS)/%.cpp
 $(FT_STK_OUT)%.o : $(STK_SRCS)/%.cpp
 			@mkdir -p output && mkdir -p output/ft_stack
 			@$(CXX) $(CPPFLAGS) -D NAMESPACE=ft -I$(CONTAINERS)  -c $< -o $@
+			
 
 # --------------------VECTOR--------------------
 VEC_TEST	=  assign.cpp capacity.cpp constructors.cpp element_access.cpp \
@@ -53,10 +55,11 @@ $(STD_VEC_OUT)%.o : $(VEC_SRCS)/%.cpp
 $(FT_VEC_OUT)%.o : $(VEC_SRCS)/%.cpp
 			@mkdir -p output && mkdir -p output/ft_vector
 			@$(CXX) $(CPPFLAGS) -D NAMESPACE=ft -I$(CONTAINERS)  -c $< -o $@
+			
 
 # --------------------MAP--------------------
 MAP_TEST	=  capacity.cpp constructors.cpp element_access.cpp erase.cpp \
-			insert.cpp iterators.cpp lookup.cpp relational.cpp swap.cpp
+			insert.cpp iterators.cpp lookup.cpp pair.cpp relational.cpp swap.cpp
 STD_MAP_OUT =  output/std_map/
 FT_MAP_OUT  =  output/ft_map/
 MAP_SRCS	=  tests/map
@@ -71,6 +74,7 @@ $(STD_MAP_OUT)%.o : $(MAP_SRCS)/%.cpp
 $(FT_MAP_OUT)%.o : $(MAP_SRCS)/%.cpp
 			@mkdir -p output && mkdir -p output/ft_map
 			@$(CXX) $(CPPFLAGS) -D NAMESPACE=ft -I$(CONTAINERS)  -c $< -o $@
+			
 
 # --------------------RULES--------------------
 
@@ -82,5 +86,7 @@ map:		$(STD_MAP_OBJ) $(FT_MAP_OBJ)
 
 clean:
 			@$(RM) $(OBJ_DIR) *.log
+
+fclean:		clean
 
 .PHONY:		vector map stack clean

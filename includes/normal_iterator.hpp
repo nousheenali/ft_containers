@@ -6,7 +6,7 @@
 /*   By: nali <nali@42abudhabi.ae>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/23 16:53:39 by nali              #+#    #+#             */
-/*   Updated: 2023/02/05 17:47:00 by nali             ###   ########.fr       */
+/*   Updated: 2023/04/06 12:47:48 by nali             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,12 +26,12 @@ namespace ft{
             typedef typename ft::iterator<ft::random_access_iterator_tag, T>    traits_type;
             // To be a valid iterator you need to define these 5 types:
             // These two you can inherit from base_iterator
-            typedef typename traits_type::iterator_category  iterator_category;
-            typedef typename traits_type::difference_type    difference_type;
-            // These three you have changed from the base_iterato so must provide your own definition.
-            typedef T								value_type;
-            typedef T&								reference;
-            typedef T*								pointer;
+            typedef typename traits_type::iterator_category     iterator_category;
+            typedef typename traits_type::difference_type       difference_type;
+            // These three you have changed from the base_iterator so must provide your own definition.
+            typedef T								            value_type;
+            typedef T&								            reference;
+            typedef T*								            pointer;
             
         public:
             //constructors
@@ -121,58 +121,29 @@ namespace ft{
             }
     };
     
-    template<typename IL, typename IR>
-    bool operator==(const normal_iterator<IL>& lhs, const normal_iterator<IR>& rhs)
-    { return lhs.base() == rhs.base(); }
-
     template<typename I>
     bool operator==(const normal_iterator<I>& lhs, const normal_iterator<I>& rhs)
     { return lhs.base() == rhs.base(); }
-
-    template<typename IL, typename IR>
-    bool operator!=(const normal_iterator<IL>& lhs, const normal_iterator<IR>& rhs)
-    { return lhs.base() != rhs.base(); }
 
     template<typename I>
     bool operator!=(const normal_iterator<I>& lhs, const normal_iterator<I>& rhs)
     { return lhs.base() != rhs.base(); }
 
-    template<typename IL, typename IR>
-    bool operator<(const normal_iterator<IL>& lhs, const normal_iterator<IR>& rhs)
-    { return lhs.base() < rhs.base(); }
-
     template<typename I>
     bool operator<(const normal_iterator<I>& lhs, const normal_iterator<I>& rhs)
     { return lhs.base() < rhs.base(); }
-
-    template<typename IL, typename IR>
-    bool operator>(const normal_iterator<IL>& lhs, const normal_iterator<IR>& rhs)
-    { return lhs.base() > rhs.base(); }
 
     template<typename I>
     bool operator>(const normal_iterator<I>& lhs, const normal_iterator<I>& rhs)
     { return lhs.base() > rhs.base(); }
 
-    template<typename IL, typename IR>
-    bool operator<=(const normal_iterator<IL>& lhs, const normal_iterator<IR>& rhs)
-    { return lhs.base() <= rhs.base(); }
-
     template<typename I>
     bool operator<=(const normal_iterator<I>& lhs, const normal_iterator<I>& rhs)
     { return lhs.base() <= rhs.base(); }
 
-    template<typename IL, typename IR>
-    bool operator>=(const normal_iterator<IL>& lhs, const normal_iterator<IR>& rhs)
-    { return lhs.base() >= rhs.base(); }
-
     template<typename I>
     bool operator>=(const normal_iterator<I>& lhs, const normal_iterator<I>& rhs)
     { return lhs.base() >= rhs.base(); }
-
-    template<typename IL, typename IR>
-    typename normal_iterator<IL>::difference_type
-    operator-(const normal_iterator<IL>& lhs, const normal_iterator<IR>& rhs)
-    { return lhs.base() - rhs.base(); }
 
     template<typename I>
     typename normal_iterator<I>::difference_type
@@ -183,6 +154,38 @@ namespace ft{
     normal_iterator<I>
     operator+(typename normal_iterator<I>::difference_type n, const normal_iterator<I>& i)
     { return normal_iterator<I>(i.base() + n); }
+
+    //to compare different types of iterators such as const_iterator and iterator
+    
+    template<typename IL, typename IR>
+    bool operator==(const normal_iterator<IL>& lhs, const normal_iterator<IR>& rhs)
+    { return lhs.base() == rhs.base(); }
+
+    template<typename IL, typename IR>
+    bool operator!=(const normal_iterator<IL>& lhs, const normal_iterator<IR>& rhs)
+    { return lhs.base() != rhs.base(); }
+    
+    template<typename IL, typename IR>
+    bool operator<(const normal_iterator<IL>& lhs, const normal_iterator<IR>& rhs)
+    { return lhs.base() < rhs.base(); }
+    
+    template<typename IL, typename IR>
+    bool operator>(const normal_iterator<IL>& lhs, const normal_iterator<IR>& rhs)
+    { return lhs.base() > rhs.base(); }
+    
+    template<typename IL, typename IR>
+    bool operator<=(const normal_iterator<IL>& lhs, const normal_iterator<IR>& rhs)
+    { return lhs.base() <= rhs.base(); }
+    
+    template<typename IL, typename IR>
+    bool operator>=(const normal_iterator<IL>& lhs, const normal_iterator<IR>& rhs)
+    { return lhs.base() >= rhs.base(); }
+
+    template<typename IL, typename IR>
+    typename normal_iterator<IL>::difference_type
+    operator-(const normal_iterator<IL>& lhs, const normal_iterator<IR>& rhs)
+    { return lhs.base() - rhs.base(); }
+
 }
 
 #endif

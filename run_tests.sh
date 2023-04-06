@@ -1,10 +1,9 @@
 #!/usr/bin/env bash
 
-DEFAULT=$(tput sgr0) #resets all set attributes such as color
+RESET=$(tput sgr0) #resets all set attributes such as color
 RED='\033[1;31m'
 GREEN='\033[1;32m'
 YELLOW='\033[1;33m'
-PURPLE='\033[1;35m'
 CYAN='\033[1;36m'
 BLUE='\033[1;34m'
 
@@ -29,7 +28,7 @@ FT_MAP=ft_map
 check_compilation_status() 
 {
 	if [ -s $LOG ]; then
-		echo -e $RED"Compilation error, check $LOG for more details"$DEFAULT
+		echo -e $RED"Compilation error, check $LOG for more details"$RESET
 	else
 		$RM $LOG
 	fi
@@ -38,7 +37,7 @@ check_compilation_status()
 print_results()
 {
 	for file in $OUT_DIR/$1/*.txt; do
-		printf $PURPLE'%-37s' " • $(basename -- $file .txt)$DEFAULT"
+		printf $CYAN'%-37s' " • $(basename -- $file .txt)$RESET"
 		if [ -f $OUT_DIR/$2/${file##*/} ]; then
 			echo -ne "Compiled: ✅  |  "
 			diff <(sed '$d' $file) <(sed '$d' $OUT_DIR/$2/${file##*/}) > diff
@@ -48,8 +47,8 @@ print_results()
 				echo -ne "Output: ✅  |  "
 				FTTIME=$(tail -n 1 $OUT_DIR/$2/${file##*/}| sed 's/[^0-9\.]*//g') #truncate everything from time value except digits and decimals
 				STDTIME=$(tail -n 1 $file| sed 's/[^0-9\.]*//g')
-				echo -ne "FT Time:$GREEN" $FTTIME ms"$DEFAULT |  "
-				echo -ne "STD Time:$GREEN" $STDTIME ms"$DEFAULT |  "
+				echo -ne "FT Time:$GREEN" $FTTIME ms"$RESET |  "
+				echo -ne "STD Time:$GREEN" $STDTIME ms"$RESET |  "
 				STDTIME=$(expr $STDTIME*20 | bc)
 				if [ $(bc <<< "$STDTIME < $FTTIME") -eq 1 ] #FT can be upto 20 times slower than the STD container
 					then
@@ -64,7 +63,7 @@ print_results()
 		fi
 		echo #new line
 	done
-	echo -e $BLUE"Checks outputs directory for results"$DEFAULT
+	echo -e $BLUE"Checks outputs directory for results"$RESET
 	check_compilation_status
 }
 
@@ -81,7 +80,7 @@ start_tests()
 {
 	echo -e $YELLOW"++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++"
 	echo -e "                                                          $3 Tester                                                      "
-	echo -e "++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++"$DEFAULT
+	echo -e "++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++"$RESET
 	run_tests $1 
 	run_tests $2 
 	print_results $2 $1
@@ -90,7 +89,7 @@ start_tests()
 
 #execution starts here with checking of the arguments
 if [ "$#" -eq 0 ]; then
-	echo -e $YELLOW"Please provide a valid container name (stack / vector / map / all)"$DEFAULT
+	echo -e $YELLOW"Please provide a valid container name (stack / vector / map / all)"$RESET
 	exit 1
 
 elif [ $1 == "stack" ]; then
@@ -115,6 +114,6 @@ elif [ $1 == "all" ]; then
 	start_tests $FT_MAP $STD_MAP "map"
 
 else
-	echo -e $YELLOW"Please enter a valid container name (stack / vector / map / all)"$DEFAULT
+	echo -e $YELLOW"Please enter a valid container name (stack / vector / map / all)"$RESET
 	exit 1
 fi
