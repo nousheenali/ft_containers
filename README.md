@@ -7,6 +7,15 @@
 ./run_tests map     # to run map tests only
 ```
 
+```bash
+#To run individual test files
+ c++ {compilation_flags} {namespace} {source_file_location} -o {executable}
+ 
+ example:
+ c++ -Werror -std=c++98 -D NAMESPACE=ft tests/stack/constructors.cpp -o ft_exec
+ c++ -Werror -std=c++98 -D NAMESPACE=std tests/stack/constructors.cpp -o std_exec
+```
+
 ### Concept of container/iterator/algorithm
 
 https://www.codeproject.com/Articles/36530/An-Introduction-to-Iterator-Traits
