@@ -6,7 +6,7 @@
 /*   By: nali <nali@42abudhabi.ae>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/02 23:38:06 by nali              #+#    #+#             */
-/*   Updated: 2023/04/06 23:34:02 by nali             ###   ########.fr       */
+/*   Updated: 2023/04/09 12:08:06 by nali             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,6 @@ template<typename T>
 void print_stack(T &stck)
 {
     std::cout << "size: " << stck.size() << std::endl;
-	std::cout << "capacity: " << stck.capacity() << std::endl;
 	std::cout << "Stack Elements:" << std::endl;
 	while (stck.size() != 0) 
     {
