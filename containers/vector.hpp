@@ -290,12 +290,9 @@ namespace ft
 
             void insert (iterator position, size_type n, const value_type& val)
             {   
-                // difference_type d	= position - this->begin();
                 if ( n <= 0)
                     return;
                 size_type d = position - this->begin();
-
-
                 if (size() + n >= capacity())
                     this->reserve(ft::max(capacity() * 2, size() + n));
                 size_type l = size();
