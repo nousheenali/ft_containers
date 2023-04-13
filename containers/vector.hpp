@@ -6,7 +6,7 @@
 /*   By: nali <nali@42abudhabi.ae>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/20 16:44:10 by nali              #+#    #+#             */
-/*   Updated: 2023/04/06 12:28:25 by nali             ###   ########.fr       */
+/*   Updated: 2023/04/13 14:34:09 by nali             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -290,79 +290,53 @@ namespace ft
 
             void insert (iterator position, size_type n, const value_type& val)
             {   
-                difference_type d	= position - this->begin();
-			    size_type new_size 	= size() + n;
+                // difference_type d	= position - this->begin();
+                if ( n <= 0)
+                    return;
+                size_type d = position - this->begin();
+
 
                 if (size() + n >= capacity())
                     this->reserve(ft::max(capacity() * 2, size() + n));
-
-                //saving vector to temp location
-                allocator_type tmp_alloc;
-                pointer temp = tmp_alloc.allocate(size() + n);
-                for (size_type i = 0; i < size(); i++) 
-                    tmp_alloc.construct(temp + i, *(_start + i));
-                //shifting values
-                for (size_type i = static_cast<size_type>(d) + n; i < new_size; i++)
+                size_type l = size();
+                while(l - d) //shift values only if insert is not at the end
                 {
-                    if (i < size())
-                        _alloc.destroy(_start + i);
-                    _alloc.construct(_start + i, *(temp + i - n));
+                    _alloc.construct(_start + l + n - 1 , *(_start + l - 1));
+                    _alloc.destroy(_start + l - 1);
+                    l--;
                 }
-                //inserting new values
-                for (size_type i = d; i < static_cast<size_type>(d) + n; i++)
-                {
-                    if (i < size())
-                        _alloc.destroy(_start + i);
-                    _alloc.construct(_start + i, val);
-                }
-                //freeing temp allocation
-                for (size_type i = 0; i < size(); i++)
-                    tmp_alloc.destroy(temp + i);
-                tmp_alloc.deallocate(temp, size());
+                for(size_t i = 0; i < n; i++)
+                    _alloc.construct(_start + d + i, val);
                 _finish = _finish + n;
             }
-    	
+
             template <class InputIterator>    
             void insert (iterator position, InputIterator first, InputIterator last, 
             typename ft::enable_if<!ft::is_integral<InputIterator>::value, InputIterator>::type* = NULL)
             {
-                difference_type d 	  = position - this->begin();
-                difference_type range = d;
-                size_type 		n	  = 0;
-                size_type       l = size();
-
-                for (InputIterator temp = first; temp != last; temp++) 
+                size_type d = position - this->begin();
+                size_type n = 0;
+                InputIterator tmp = first;
+                size_type l = size();
+                while ( tmp != last)
                 {
-                    range++;
+                    tmp++;
                     n++;
                 }
                 if (l + n >= capacity())
                     this->reserve(ft::max(capacity() * 2, l + n));
-
-                allocator_type tmp_alloc;
-                pointer 	   temp = tmp_alloc.allocate(l);
-
-                for (size_type i = 0; i < l; i++)
-                    tmp_alloc.construct(temp + i, *(_start + i));
-
-                for (size_type i = static_cast<size_type>(range); i < l + n; i++)
+                while(l - d)
                 {
-                    if (i < l)
-                        _alloc.destroy(_start + i);
-                    _alloc.construct(_start + i, *(temp + i + static_cast<size_type>(d - range)));
+                    _alloc.construct(_start + l + n - 1 , *(_start + l - 1));
+                    _alloc.destroy(_start + l - 1);
+                    l--;
                 }
-
-                for (size_type i = static_cast<size_type>(d); i < static_cast<size_type>(range); i++)
+                for(size_t i = 0; i < n; i++)
                 {
-                    if (i < l)
-                        _alloc.destroy(_start + i);
-                    _alloc.construct(_start + i, *first++);
+                    _alloc.construct(_start + d + i, *first);
+                    first++;
                 }
-
-                for (size_type i = 0; i < l; i++)
-                    tmp_alloc.destroy(temp + i);
-                tmp_alloc.deallocate(temp, l);
-                _finish += n;
+                _finish = _finish + n;
             }
 
             iterator erase (iterator position)
