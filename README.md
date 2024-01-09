@@ -1,5 +1,10 @@
 # ft_containers
 
+![cpp-stl-standard-template-library1](https://github.com/nousheenali/ft_containers/assets/66158938/f62f8653-91c6-4e48-9714-a972c54b46c3)
+
+[Image reference](https://www.tutorialandexample.com/cpp-stl-standard-template-library)
+
+
 ```bash
 ./run_tests all     # to run all tests
 ./run_tests stack   # to run stack tests only
